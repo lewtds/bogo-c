@@ -32,13 +32,12 @@ wchar_t strip_tone_from_char(wchar_t chr)
     return add_tone_to_char(chr, NONE);
 }
 
-wchar_t *strip_tone_from_string(wchar_t *str) {
-
-    wchar_t *dest = (wchar_t *) malloc(strlen(str));
-    strcpy(dest, str);
+wchar_t *strip_tone_from_string(const wchar_t *str)
+{
+    wchar_t *dest = wcsdup(str);
 
     wchar_t *index = dest;
-    while(*index != 0) {
+    while (*index != 0) {
         *index = strip_tone_from_char(*index);
     }
 
