@@ -27,7 +27,8 @@ wchar_t add_tone_to_char(wchar_t chr, Tone tone)
     }
 }
 
-inline wchar_t strip_tone_from_char(wchar_t chr) {
+wchar_t strip_tone_from_char(wchar_t chr)
+{
     return add_tone_to_char(chr, NONE);
 }
 
