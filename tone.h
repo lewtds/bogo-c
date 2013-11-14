@@ -14,4 +14,6 @@ typedef enum {
 
 wchar_t add_tone_to_char(wchar_t chr, Tone tone);
 
+wchar_t *add_tone_to_string(wchar_t *str, Tone tone);
+
 #endif

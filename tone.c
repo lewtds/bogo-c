@@ -46,6 +46,33 @@ wchar_t *strip_tone_from_string(const wchar_t *str)
 
     return dest;
 }
+
+wchar_t *add_tone_to_string(wchar_t *str, Tone tone)
+{
+    wchar_t *clone = wcsdup(str);
+
+    int start, vlen;
+    find_rightmost_vowel_group(clone, &start, &vlen);
+
+    if (start != -1) {
+
+        wchar_t *target = NULL;
+        switch (vlen) {
+        case 3:
+            break;
+        case 2:
+            break;
+        case 1:
+            target = clone + start;
+            break;
+        }
+
+        *target = add_tone_to_char(*target, tone);
+    }
+
+    return clone;
+}
+
 void find_rightmost_vowel_group(wchar_t *str,
                                 int *out_start_index,
                                 int *out_len)
