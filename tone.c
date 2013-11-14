@@ -3,14 +3,22 @@
 #include <wchar.h>
 #include "tone.h"
 
+// See notes in tone.h
+
+// Interesting observations:
+// - The position of a vowel in the vowel list tells
+//   its tone (by taking the quotient after dividing the
+//   position by 6)
+// - The position can also tell the vowel's family (aăâeêioôơuư)
+
 const wchar_t *VOWELS = L"àáảãạaằắẳẵặăầấẩẫậâèéẻẽẹeềếểễệêìíỉĩịi" \
                         "òóỏõọoồốổỗộôờớởỡợơùúủũụuừứửữựưỳýỷỹỵy";
 
-void find_rightmost_vowel_group(wchar_t *str,
+static void find_rightmost_vowel_group(wchar_t *str,
                                 int *out_start_index,
                                 int *out_len);
 
-int is_vowel(wchar_t chr)
+static int is_vowel(wchar_t chr)
 {
     return wcschr(VOWELS, chr) != NULL;
 }
@@ -47,6 +55,20 @@ wchar_t *strip_tone_from_string(const wchar_t *str)
     return dest;
 }
 
+/*
+This function only supports the traditional tone positions (hòa vs. hoà).
+
+Process from the end of the string:
+
+- If an ê or an ơ is found then put the tone there (tuyển)
+- If 3 continuous vowels are found then put on the
+  second vowel (khuỷu)
+- If 2 continuous vowels are found with no adjacent consonant
+  then put on the first vowel (tòa)
+- If 2 continuous vowels are found with 1 adjacent consonant
+  then put on the second vowel (toàn)
+- If 1 vowel is found then put the tone on it (án)
+*/
 wchar_t *add_tone_to_string(wchar_t *str, Tone tone)
 {
     wchar_t *clone = wcsdup(str);
