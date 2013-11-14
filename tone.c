@@ -6,6 +6,9 @@
 const wchar_t *VOWELS = L"àáảãạaằắẳẵặăầấẩẫậâèéẻẽẹeềếểễệêìíỉĩịi" \
                         "òóỏõọoồốổỗộôờớởỡợơùúủũụuừứửữựưỳýỷỹỵy";
 
+void find_rightmost_vowel_group(wchar_t *str,
+                                int *out_start_index,
+                                int *out_len);
 
 int is_vowel(wchar_t chr)
 {
