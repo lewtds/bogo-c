@@ -3,8 +3,6 @@
 #include <wchar.h>
 #include "tone.h"
 
-// See notes in tone.h
-
 // Interesting observations:
 // - The position of a vowel in the vowel list tells
 //   its tone (by taking the remainder after dividing the
