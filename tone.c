@@ -7,7 +7,7 @@
 
 // Interesting observations:
 // - The position of a vowel in the vowel list tells
-//   its tone (by taking the quotient after dividing the
+//   its tone (by taking the remainder after dividing the
 //   position by 6)
 // - The position can also tell the vowel's family (aăâeêioôơuư)
 
