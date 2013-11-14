@@ -1,4 +1,6 @@
-#include <stdlib.h>
+#define _GNU_SOURCE
+
+#include <wchar.h>
 #include "tone.h"
 
 const wchar_t *VOWELS = L"àáảãạaằắẳẵặăầấẩẫậâèéẻẽẹeềếểễệêìíỉĩịi" \
