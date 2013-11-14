@@ -6,7 +6,9 @@
 const wchar_t *VOWELS = L"àáảãạaằắẳẵặăầấẩẫậâèéẻẽẹeềếểễệêìíỉĩịi" \
                         "òóỏõọoồốổỗộôờớởỡợơùúủũụuừứửữựưỳýỷỹỵy";
 
-bool is_vowel(wchar_t chr) {
+
+int is_vowel(wchar_t chr)
+{
     return wcschr(VOWELS, chr) != NULL;
 }
 
