@@ -12,5 +12,7 @@ typedef enum {
 } Mark;
 
 wchar_t strip_mark_from_char(wchar_t chr);
+wchar_t add_mark_to_char(wchar_t chr, Mark mark);
+wchar_t *add_mark_to_string(wchar_t *str, Mark mark);
 
 #endif
