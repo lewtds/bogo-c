@@ -41,9 +41,9 @@ wchar_t *strip_tone_from_string(wchar_t *str) {
 }
 void find_rightmost_vowel_group(wchar_t *str,
                                 int *out_start_index,
-                                int *out_end_index)
+                                int *out_len)
 {
-    int len = len(str);
+    int len = wcslen(str);
     int start = -1;
     int end = -1;
 
@@ -66,5 +66,5 @@ void find_rightmost_vowel_group(wchar_t *str,
     }
 
     *out_start_index = start;
-    *out_end_index = end;
+    *out_len = end - start + 1;
 }
