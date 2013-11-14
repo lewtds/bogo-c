@@ -79,14 +79,41 @@ wchar_t *add_tone_to_string(wchar_t *str, Tone tone)
     if (start != -1) {
 
         wchar_t *target = NULL;
-        switch (vlen) {
-        case 3:
-            break;
-        case 2:
-            break;
-        case 1:
-            target = clone + start;
-            break;
+
+        // Find ê, ơ
+        wchar_t *e_cir_pos = NULL;
+        wchar_t *o_horn_pos = NULL;
+        wchar_t *pointer = clone;
+
+        while(*pointer != L'\0') {
+            wchar_t naked = strip_tone_from_char(*pointer);
+            if (naked == L'ê') {
+                e_cir_pos = pointer;
+            }
+            if (naked == L'ơ') {
+                o_horn_pos = pointer;
+            }
+            pointer++;
+        }
+
+        if (e_cir_pos != NULL || o_horn_pos != NULL) {
+            target = e_cir_pos > o_horn_pos ? e_cir_pos : o_horn_pos;
+        } else {
+            switch (vlen) {
+            case 3:
+                target = clone + start + 1;
+                break;
+            case 2:
+                if (str[start + 2] == L'\0') {
+                    target = clone + start;
+                } else {
+                    target = clone + start + 1;
+                }
+                break;
+            case 1:
+                target = clone + start;
+                break;
+            }
         }
 
         *target = add_tone_to_char(*target, tone);
