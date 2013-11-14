@@ -22,6 +22,23 @@ wchar_t add_tone_to_char(wchar_t chr, Tone tone)
         return chr;
     }
 }
+
+inline wchar_t strip_tone_from_char(wchar_t chr) {
+    return add_tone_to_char(chr, NONE);
+}
+
+wchar_t *strip_tone_from_string(wchar_t *str) {
+
+    wchar_t *dest = (wchar_t *) malloc(strlen(str));
+    strcpy(dest, str);
+
+    wchar_t *index = dest;
+    while(*index != 0) {
+        *index = strip_tone_from_char(*index);
+    }
+
+    return dest;
+}
 void find_rightmost_vowel_group(wchar_t *str,
                                 int *out_start_index,
                                 int *out_end_index)
