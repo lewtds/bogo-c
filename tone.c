@@ -4,6 +4,10 @@
 const wchar_t *VOWELS = L"àáảãạaằắẳẵặăầấẩẫậâèéẻẽẹeềếểễệêìíỉĩịi" \
                         "òóỏõọoồốổỗộôờớởỡợơùúủũụuừứửữựưỳýỷỹỵy";
 
+bool is_vowel(wchar_t chr) {
+    return wcschr(VOWELS, chr) != NULL;
+}
+
 wchar_t add_tone_to_char(wchar_t chr, Tone tone)
 {
     wchar_t *match = wcschr(VOWELS, chr);
