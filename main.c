@@ -15,14 +15,14 @@ int main(int argc, char const *argv[])
     }
 
     wchar_t *input = L"con";
-    wchar_t *output = add_tone_to_string(input, GRAVE);
+    wchar_t *output = add_tone_to_string(input, TONE_GRAVE);
     printf("%ls\n", output);
 
-    printf("%ls\n", add_tone_to_string(L"meo", GRAVE));
-    printf("%ls\n", add_tone_to_string(L"hoan", GRAVE));
-    printf("%ls\n", add_tone_to_string(L"khuyu", HOOK));
-    printf("%ls\n", add_tone_to_string(L"huyên", HOOK));
-    printf("%ls\n", add_tone_to_string(L"hương", HOOK));
+    printf("%ls\n", add_tone_to_string(L"meo", TONE_GRAVE));
+    printf("%ls\n", add_tone_to_string(L"hoan", TONE_GRAVE));
+    printf("%ls\n", add_tone_to_string(L"khuyu", TONE_HOOK));
+    printf("%ls\n", add_tone_to_string(L"huyên", TONE_HOOK));
+    printf("%ls\n", add_tone_to_string(L"hương", TONE_HOOK));
 
     printf("%lc\n", strip_mark_from_char(L'ư'));
     printf("%lc\n", add_mark_to_char(L'u', MARK_HORN));

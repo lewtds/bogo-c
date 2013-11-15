@@ -4,12 +4,12 @@
 extern const wchar_t *VOWELS;
 
 typedef enum {
-    GRAVE, // huyền
-    ACUTE, // sắc
-    HOOK,  // hỏi
-    TILDE, // ngã
-    DOT,   // nặng
-    NONE   // ngang
+    TONE_GRAVE, // huyền
+    TONE_ACUTE, // sắc
+    TONE_HOOK,  // hỏi
+    TONE_TILDE, // ngã
+    TONE_DOT,   // nặng
+    TONE_NONE   // ngang
 } Tone;
 
 wchar_t add_tone_to_char(wchar_t chr, Tone tone);

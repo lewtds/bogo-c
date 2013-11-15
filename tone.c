@@ -38,7 +38,7 @@ wchar_t add_tone_to_char(wchar_t chr, Tone tone)
 
 wchar_t strip_tone_from_char(wchar_t chr)
 {
-    return add_tone_to_char(chr, NONE);
+    return add_tone_to_char(chr, TONE_NONE);
 }
 
 wchar_t *strip_tone_from_string(const wchar_t *str)
