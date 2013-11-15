@@ -1,8 +1,6 @@
 #ifndef TONE_H
 #define TONE_H
 
-extern const wchar_t *VOWELS;
-
 typedef enum {
     TONE_GRAVE, // huyền
     TONE_ACUTE, // sắc
