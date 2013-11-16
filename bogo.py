@@ -24,6 +24,41 @@ VOWELS = "àáảãạaằắẳẵặăầấẩẫậâèéẻẽẹeềếể
     "òóỏõọoồốổỗộôờớởỡợơùúủũụuừứửữựưỳýỷỹỵy"
 
 
+input_rules = {
+    "s": {
+        "type": "TONE",
+        "key": "s",
+        "effect": Tone.ACUTE
+    },
+    "f": {
+        "type": "TONE",
+        "key": "f",
+        "effect": Tone.GRAVE
+    },
+    "r": {
+        "type": "TONE",
+        "key": "r",
+        "effect": Tone.HOOK
+    },
+    "a": {
+        "type": "MARK",
+        "key": "a",
+        "effect": Mark.HAT,
+        "affinity": ["a"]
+    },
+    "e": {
+        "type": "MARK",
+        "key": "e",
+        "effect": Mark.HAT,
+        "affinity": ["e"]
+    },
+    "w": {
+        "type": "MARK",
+        "key": "w",
+        "effect": Mark.HORN,
+        "affinity": ["u", "o"]
+    }
+}
 def add_tone_to_char(chr, tone):
     try:
         position = VOWELS.index(chr)
