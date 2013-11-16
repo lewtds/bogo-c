@@ -189,6 +189,14 @@ def process_char(trans_list, chr):
     trans_list.append(trans)
 
 
+def process_string(string):
+    trans_list = []
+    for char in string:
+        process_char(trans_list, char)
+
+    return flatten(trans_list)
+
+
 def flatten(trans_list):
 
     def apply_trans(trans, function):
