@@ -128,6 +128,14 @@ def remove_last_char(trans_list):
     return trans_list
 
 
+def clear_transformations(trans_list):
+    trans_list = copy.deepcopy(trans_list)
+    for trans in trans_list:
+        trans["type"] = "APPEND"
+
+    return trans_list
+
+
 test_array = [
     {
         "type": "APPEND",
