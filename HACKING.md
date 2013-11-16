@@ -77,11 +77,12 @@ Consider this example:
 which should be "hươ" when flattened. The users expect backspace would delete
 "ơ" and leave "ư" intact. To do that, we remove the last appending
 transformation, which is o-APPEND and remove the "2" target from w-MARK-HORN.
+That gives "hư", as expected.
 
-Now what happens if the user presses "k"? "hưk" is not Vietnamese, so we return
-a plain ASCII string. Now the ASCII string could be "huwk" or "huowk". The
-former is probably less astonishing (google POLA) since the user explicitly
-deleted "o" and would not expect to see it again.
+Now what happens if the user presses "k" after all that? "hưk" is not
+Vietnamese, so we return a plain ASCII string. Now the ASCII string could be
+"huwk" or "huowk". The former is probably less astonishing (google POLA) since
+the user explicitly deleted "o" and would not expect to see it again.
 
 So after receiving "k", we modify the list into this:
 
