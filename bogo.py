@@ -23,7 +23,8 @@ class Mark:
 VOWELS = "àáảãạaằắẳẵặăầấẩẫậâèéẻẽẹeềếểễệêìíỉĩịi" \
     "òóỏõọoồốổỗộôờớởỡợơùúủũụuừứửữựưỳýỷỹỵy"
 
-
+# FIXME This design cannot encode w-MARK-BREVE-a and w-MARK-HORN-o-w at the same
+# time.
 input_rules = {
     "s": {
         "type": "TONE",
@@ -32,6 +33,14 @@ input_rules = {
     "f": {
         "type": "TONE",
         "effect": Tone.GRAVE
+    },
+    "x": {
+        "type": "TONE",
+        "effect": Tone.TILDE
+    },
+    "j": {
+        "type": "TONE",
+        "effect": Tone.DOT
     },
     "r": {
         "type": "TONE",
@@ -51,6 +60,11 @@ input_rules = {
         "type": "MARK",
         "effect": Mark.HORN,
         "affinity": ["u", "o"]
+    },
+    "d": {
+        "type": "MARK",
+        "effect": Mark.BAR,
+        "affinity": ["d"]
     }
 }
 
