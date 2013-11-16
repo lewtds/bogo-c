@@ -69,6 +69,10 @@ input_rules = {
 }
 
 
+#
+# Utils
+#
+
 def is_vowel(chr):
     return chr != "" and chr in VOWELS
 
@@ -81,15 +85,9 @@ def next_append(trans_list, index):
     except:
         return None
 
-
-def add_tone_to_char(chr, tone):
-    try:
-        position = VOWELS.index(chr)
-        current_tone = position % 6
-        offset = tone - current_tone
-        return VOWELS[position + offset]
-    except:
-        return chr
+#
+# Mark processing
+#
 
 
 def add_mark_to_char(chr, mark):
@@ -136,6 +134,21 @@ def find_mark_target(trans_list, trans):
         trans["type"] = "APPEND"
 
 
+#
+# Tone processing
+#
+
+
+def add_tone_to_char(chr, tone):
+    try:
+        position = VOWELS.index(chr)
+        current_tone = position % 6
+        offset = tone - current_tone
+        return VOWELS[position + offset]
+    except:
+        return chr
+
+
 def find_rightmost_vowels(trans_list):
     i = len(trans_list) - 1
     end = -1
@@ -170,6 +183,11 @@ def find_tone_target(trans_list, trans):
             trans["target"] = [vowels[1]]
     elif vlen == 3:
         trans["target"] = [vowels[2]]
+
+
+#
+# Putting it all together
+#
 
 
 def process_char(trans_list, chr):
@@ -216,6 +234,11 @@ def flatten(trans_list):
             apply_trans(trans, add_mark_to_char)
 
     return "".join(result)
+
+
+#
+# Miscellaneous operations
+#
 
 
 def undo(trans_list):
