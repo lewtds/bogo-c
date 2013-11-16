@@ -7,7 +7,7 @@ class Tone:
     GRAVE = 0
     ACUTE = 1
     HOOK = 2
-    TIDLE = 3
+    TILDE = 3
     DOT = 4
     NONE = 5
 
