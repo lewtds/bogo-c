@@ -59,6 +59,21 @@ input_rules = {
         "affinity": ["u", "o"]
     }
 }
+
+
+def is_vowel(chr):
+    return chr != "" and chr in VOWELS
+
+
+def next_append(trans_list, index):
+    try:
+        while trans_list[index + 1]["type"] != "APPEND":
+            index += 1
+        return trans_list[index + 1]
+    except:
+        return None
+
+
 def add_tone_to_char(chr, tone):
     try:
         position = VOWELS.index(chr)
