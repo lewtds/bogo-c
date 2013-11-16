@@ -84,7 +84,7 @@ def undo(trans_list):
     i = len(trans_list) - 1
     while i > -1:
         if trans_list[i]["type"] in ("MARK", "TONE"):
-            trans_list.pop(i)
+            trans_list[i]["type"] = "UNDONE"
             break
         i -= 1
 
