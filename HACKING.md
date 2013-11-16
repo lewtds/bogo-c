@@ -18,3 +18,82 @@ existing ones. We call these simply 'marks'.
 * breve, used in ă
 * horn, used in ư, ơ
 * dash, used in đ
+
+## Operation
+
+Bogo engine works in two phases. First, it tries to build a list of
+transformations holding information on each character in the raw input string.
+
+For example, if the user press buttons on the keyboard in the sequence "meof"
+then the list should look similar to this:
+
+    [
+        { 'type' : 'append',
+          'key': 'm' },
+        { 'type' : 'append',
+          'key': 'e' },
+        { 'type' : 'append',
+          'key': 'o' },
+        { 'type' : 'tone',
+          'key': 'f',
+          'tone': 'GRAVE',
+          'target': [1] }
+    ]
+
+Using matching rules, it will sort each key into three categories: tone, mark,
+append; and find one or more suitable targets for it. The target has to be a
+list because we need to accomodate typing shortcuts like "uow", in which the
+letter "w" targets both "o" and "u", resulting in "ươ".
+
+The second phase is simpler, Bogo flattens the list into a final string using
+the instructions built from the first phase into the list itself.
+
+This two-phase structure makes certain operations like undoing, handling
+backspace or returning raw string after some backspaces relatively easy. In the
+example above, if we want to undo the f-TONE-GRAVE operation (mèo -> meo) then
+we can simply remove the last TONE or MARK member of the list and reflatten it.
+
+Handling backspaces is a bit more complicated. The users expect backspace to
+delete characters, not undo tone or mark operations. So we remove the last
+appending transformation and all other operations that target it. If the
+targeting transformation has more than one targets then remove the orphaned
+target from it.
+
+Consider this example:
+
+    [
+        { 'type': 'APPEND',
+          'key': 'h'},
+        { 'type': 'APPEND',
+          'key': 'u' },
+        { 'type': 'APPEND',
+          'key': 'o' },
+        { 'type': 'MARK',
+          'key': 'w',
+          'mark': 'HORN',
+          'target': [1, 2] }
+    ]
+
+which should be "hươ" when flattened. The users expect backspace would delete
+"ơ" and leave "ư" intact. To do that, we remove the last appending
+transformation, which is o-APPEND and remove the "2" target from w-MARK-HORN.
+
+Now what happens if the user presses "k"? "hưk" is not Vietnamese, so we return
+a plain ASCII string. Now the ASCII string could be "huwk" or "huowk". The
+former is probably less astonishing (google POLA) since the user explicitly
+deleted "o" and would not expect to see it again.
+
+So after receiving "k", we modify the list into this:
+
+    [
+        { 'type': 'APPEND',
+          'key': 'h'},
+        { 'type': 'APPEND',
+          'key': 'u' },
+        { 'type': 'APPEND',
+          'key': 'w' }
+        { 'type': 'APPEND',
+          'key': 'k' }
+    ]
+
+And flatten it into "huwk".
