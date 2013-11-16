@@ -36,19 +36,25 @@ def add_tone_to_char(chr, tone):
 
 def add_mark_to_char(chr, mark):
     famililies = [
-        "aâăaa",
-        "eêeee",
-        "oôoơo",
-        "uuuưu",
-        "ddddđ"
+        "aâă  ",
+        "eê   ",
+        "oô ơ ",
+        "u  ư ",
+        "d   đ"
     ]
+
+    if chr == " ":
+        return chr
+
+    result = " "
     for family in famililies:
         try:
             family.index(chr)
-            return family[mark]
+            result = family[mark]
         except:
             pass
-    return chr
+
+    return result if result != " " else chr
 
 
 def flatten(trans_list):
