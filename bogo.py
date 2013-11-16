@@ -27,34 +27,28 @@ VOWELS = "àáảãạaằắẳẵặăầấẩẫậâèéẻẽẹeềếể
 input_rules = {
     "s": {
         "type": "TONE",
-        "key": "s",
         "effect": Tone.ACUTE
     },
     "f": {
         "type": "TONE",
-        "key": "f",
         "effect": Tone.GRAVE
     },
     "r": {
         "type": "TONE",
-        "key": "r",
         "effect": Tone.HOOK
     },
     "a": {
         "type": "MARK",
-        "key": "a",
         "effect": Mark.HAT,
         "affinity": ["a"]
     },
     "e": {
         "type": "MARK",
-        "key": "e",
         "effect": Mark.HAT,
         "affinity": ["e"]
     },
     "w": {
         "type": "MARK",
-        "key": "w",
         "effect": Mark.HORN,
         "affinity": ["u", "o"]
     }
@@ -172,6 +166,7 @@ def process_char(trans_list, chr):
         }
     else:
         trans = copy.deepcopy(input_rules[chr])
+        trans["key"] = chr
         if trans["type"] == "MARK":
             find_mark_target(trans_list, trans)
         elif trans["type"] == "TONE":
