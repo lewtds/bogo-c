@@ -318,78 +318,14 @@ test_array2 = [
     }
 ]
 
-# print(flatten(test_array))        # hàn
-# print(flatten(undo(test_array)))  # han
-# print(flatten(clear_transformations(undo(test_array))))  # hafn
+print(flatten(test_array))        # hàn
+print(flatten(undo(test_array)))  # han
+print(flatten(clear_transformations(undo(test_array))))  # hafn
 
-# print(flatten(test_array2))       # hươ
-# print(flatten(remove_last_char(test_array2)))  # hư
+print(flatten(test_array2))       # hươ
+print(flatten(remove_last_char(test_array2)))  # hư
 
-test_array = [
-    {
-        "type": "APPEND",
-        "key": "h"
-    },
-    {
-        "type": "APPEND",
-        "key": "u"
-    },
-    {
-        "type": "APPEND",
-        "key": "u"
-    },
-    {
-        "type": "APPEND",
-        "key": "o"
-    },
-    {
-        "type": "MARK",
-        "key": "w",
-        "effect": Mark.HORN,
-        "affinity": ["u", "o"]
-    }
-]
-
-test_array = [
-    {
-        "type": "MARK",
-        "key": "w",
-        "effect": Mark.HORN,
-        "affinity": ["u", "o"]
-    }
-]
-
-# find_mark_target(test_array[:-1], test_array[-1])
-# print(test_array)
-
-trans_list = []
-process_char(trans_list, "h")
-process_char(trans_list, "u")
-process_char(trans_list, "y")
-process_char(trans_list, "e")
-process_char(trans_list, "e")
-process_char(trans_list, "n")
-process_char(trans_list, "f")
-
-print(flatten(trans_list))
-
-trans_list = []
-process_char(trans_list, "d")
-process_char(trans_list, "a")
-process_char(trans_list, "a")
-process_char(trans_list, "u")
-process_char(trans_list, "s")
-
-print(flatten(trans_list))
-
-trans_list = []
-process_char(trans_list, "c")
-process_char(trans_list, "h")
-process_char(trans_list, "u")
-process_char(trans_list, "o")
-process_char(trans_list, "w")
-process_char(trans_list, "n")
-process_char(trans_list, "g")
-process_char(trans_list, "r")
-
-print(flatten(trans_list))
+print(process_string("meof"))      # mèo
+print(process_string("dieend"))    # điên
+print(process_string("vaix"))      # vãi
+print(process_string("chuongwr"))  # chưởng
