@@ -107,6 +107,79 @@ def add_mark_to_char(chr, mark):
     return result if result != " " else chr
 
 
+def find_mark_target(trans_list, trans):
+    if trans["type"] != "MARK":
+        return
+
+    i = len(trans_list) - 1
+    target_count = 0
+
+    while i > -1 and target_count < len(trans["affinity"]):
+        if trans_list[i]["type"] == "APPEND" and \
+                trans_list[i]["key"] in trans["affinity"]:
+            target_count += 1
+            try:
+                trans["target"].append(i)
+            except:
+                trans["target"] = [i]
+        i -= 1
+
+    if target_count == 0:
+        trans["type"] = "APPEND"
+
+
+def find_rightmost_vowels(trans_list):
+    i = len(trans_list) - 1
+    end = -1
+    vowel_indexes = []
+    while i > -1:
+        if trans_list[i]["type"] == "APPEND":
+            if is_vowel(trans_list[i]["key"]):
+                if end == -1:
+                    end = i
+
+                vowel_indexes.append(i)
+            else:
+                if end != -1:
+                    break
+        i -= 1
+
+    vowel_indexes.reverse()
+    return vowel_indexes
+
+
+def find_tone_target(trans_list, trans):
+    vowels = find_rightmost_vowels(trans_list)
+
+    vlen = len(vowels)
+
+    if vlen == 1:
+        trans["target"] = [vowels[0]]
+    elif vlen == 2:
+        if next_append(trans_list, vowels[1]) is None:
+            trans["target"] = [vowels[0]]
+        else:
+            trans["target"] = [vowels[1]]
+    elif vlen == 3:
+        trans["target"] = [vowels[2]]
+
+
+def process_char(trans_list, chr):
+    if not chr in input_rules:
+        trans = {
+            "type": "APPEND",
+            "key": chr
+        }
+    else:
+        trans = copy.deepcopy(input_rules[chr])
+        if trans["type"] == "MARK":
+            find_mark_target(trans_list, trans)
+        elif trans["type"] == "TONE":
+            find_tone_target(trans_list, trans)
+
+    trans_list.append(trans)
+
+
 def flatten(trans_list):
 
     def apply_trans(trans, function):
@@ -228,7 +301,78 @@ test_array2 = [
     }
 ]
 
-print(flatten(test_array))        # hàn
-print(flatten(undo(test_array)))  # han
-print(flatten(test_array2))       # hươ
-print(flatten(remove_last_char(test_array2)))  # hư
+# print(flatten(test_array))        # hàn
+# print(flatten(undo(test_array)))  # han
+# print(flatten(clear_transformations(undo(test_array))))  # hafn
+
+# print(flatten(test_array2))       # hươ
+# print(flatten(remove_last_char(test_array2)))  # hư
+
+test_array = [
+    {
+        "type": "APPEND",
+        "key": "h"
+    },
+    {
+        "type": "APPEND",
+        "key": "u"
+    },
+    {
+        "type": "APPEND",
+        "key": "u"
+    },
+    {
+        "type": "APPEND",
+        "key": "o"
+    },
+    {
+        "type": "MARK",
+        "key": "w",
+        "effect": Mark.HORN,
+        "affinity": ["u", "o"]
+    }
+]
+
+test_array = [
+    {
+        "type": "MARK",
+        "key": "w",
+        "effect": Mark.HORN,
+        "affinity": ["u", "o"]
+    }
+]
+
+# find_mark_target(test_array[:-1], test_array[-1])
+# print(test_array)
+
+trans_list = []
+process_char(trans_list, "h")
+process_char(trans_list, "u")
+process_char(trans_list, "y")
+process_char(trans_list, "e")
+process_char(trans_list, "e")
+process_char(trans_list, "n")
+process_char(trans_list, "f")
+
+print(flatten(trans_list))
+
+trans_list = []
+process_char(trans_list, "d")
+process_char(trans_list, "a")
+process_char(trans_list, "a")
+process_char(trans_list, "u")
+process_char(trans_list, "s")
+
+print(flatten(trans_list))
+
+trans_list = []
+process_char(trans_list, "c")
+process_char(trans_list, "h")
+process_char(trans_list, "u")
+process_char(trans_list, "o")
+process_char(trans_list, "w")
+process_char(trans_list, "n")
+process_char(trans_list, "g")
+process_char(trans_list, "r")
+
+print(flatten(trans_list))
