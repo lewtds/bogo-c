@@ -361,7 +361,7 @@ print(flatten(clear_transformations(undo(test_array))))  # hafn
 print(flatten(test_array2))       # hươ
 print(flatten(remove_last_char(test_array2)))  # hư
 
-print(process_string("meofe"))      # mèo
+print(process_string("meofe")[0])      # mều
 print(process_string("dieend")[0])    # điên
 print(process_string("vaix")[0])      # vãi
 print(process_string("chuongwr")[0])  # chưởng
