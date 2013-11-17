@@ -219,12 +219,13 @@ def process_char(trans_list, chr):
     trans_list.append(trans)
 
 
-def process_string(string):
-    trans_list = []
+def process_string(string, trans_list=None):
+    if type(trans_list) is not list:
+        trans_list = []
     for char in string:
         process_char(trans_list, char)
 
-    return flatten(trans_list)
+    return flatten(trans_list), trans_list
 
 
 def flatten(trans_list):
@@ -360,7 +361,7 @@ print(flatten(clear_transformations(undo(test_array))))  # hafn
 print(flatten(test_array2))       # hươ
 print(flatten(remove_last_char(test_array2)))  # hư
 
-print(process_string("meof"))      # mèo
-print(process_string("dieend"))    # điên
-print(process_string("vaix"))      # vãi
-print(process_string("chuongwr"))  # chưởng
+print(process_string("meofe"))      # mèo
+print(process_string("dieend")[0])    # điên
+print(process_string("vaix")[0])      # vãi
+print(process_string("chuongwr")[0])  # chưởng
