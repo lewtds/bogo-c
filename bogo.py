@@ -102,13 +102,18 @@ def add_mark_to_char(chr, mark):
     if chr == " ":
         return chr
 
+    current_tone = get_tone_from_char(chr)
+    stripped_chr = add_tone_to_char(chr, Tone.NONE)
+
     result = " "
     for family in famililies:
         try:
-            family.index(chr)
+            family.index(stripped_chr)
             result = family[mark]
         except:
             pass
+
+    result = add_tone_to_char(result, current_tone)
 
     return result if result != " " else chr
 
@@ -137,6 +142,13 @@ def find_mark_target(trans_list, trans):
 #
 # Tone processing
 #
+
+def get_tone_from_char(chr):
+    try:
+        position = VOWELS.index(chr)
+        return position % 6
+    except:
+        return Tone.NONE
 
 
 def add_tone_to_char(chr, tone):
