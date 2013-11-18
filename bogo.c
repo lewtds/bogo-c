@@ -128,23 +128,15 @@ struct RuleT {
 void flatten(bgStr output, const struct TransT *transList, size_t transListLen);
 void add_tone_to_char(bgStr chr, enum ToneEnum tone);
 void add_mark_to_char(bgStr chr, enum MarkEnum mark);
-// void strSubstr(output, theString, position, numberOfCharacters);
 void strToTrans(struct RuleT *rule, const bgStr str);
 
+void strSubstr(bgStr dest, const bgStr src, int position, int len);
 void stripSpaces(bgStr dest, const bgStr src);
 void strAssign(bgStr dest, const bgStr src);
 bool strStartsWith(const bgStr str, const bgStr pattern);
 size_t strLen(const bgStr);
 bool strIsEmpty(const bgStr str);
 
-
-/*
-* Get sub-string from a string
-*/
-// void strSubstr(output, theString, position, numberOfCharacters)
-// {
-
-// }
 
 /*
 
@@ -189,6 +181,7 @@ void strToTrans(struct RuleT *rule,
     strLastChar(lastChar, tmp);
     hashGetValueUnion(&(rule->transType), STRING_TO_TRANS, lastChar);
 }
+
 
 
 /*
@@ -342,4 +335,12 @@ size_t strLen(const bgStr) {
 
 bool strIsEmpty(const bgStr str) {
     return strLen(str) == 0;
+}
+
+void strSubstr(bgStr dest, const bgStr src, int position, int len) {
+    int dest_index = 0;
+    for (int i = position; dest_index < len; i++) {
+        dest[dest_index] = src[i];
+        dest_index++;
+    }
 }
