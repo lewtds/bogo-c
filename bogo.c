@@ -229,14 +229,8 @@ void strToTrans(struct RuleT *rule,
         return;
     }
 
-    /* Second part: effectOn */
-    int position = strIndexOf(tmp, L" ", 0);
-    strSubstr(rule->effectOn, tmp, 0, position + 1);
-
-    /* First part: key */
-    int oldPosition = position;
-    position = strIndexOf(tmp, L" ", oldPosition + 1);
-    strSubstr(rule->key, tmp, oldPosition, position - oldPosition + 1);
+    *rule->key = tmp[0];
+    *rule->effectOn = tmp[2];
 
     /* Last part: transformation type */
     bgStr lastChar;
