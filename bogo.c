@@ -173,11 +173,11 @@ void strToTrans(struct RuleT *rule,
     }
 
     /* Second part: effectOn */
-    position = strIndexOf(tmp, L" ", 0);
+    int position = strIndexOf(tmp, L" ", 0);
     strSubstr(rule->effectOn, tmp, 0, position + 1);
 
     /* First part: key */
-    oldPosition = position;
+    int oldPosition = position;
     position = strIndexOf(tmp, L" ", oldPosition + 1);
     strSubstr(rule->key, tmp, oldPosition, position - oldPosition + 1);
 
