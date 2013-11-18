@@ -317,19 +317,32 @@ bool strEqual(const bgStr left, const bgStr right) {
     return charEqual(right[i], L'\0');
 }
 
+/*
+ * Strip leading and trailing spaces.
+ * TODO Actually implement it
+ */
 void stripSpaces(bgStr dest, const bgStr src)
 {
     int i = 0, k = 0;
 
-    while(!charEqual(src[i], L'\0')) {
-        if (src[i] != L' ') {
-            dest[k] = src[i];
-            k++;
-        }
+    // Leading spaces
+    while(!charEqual(src[i], L'\0') && charEqual(src[i], L' ')) {
         i++;
     }
+    int start = i;
+
+    i = strLen(src) - 1;
+    while(i > -1 && charEqual(src[i], L' ')) {
+        i--;
+    }
+    int end = i + 1;
+
+    strSubstr(dest, src, start, end - start);
 }
 
+/*
+ * Copy strings
+ */
 void strAssign(bgStr dest, const bgStr src)
 {
     int i = 0;
