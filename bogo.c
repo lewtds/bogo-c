@@ -333,7 +333,17 @@ size_t strLen(const bgStr) {
     return 0;
 }
 
-bool strIsEmpty(const bgStr str) {
+size_t strLen(const bgStr str)
+{
+    int i = 0;
+    while(!charEqual(str[i], L'\0')) {
+        i++;
+    }
+    return i;
+}
+
+bool strIsEmpty(const bgStr str)
+{
     return strLen(str) == 0;
 }
 
