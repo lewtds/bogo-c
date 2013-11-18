@@ -195,6 +195,7 @@ bool strIsEmpty(const bgStr str);
 void strToTransType(union TransTypeUnion *transType, const bgStr str);
 bool charEqual(bgChar left, bgChar right);
 bool strEqual(const bgStr left, const bgStr right);
+void strGetLastChar(bgStr lastChar, const bgStr str);
 
 
 /*
@@ -237,7 +238,7 @@ void strToTrans(struct RuleT *rule,
 
     /* Last part: transformation type */
     bgStr lastChar;
-    strLastChar(lastChar, tmp);
+    strGetLastChar(lastChar, tmp);
     strToTransType(&(rule->transType), lastChar);
 }
 
@@ -403,4 +404,12 @@ void strToTransType(union TransTypeUnion *transType, const bgStr str)
     } else if (strEqual(str, L"-")) {
         (*transType).mark = MARK_DASH;
     }
+}
+
+void strGetLastChar(bgStr lastChar, const bgStr str) {
+    int i = 0;
+    while(!charEqual(str[i], L'\0')) {
+        i++;
+    }
+    strAssign(lastChar, str + i - 1);
 }
