@@ -159,6 +159,7 @@ enum MarkEnum {
 union TransTypeUnion {
     enum ToneEnum   tone;   /* Larger data structure goes first */
     enum MarkEnum   mark;
+    enum TransEnum  append;
 };
 
 struct TransT {
