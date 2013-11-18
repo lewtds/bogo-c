@@ -160,33 +160,31 @@ void strToTrans(struct RuleT *rule,
 {
     bgStr tmp;
 
-
     stripSpaces(tmp, str); /* Safe, not that stripSpaces(str, str) */
-    /* looks confused and dangerous         */
-    strAssign(str, tmp);
 
     /* By default, the transformation is appending */
-    strAssign(rule->key, "");
-    strAssign(rule->effectOn, "");
-    rule->TransType.append = TRANS_APPEND;
+    strAssign(rule->key, L"");
+    strAssign(rule->effectOn, L"");
+    rule->transType.append = TRANS_APPEND;
 
     /* Ignore comments and blank strings */
-    if (strStartsWith(str, "#") || strIsEmpty(str)) {
+    if (strStartsWith(tmp, L"#") || strIsEmpty(tmp)) {
         return;
     }
 
     /* Second part: effectOn */
-    position = strIndexOf(str, " ", 0);
-    strSubstr(rule->effectOn, str, 0, position + 1);
+    position = strIndexOf(tmp, L" ", 0);
+    strSubstr(rule->effectOn, tmp, 0, position + 1);
 
     /* First part: key */
     oldPosition = position;
-    position = strIndexOf(str, " ", oldPosition + 1);
-    strSubstr(rule->key, str, oldPosition, position - oldPosition + 1);
+    position = strIndexOf(tmp, L" ", oldPosition + 1);
+    strSubstr(rule->key, tmp, oldPosition, position - oldPosition + 1);
 
     /* Last part: transformation type */
-    strLastChar(tmp, str);
-    hashGetValueUnion(&(rule->transType), STRING_TO_TRANS, tmp);
+    bgStr lastChar;
+    strLastChar(lastChar, tmp);
+    hashGetValueUnion(&(rule->transType), STRING_TO_TRANS, lastChar);
 }
 
 
