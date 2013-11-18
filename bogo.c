@@ -71,6 +71,14 @@
 #define bool char
 #endif
 
+#ifndef TRUE
+#define TRUE 1
+#endif
+
+#ifndef FALSE
+#define FALSE 0
+#endif
+
 typedef wchar_t bgChar;
 typedef wchar_t bgStr[MAXSTRLEN];
 
