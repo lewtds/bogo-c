@@ -112,6 +112,8 @@
  * e z e_
  */
 
+#include <stdio.h>
+#include <locale.h>
 #include <stdlib.h>
 #include <wchar.h>
 
@@ -412,4 +414,18 @@ void strGetLastChar(bgStr lastChar, const bgStr str) {
         i++;
     }
     strAssign(lastChar, str + i - 1);
+}
+
+int main() {
+    if (!setlocale(LC_CTYPE, "")) {
+      fprintf(stderr, "Can't set the specified locale! "
+              "Check LANG, LC_CTYPE, LC_ALL.\n");
+      return 1;
+    }
+
+    struct RuleT rule;
+    bgStr strRule = L"a a a^";
+    strToTrans(&rule, strRule);
+    printf("%ls\n", rule.key);
+    return 0;
 }
