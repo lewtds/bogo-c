@@ -296,11 +296,15 @@ void add_mark_to_char(bgStr chr, enum MarkEnum mark)
 
 }
 
+bool charEqual(bgChar left, bgChar right) {
+    return left == right;
+}
+
 void stripSpaces(bgStr dest, bgStr src)
 {
     int i = 0, k = 0;
 
-    while(src[i] != L"\0") {
+    while(!charEqual(src[i], L"\0")) {
         if (src[i] != L" ") {
             dest[k] = src[i];
         }
@@ -312,7 +316,7 @@ void stripSpaces(bgStr dest, bgStr src)
 void strAssign(bgStr dest, bgStr src)
 {
     int i = 0;
-    while(src[i] != L"\0") {
+    while(!charEqual(src[i], L"\0")) {
         dest[i] = src[i];
         i++;
     }
