@@ -295,7 +295,7 @@ bool charEqual(bgChar left, bgChar right) {
     return left == right;
 }
 
-void stripSpaces(bgStr dest, bgStr src)
+void stripSpaces(bgStr dest, const bgStr src)
 {
     int i = 0, k = 0;
 
@@ -317,7 +317,7 @@ void strAssign(bgStr dest, const bgStr src)
     }
 }
 
-bool strStartsWith(bgStr str, bgStr pattern)
+bool strStartsWith(const bgStr str, const bgStr pattern)
 {
     int i = 0;
     while(!charEqual(pattern[i], L'\0')) {
