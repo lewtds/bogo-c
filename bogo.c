@@ -166,9 +166,9 @@ void strToTrans(struct RuleT *rule,
     strAssign(str, tmp);
 
     /* By default, the transformation is appending */
-    strAssign(trans.key, "");
-    strAssign(trans.effectOn, "");
-    trans.transType.append = TRANS_APPEND;
+    strAssign(rule->key, "");
+    strAssign(rule->effectOn, "");
+    rule->TransType.append = TRANS_APPEND;
 
     /* Ignore comments and blank strings */
     if (strStartsWith(str, "#") || strIsEmpty(str)) {
@@ -177,16 +177,16 @@ void strToTrans(struct RuleT *rule,
 
     /* Second part: effectOn */
     position = strIndexOf(str, " ", 0);
-    strSubstr(rule.effectOn, str, 0, position + 1);
+    strSubstr(rule->effectOn, str, 0, position + 1);
 
     /* First part: key */
     oldPosition = position;
     position = strIndexOf(str, " ", oldPosition + 1);
-    strSubstr(rule.key, str, oldPosition, position - oldPosition + 1);
+    strSubstr(rule->key, str, oldPosition, position - oldPosition + 1);
 
     /* Last part: transformation type */
     strLastChar(tmp, str);
-    hashGetValueUnion(&rule.transType, STRING_TO_TRANS, tmp);
+    hashGetValueUnion(&(rule->transType), STRING_TO_TRANS, tmp);
 }
 
 
