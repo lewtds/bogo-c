@@ -123,6 +123,9 @@ void add_mark_to_char(bgStr chr, enum MarkEnum mark);
 // void strSubstr(output, theString, position, numberOfCharacters);
 void strToTrans(struct RuleT *rule, const bgStr str);
 
+void stripSpaces(bgStr dest, const bgStr src);
+void strAssign(bgStr dest, bgStr src);
+
 /*
 * Get sub-string from a string
 */
@@ -283,4 +286,26 @@ void add_tone_to_char(bgStr chr, enum ToneEnum tone)
 void add_mark_to_char(bgStr chr, enum MarkEnum mark)
 {
 
+}
+
+void stripSpaces(bgStr dest, bgStr src)
+{
+    int i = 0, k = 0;
+
+    while(src[i] != L"\0") {
+        if (src[i] != L" ") {
+            dest[k] = src[i];
+        }
+        i++;
+        k++;
+    }
+}
+
+void strAssign(bgStr dest, bgStr src)
+{
+    int i = 0;
+    while(src[i] != L"\0") {
+        dest[i] = src[i];
+        i++;
+    }
 }
