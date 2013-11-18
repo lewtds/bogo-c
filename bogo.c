@@ -324,9 +324,9 @@ void stripSpaces(bgStr dest, const bgStr src)
     while(!charEqual(src[i], L'\0')) {
         if (src[i] != L' ') {
             dest[k] = src[i];
+            k++;
         }
         i++;
-        k++;
     }
 }
 
