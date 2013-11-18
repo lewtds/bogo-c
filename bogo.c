@@ -101,14 +101,14 @@ union TransTypeUnion {
 };
 
 struct TransT {
-    enum TransEnum            type;       /* Could be TRANS_TONE or TRANS_MARK */
-    bgStr                key;        /* "a"                               */
-    union TransTypeUnion       effect;     /* MARK_ROOF, ...                    */
-    struct TransT  *targets[MAXTRANSLEN];
-    size_t               targetsLen;
-    bgStr                dest;       /* For TRANS_APPEND, a pointer to the */
-    /* char in the flattened string made  */
-    /* by this TransT                     */
+    enum TransEnum         type;        /* Can be TRANS_TONE or TRANS_MARK    */
+    bgStr                  key;         /* "a"                                */
+    union TransTypeUnion   effect;      /* MARK_ROOF, ...                     */
+    struct TransT          *targets[MAXTRANSLEN];
+    size_t                 targetsLen;
+    bgStr                  dest;        /* For TRANS_APPEND, a pointer to the */
+                                        /* char in the flattened string made  */
+                                        /* by this TransT                     */
 };
 
 struct RuleT {
