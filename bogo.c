@@ -132,7 +132,7 @@ void add_mark_to_char(bgStr chr, enum MarkEnum mark);
 void strToTrans(struct RuleT *rule, const bgStr str);
 
 void stripSpaces(bgStr dest, const bgStr src);
-void strAssign(bgStr dest, bgStr src);
+void strAssign(bgStr dest, const bgStr src);
 
 /*
 * Get sub-string from a string
