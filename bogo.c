@@ -193,6 +193,8 @@ int strIndexOf(const bgStr str, const bgStr pattern, int startFrom);
 size_t strLen(const bgStr);
 bool strIsEmpty(const bgStr str);
 void strToTransType(union TransTypeUnion *transType, const bgStr str);
+bool charEqual(bgChar left, bgChar right);
+bool strEqual(const bgStr left, const bgStr right);
 
 
 /*
@@ -299,6 +301,17 @@ void add_mark_to_char(bgStr chr, enum MarkEnum mark)
 
 bool charEqual(bgChar left, bgChar right) {
     return left == right;
+}
+
+bool strEqual(const bgStr left, const bgStr right) {
+    int i = 0;
+    while(!charEqual(left[i], L'\0')) {
+        if (!charEqual(left[i], right[i])) {
+            return FALSE;
+        }
+        i++;
+    }
+    return charEqual(right[i], L'\0');
 }
 
 void stripSpaces(bgStr dest, const bgStr src)
