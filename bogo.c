@@ -305,8 +305,8 @@ void stripSpaces(bgStr dest, bgStr src)
 {
     int i = 0, k = 0;
 
-    while(!charEqual(src[i], L"\0")) {
-        if (src[i] != L" ") {
+    while(!charEqual(src[i], L'\0')) {
+        if (src[i] != L' ') {
             dest[k] = src[i];
         }
         i++;
@@ -314,10 +314,10 @@ void stripSpaces(bgStr dest, bgStr src)
     }
 }
 
-void strAssign(bgStr dest, bgStr src)
+void strAssign(bgStr dest, const bgStr src)
 {
     int i = 0;
-    while(!charEqual(src[i], L"\0")) {
+    while(!charEqual(src[i], L'\0')) {
         dest[i] = src[i];
         i++;
     }
@@ -326,7 +326,7 @@ void strAssign(bgStr dest, bgStr src)
 bool strStartsWith(bgStr str, bgStr pattern)
 {
     int i = 0;
-    while(!charEqual(pattern[i], L"\0")) {
+    while(!charEqual(pattern[i], L'\0')) {
         if (str[i] != pattern[i]) {
             return FALSE;
         }
