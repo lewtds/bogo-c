@@ -134,6 +134,9 @@ void strToTrans(struct RuleT *rule, const bgStr str);
 void stripSpaces(bgStr dest, const bgStr src);
 void strAssign(bgStr dest, const bgStr src);
 bool strStartsWith(const bgStr str, const bgStr pattern);
+size_t strLen(const bgStr);
+bool strIsEmpty(const bgStr str);
+
 
 /*
 * Get sub-string from a string
@@ -331,4 +334,12 @@ bool strStartsWith(bgStr str, bgStr pattern)
         i++;
     }
     return TRUE;
+}
+
+size_t strLen(const bgStr) {
+    return 0;
+}
+
+bool strIsEmpty(const bgStr str) {
+    return strLen(str) == 0;
 }
