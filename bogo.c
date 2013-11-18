@@ -55,7 +55,8 @@
  *     "_": TONE_NONE,
  *     "+": MARK_HORN = 0,
  *     "(": MARK_BREVE,
- *     "^": MARK_HAT
+ *     "^": MARK_HAT,
+ *     "-": MARK_DASH
  * }
  *
  */
@@ -100,7 +101,8 @@ enum ToneEnum {
 enum MarkEnum {
     MARK_HORN = 0,
     MARK_BREVE,
-    MARK_HAT
+    MARK_HAT,
+    MARK_DASH
 };
 
 union TransTypeUnion {
@@ -123,6 +125,23 @@ struct RuleT {
     bgStr key;
     bgStr effectOn;
     union TransTypeUnion transType;
+};
+
+struct TransTypeUnionHash {
+    bgStr key;
+    union TransTypeUnion transType;
+};
+
+struct TransTypeUnionHash STRING_TO_TRANS[] = {
+    { L"'", .transType.tone = TONE_ACUTE },
+    { L"`", .transType.tone = TONE_GRAVE },
+    { L"?", .transType.tone = TONE_HOOK },
+    { L"~", .transType.tone = TONE_TILDE },
+    { L".", .transType.tone = TONE_DOT },
+    { L"+", .transType.mark = MARK_HORN },
+    { L"(", .transType.mark = MARK_BREVE },
+    { L"^", .transType.mark = MARK_HAT },
+    { L"-", .transType.mark = MARK_DASH }
 };
 
 void flatten(bgStr output, const struct TransT *transList, size_t transListLen);
