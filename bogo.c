@@ -178,22 +178,6 @@ struct RuleT {
     union TransTypeUnion transType;
 };
 
-struct TransTypeUnionHash {
-    bgStr key;
-    union TransTypeUnion transType;
-};
-
-struct TransTypeUnionHash STRING_TO_TRANS[] = {
-    { L"'", .transType.tone = TONE_ACUTE },
-    { L"`", .transType.tone = TONE_GRAVE },
-    { L"?", .transType.tone = TONE_HOOK },
-    { L"~", .transType.tone = TONE_TILDE },
-    { L".", .transType.tone = TONE_DOT },
-    { L"+", .transType.mark = MARK_HORN },
-    { L"(", .transType.mark = MARK_BREVE },
-    { L"^", .transType.mark = MARK_HAT },
-    { L"-", .transType.mark = MARK_DASH }
-};
 
 void flatten(bgStr output, const struct TransT *transList, size_t transListLen);
 void add_tone_to_char(bgStr chr, enum ToneEnum tone);
@@ -207,6 +191,7 @@ bool strStartsWith(const bgStr str, const bgStr pattern);
 int strIndexOf(const bgStr str, const bgStr pattern, int startFrom);
 size_t strLen(const bgStr);
 bool strIsEmpty(const bgStr str);
+void strToTransType(union TransTypeUnion *transType, const bgStr str);
 
 
 /*
@@ -250,7 +235,7 @@ void strToTrans(struct RuleT *rule,
     /* Last part: transformation type */
     bgStr lastChar;
     strLastChar(lastChar, tmp);
-    hashGetValueUnion(&(rule->transType), STRING_TO_TRANS, lastChar);
+    strToTransType(&(rule->transType), lastChar);
 }
 
 
@@ -380,5 +365,28 @@ void strSubstr(bgStr dest, const bgStr src, int position, int len) {
     for (int i = position; dest_index < len; i++) {
         dest[dest_index] = src[i];
         dest_index++;
+    }
+}
+
+void strToTransType(union TransTypeUnion *transType, const bgStr str)
+{
+    if (strEqual(str, L"'")) {
+        (*transType).tone = TONE_ACUTE;
+    } else if (strEqual(str, L"`")) {
+        (*transType).tone = TONE_GRAVE;
+    } else if (strEqual(str, L"?")) {
+        (*transType).tone = TONE_HOOK;
+    } else if (strEqual(str, L"~")) {
+        (*transType).tone = TONE_TILDE;
+    } else if (strEqual(str, L".")) {
+        (*transType).tone = TONE_DOT;
+    } else if (strEqual(str, L"^")) {
+        (*transType).mark = MARK_HAT;
+    } else if (strEqual(str, L"(")) {
+        (*transType).mark = MARK_BREVE;
+    } else if (strEqual(str, L"+")) {
+        (*transType).mark = MARK_HORN;
+    } else if (strEqual(str, L"-")) {
+        (*transType).mark = MARK_DASH;
     }
 }
