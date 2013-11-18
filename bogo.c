@@ -134,6 +134,7 @@ void strSubstr(bgStr dest, const bgStr src, int position, int len);
 void stripSpaces(bgStr dest, const bgStr src);
 void strAssign(bgStr dest, const bgStr src);
 bool strStartsWith(const bgStr str, const bgStr pattern);
+int strIndexOf(const bgStr str, const bgStr pattern, int startFrom);
 size_t strLen(const bgStr);
 bool strIsEmpty(const bgStr str);
 
@@ -329,8 +330,16 @@ bool strStartsWith(const bgStr str, const bgStr pattern)
     return TRUE;
 }
 
-size_t strLen(const bgStr) {
-    return 0;
+int strIndexOf(const bgStr str, const bgStr pattern, int startFrom)
+{
+    int i = 0;
+    while(!charEqual(str[i], L'\0')) {
+        if (strStartsWith(str + startFrom + i, pattern)) {
+            return i + startFrom;
+        }
+        i++;
+    }
+    return -1;
 }
 
 size_t strLen(const bgStr str)
