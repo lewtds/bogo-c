@@ -152,9 +152,10 @@ enum ToneEnum {
 };
 
 enum MarkEnum {
-    MARK_HORN = 0,
-    MARK_BREVE,
+    MARK_NONE,
     MARK_HAT,
+    MARK_BREVE,
+    MARK_HORN,
     MARK_DASH
 };
 
@@ -293,7 +294,16 @@ void add_tone_to_char(bgStr chr, enum ToneEnum tone)
 
 void add_mark_to_char(bgStr chr, enum MarkEnum mark)
 {
+    // TODO Backup and restore the tone
+    static bgStr mark_groups[] =
+    {L"aâăaa", L"eêeee", L"oôoơo", L"uuuưu", L"ddddđ"};
 
+    for (int i = 0; i < 5; i++) {
+        if (strIndexOf(mark_groups[i], chr, 0) != -1) {
+            strSubstr(chr, mark_groups[i], mark, 1);
+            break;
+        }
+    }
 }
 
 bool charEqual(bgChar left, bgChar right) {
