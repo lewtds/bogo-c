@@ -450,9 +450,20 @@ int main() {
       return 1;
     }
 
-    struct RuleT rule;
-    bgStr strRule = L"a a a^";
-    strToTrans(&rule, strRule);
-    printf("%ls\n", rule.key);
+    struct TransT seq[] = {
+        {TRANS_APPEND, L"a", 0, 0, 0, 0},
+        {TRANS_MARK, L"a", MARK_HAT, {} , 1, 0}
+    };
+    seq[1].targets[0] = &seq[0]; // The second "a" targets the first "a"
+
+    bgStr result;
+    flatten(result, seq, sizeof(seq) / sizeof(seq[0]));
+    printf("%ls\n", result);
+
+
+    bgStr chr = L"u";
+    add_tone_to_char(chr, TONE_ACUTE);
+
+    printf("%ls\n", chr);
     return 0;
 }
