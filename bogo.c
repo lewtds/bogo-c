@@ -143,12 +143,12 @@ enum TransEnum {
 };
 
 enum ToneEnum {
-    TONE_ACUTE = 0,
     TONE_GRAVE,
+    TONE_ACUTE,
     TONE_HOOK,
     TONE_TILDE,
     TONE_DOT,
-    TONE_NONE,
+    TONE_NONE
 };
 
 enum MarkEnum {
@@ -182,6 +182,8 @@ struct RuleT {
     union TransTypeUnion transType;
 };
 
+const bgStr VOWELS = L"àáảãạaằắẳẵặăầấẩẫậâèéẻẽẹeềếểễệêìíỉĩịi" \
+                        "òóỏõọoồốổỗộôờớởỡợơùúủũụuừứửữựưỳýỷỹỵy";
 
 void flatten(bgStr output, const struct TransT *transList, size_t transListLen);
 void add_tone_to_char(bgStr chr, enum ToneEnum tone);
@@ -290,7 +292,14 @@ void flatten(bgStr output,
 
 void add_tone_to_char(bgStr chr, enum ToneEnum tone)
 {
+    int index = strIndexOf(VOWELS, chr, 0);
 
+    if (index != -1) {
+        int current_tone = index % 6;
+        int offset = tone - current_tone;
+
+        strSubstr(chr, VOWELS, index + offset, 1);
+    }
 }
 
 void add_mark_to_char(bgStr chr, enum MarkEnum mark)
