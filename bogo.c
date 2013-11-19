@@ -171,7 +171,7 @@ struct TransT {
     union TransTypeUnion   effect;      /* MARK_HAT, ...                     */
     struct TransT          *targets[MAXTRANSLEN];
     size_t                 targetsLen;
-    bgStr                  dest;        /* For TRANS_APPEND, a pointer to the */
+    int                    dest_index;  /* For TRANS_APPEND, a pointer to the */
                                         /* char in the flattened string made  */
                                         /* by this TransT                     */
 };
@@ -268,18 +268,19 @@ void flatten(bgStr output,
 
         switch (transList[i].type) {
         case TRANS_APPEND:
-            // output[output_index] = trans.key;
+            strAssign(output + output_index, trans.key);
+            trans.dest_index = output_index;
             output_index++;  // Only TRANS_APPEND creates a new char
             break;
         case TRANS_TONE:
-            for (int k = 0; i < trans.targetsLen; i++) {
-                add_tone_to_char(trans.targets[k]->dest,
+            for (int k = 0; k < trans.targetsLen; k++) {
+                add_tone_to_char(output + trans.targets[k]->dest_index,
                                  trans.effect.tone);
             }
             break;
         case TRANS_MARK:
-            for (int k = 0; i < trans.targetsLen; i++) {
-                add_mark_to_char(trans.targets[k]->dest,
+            for (int k = 0; k < trans.targetsLen; k++) {
+                add_mark_to_char(output + trans.targets[k]->dest_index,
                                  trans.effect.mark);
             }
             break;
