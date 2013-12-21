@@ -26,9 +26,9 @@ struct ListItem *listNext(struct ListItem *listItem)
 }
 
 
-void listFromArray(struct List *list, void *array, int len)
+void listFromArray(struct List *list, void *array, int itemSize, int len)
 {
     for (int i = 0; i < len; i++) {
-        listAppend(list, array + i);
+        listAppend(list, array + itemSize);
     }
 }
