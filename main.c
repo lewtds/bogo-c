@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <wchar.h>
 
+#include "string.h"
 #include "bogo.h"
 #include "list.h"
 
@@ -13,25 +14,21 @@ int main() {
       return 1;
     }
 
-    struct TransT items[] = {
-        {TRANS_APPEND, L"a", 0, 0, 0, 0},
-        {TRANS_MARK, L"a", MARK_HAT, {} , 1, 0}
-    };
+    struct List *rules = new(struct RuleT);
+    struct RuleT aHatRule;
+    strAssign(aHatRule.effectOn, L"a");
+    strAssign(aHatRule.key, L"a");
+    aHatRule.type = TRANS_MARK;
+    aHatRule.transMethod.mark = MARK_HAT;
 
-    struct List *seq = new(struct List);
-    listFromArray(seq, items, sizeof(struct TransT), 2);
+    listAppend(rules, &aHatRule);
 
-    ((struct TransT *) listIndex(seq, 1)->item)->targets[0] = (struct TransT *) listIndex(seq, 0)->item;
-//    seq[1].targets[0] = &seq[0]; // The second "a" targets the first "a"
+    bgStr input = L"aa";
+    bgStr output;
 
-    bgStr result;
-    flatten(result, seq);
-    printf("%ls\n", result);
+    processString(rules, output, input);
 
+    printf("%ls\n", output);
 
-    bgStr chr = L"u";
-    addToneToChar(chr, TONE_ACUTE);
-
-    printf("%ls\n", chr);
     return 0;
 }
