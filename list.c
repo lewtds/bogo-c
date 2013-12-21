@@ -8,8 +8,13 @@ struct List *listAppend(struct List *list, void *item)
     newItem->item = item;
     newItem->next = NULL;
     newItem->prev = list->last;
-    list->last->next = newItem;
     list->length++;
+
+    if (list->first == NULL) {
+        list->first = newItem;
+    } else {
+        list->last->next = newItem;
+    }
 
     return list;
 }
