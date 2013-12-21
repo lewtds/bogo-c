@@ -21,4 +21,6 @@
 typedef wchar_t bgChar;
 typedef wchar_t bgStr[MAXSTRLEN];
 
+#define new(type) malloc(sizeof(type))
+
 #endif // COMMON_H
