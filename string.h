@@ -4,9 +4,6 @@
 #include <wchar.h>
 #include "common.h"
 
-typedef wchar_t bgChar;
-typedef wchar_t bgStr[MAXSTRLEN];
-
 void strSubstr(bgStr dest, const bgStr src, int position, int len);
 void stripSpaces(bgStr dest, const bgStr src);
 void strAssign(bgStr dest, const bgStr src);

@@ -1,7 +1,6 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-
 #define MAXSTRLEN 4096
 #define MAXTRANSLEN 20
 
@@ -16,5 +15,8 @@
 #ifndef FALSE
 #define FALSE 0
 #endif
+
+typedef wchar_t bgChar;
+typedef wchar_t bgStr[MAXSTRLEN];
 
 #endif // COMMON_H
