@@ -75,7 +75,7 @@ void strToTrans(struct RuleT *rule,
     /* By default, the transformation is appending */
     strAssign(rule->key, L"");
     strAssign(rule->effectOn, L"");
-    rule->transType.append = TRANS_APPEND;
+    rule->type = TRANS_APPEND;
 
     /* Ignore comments and blank strings */
     if (strStartsWith(tmp, L"#") || strIsEmpty(tmp)) {
@@ -88,7 +88,7 @@ void strToTrans(struct RuleT *rule,
     /* Last part: transformation type */
     bgStr lastChar;
     strGetLastChar(lastChar, tmp);
-    strToTransType(&(rule->transType), lastChar);
+    strToTransType(&(rule->transMethod), lastChar);
 }
 
 void strToTransType(union TransTypeUnion *transType, const bgStr str)

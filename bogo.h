@@ -29,13 +29,12 @@ enum MarkEnum {
 union TransTypeUnion {
     enum ToneEnum   tone;   /* Larger data structure goes first */
     enum MarkEnum   mark;
-    enum TransEnum  append;
 };
 
 struct TransT {
     enum TransEnum         type;        /* Can be TRANS_TONE or TRANS_MARK    */
     bgStr                  key;         /* "a"                                */
-    union TransTypeUnion   effect;      /* MARK_HAT, ...                     */
+    union TransTypeUnion   effect;      /* MARK_HAT, TONE_ACUTE...            */
     struct TransT          *targets[MAXTRANSLEN];
     size_t                 targetsLen;
     int                    dest_index;  /* For TRANS_APPEND, a pointer to the */
@@ -46,7 +45,8 @@ struct TransT {
 struct RuleT {
     bgStr key;
     bgStr effectOn;
-    union TransTypeUnion transType;
+    enum TransEnum type;
+    union TransTypeUnion transMethod;
 };
 
 void flatten(bgStr output, const struct TransT *transList, size_t transListLen);
