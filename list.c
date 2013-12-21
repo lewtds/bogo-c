@@ -36,3 +36,12 @@ void listFromArray(struct List *list, void *array, int itemSize, int len)
         listAppend(list, array + itemSize);
     }
 }
+
+struct ListItem *listIndex(struct List *list, int index) {
+    struct ListItem *iter = list->first;
+    while (iter != NULL && index > 0) {
+        index--;
+        iter = iter->next;
+    }
+    return iter;
+}

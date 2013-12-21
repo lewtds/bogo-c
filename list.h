@@ -16,6 +16,7 @@ struct List {
 struct ListItem *listNext(struct ListItem *list);
 struct List *listAppend(struct List *list, void *item);
 void listFromArray(struct List *list, void *array, int itemSize, int len);
+struct ListItem *listIndex(struct List *list, int index);
 
 
 #endif // LIST_H
