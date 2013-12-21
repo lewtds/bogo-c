@@ -53,4 +53,6 @@ void flatten(bgStr output, struct List *transList);
 void addToneToChar(bgStr chr, enum ToneEnum tone);
 void addMarkToChar(bgStr chr, enum MarkEnum mark);
 
+void processString(struct List *rules, bgStr output, const bgStr input);
+
 #endif // BOGO_H

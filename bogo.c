@@ -150,28 +150,60 @@ void addMarkToChar(bgStr chr, enum MarkEnum mark)
     }
 }
 
-/***
- * index - index of the last position in transList
- */
+void findMarkTarget(struct List *transList, struct TransT *trans, struct RuleT *rule) {
+    struct ListItem *iter = transList->last;
+    while (iter != NULL) {
+        ITERITEM(iter, struct TransT, currentTrans);
+        if (strEqual(currentTrans->key, rule->effectOn)) {
+            trans->target = currentTrans;
+            break;
+        }
+        iter = iter->prev;
+    }
+
+    if (trans->target == NULL) {
+        trans->type = TRANS_APPEND;
+    } else {
+        trans->type = TRANS_MARK;
+        trans->effect = rule->transMethod;
+    }
+}
+
+
 void processChar(struct List *rules, struct List *transList, bgStr chr) {
     struct List *applicable_rules = new(struct List);
-    // Build a list of applicable rules
-    // ...
+
+    // Build a list of applicable rules whose key matches chr
+    struct ListItem *iter = rules->first;
+    while (iter != NULL) {
+        struct RuleT *rule = (struct RuleT *) iter->item;
+        if (strEqual(rule->key, chr)) {
+            listAppend(applicable_rules, rule);
+        }
+        iter = iter->next;
+    }
+
+    struct TransT *newTrans = new(struct TransT);
+    strAssign(newTrans->key, chr);
 
     if (applicable_rules->length == 0) {
-        struct TransT *appendTrans = new(struct TransT);
-        appendTrans->type = TRANS_APPEND;
-        strAssign(appendTrans->key, chr);
-
-        listAppend(transList, appendTrans);
+        newTrans->type = TRANS_APPEND;
     } else {
         struct ListItem *ruleIter = rules->first;
         while (ruleIter != NULL) {
-            struct RuleT rule = *((struct RuleT *) ruleIter->item);
+            struct RuleT *rule = (struct RuleT *) ruleIter->item;
+
+            if (rule->type == TRANS_MARK) {
+                findMarkTarget(transList, newTrans, rule);
+            } else {
+                // Must be tonal then
+//                findToneTarget(transList, newTrans, rule);
+            }
 
             ruleIter = ruleIter->next;
         }
     }
+    listAppend(transList, newTrans);
 }
 
 
@@ -181,7 +213,7 @@ void processString(struct List *rules, bgStr output, const bgStr input) {
     for (int i = 0; i < strLen(input); ++i) {
         bgStr chr;
         strIndex(chr, input, i);
-        processChar(NULL, transList, chr);
+        processChar(rules, transList, chr);
     }
 
     flatten(output, transList);
