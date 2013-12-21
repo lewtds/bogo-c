@@ -111,16 +111,12 @@ void flatten(bgStr output,
             output_index++;  // Only TRANS_APPEND creates a new char
             break;
         case TRANS_TONE:
-            for (int k = 0; k < trans.targetsLen; k++) {
-                addToneToChar(output + trans.targets[k]->dest_index,
-                                 trans.effect.tone);
-            }
+            addToneToChar(output + trans.target->dest_index,
+                             trans.effect.tone);
             break;
         case TRANS_MARK:
-            for (int k = 0; k < trans.targetsLen; k++) {
-                addMarkToChar(output + trans.targets[k]->dest_index,
-                                 trans.effect.mark);
-            }
+            addMarkToChar(output + trans.target->dest_index,
+                             trans.effect.mark);
             break;
         }
 
