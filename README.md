@@ -21,3 +21,7 @@ See [HACKING.md](HACKING.md)
 
 Trung Ngo <ndtrung4419@gmail.com> is currently the main/sole developer and he
 takes pleasure in releasing this project under GPL v3 **all the way down!**
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/lewtds/bogo-c/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
