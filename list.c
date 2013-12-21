@@ -19,3 +19,11 @@ struct ListItem *listNext(struct ListItem *listItem)
 {
     return listItem->next;
 }
+
+
+void listFromArray(struct List *list, void *array, int len)
+{
+    for (int i = 0; i < len; i++) {
+        listAppend(list, array + i);
+    }
+}
