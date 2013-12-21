@@ -1,10 +1,12 @@
 #include <malloc.h>
 #include "list.h"
+#include "common.h"
 
 
 struct List *listAppend(struct List *list, void *item)
 {
-    struct ListItem *newItem = malloc(sizeof(struct ListItem));
+    struct ListItem *newItem = new(struct ListItem);
+
     newItem->item = item;
     newItem->next = NULL;
     newItem->prev = list->last;
@@ -15,6 +17,8 @@ struct List *listAppend(struct List *list, void *item)
     } else {
         list->last->next = newItem;
     }
+
+    list->last = newItem;
 
     return list;
 }
