@@ -118,64 +118,11 @@
 #include <wchar.h>
 
 #include "string.h"
+#include "bogo.h"
 
-
-
-enum TransEnum {
-    TRANS_TONE = 0,
-    TRANS_MARK,
-    TRANS_APPEND
-};
-
-enum ToneEnum {
-    TONE_GRAVE,
-    TONE_ACUTE,
-    TONE_HOOK,
-    TONE_TILDE,
-    TONE_DOT,
-    TONE_NONE
-};
-
-enum MarkEnum {
-    MARK_NONE,
-    MARK_HAT,
-    MARK_BREVE,
-    MARK_HORN,
-    MARK_DASH
-};
-
-union TransTypeUnion {
-    enum ToneEnum   tone;   /* Larger data structure goes first */
-    enum MarkEnum   mark;
-    enum TransEnum  append;
-};
-
-struct TransT {
-    enum TransEnum         type;        /* Can be TRANS_TONE or TRANS_MARK    */
-    bgStr                  key;         /* "a"                                */
-    union TransTypeUnion   effect;      /* MARK_HAT, ...                     */
-    struct TransT          *targets[MAXTRANSLEN];
-    size_t                 targetsLen;
-    int                    dest_index;  /* For TRANS_APPEND, a pointer to the */
-                                        /* char in the flattened string made  */
-                                        /* by this TransT                     */
-};
-
-struct RuleT {
-    bgStr key;
-    bgStr effectOn;
-    union TransTypeUnion transType;
-};
 
 const bgStr VOWELS = L"àáảãạaằắẳẵặăầấẩẫậâèéẻẽẹeềếểễệêìíỉĩịi" \
                         "òóỏõọoồốổỗộôờớởỡợơùúủũụuừứửữựưỳýỷỹỵy";
-
-void flatten(bgStr output, const struct TransT *transList, size_t transListLen);
-void add_tone_to_char(bgStr chr, enum ToneEnum tone);
-void add_mark_to_char(bgStr chr, enum MarkEnum mark);
-void strToTrans(struct RuleT *rule, const bgStr str);
-void strToTransType(union TransTypeUnion *transType, const bgStr str);
-
 
 
 /*
@@ -251,13 +198,13 @@ void flatten(bgStr output,
             break;
         case TRANS_TONE:
             for (int k = 0; k < trans.targetsLen; k++) {
-                add_tone_to_char(output + trans.targets[k]->dest_index,
+                addToneToChar(output + trans.targets[k]->dest_index,
                                  trans.effect.tone);
             }
             break;
         case TRANS_MARK:
             for (int k = 0; k < trans.targetsLen; k++) {
-                add_mark_to_char(output + trans.targets[k]->dest_index,
+                addMarkToChar(output + trans.targets[k]->dest_index,
                                  trans.effect.mark);
             }
             break;
@@ -290,7 +237,7 @@ void strToTransType(union TransTypeUnion *transType, const bgStr str)
 }
 
 
-void add_tone_to_char(bgStr chr, enum ToneEnum tone)
+void addToneToChar(bgStr chr, enum ToneEnum tone)
 {
     int index = strIndexOf(VOWELS, chr, 0);
 
@@ -302,7 +249,7 @@ void add_tone_to_char(bgStr chr, enum ToneEnum tone)
     }
 }
 
-void add_mark_to_char(bgStr chr, enum MarkEnum mark)
+void addMarkToChar(bgStr chr, enum MarkEnum mark)
 {
     // TODO Backup and restore the tone
     static bgStr mark_groups[] =
@@ -317,27 +264,3 @@ void add_mark_to_char(bgStr chr, enum MarkEnum mark)
 }
 
 
-int main() {
-    if (!setlocale(LC_CTYPE, "")) {
-      fprintf(stderr, "Can't set the specified locale! "
-              "Check LANG, LC_CTYPE, LC_ALL.\n");
-      return 1;
-    }
-
-    struct TransT seq[] = {
-        {TRANS_APPEND, L"a", 0, 0, 0, 0},
-        {TRANS_MARK, L"a", MARK_HAT, {} , 1, 0}
-    };
-    seq[1].targets[0] = &seq[0]; // The second "a" targets the first "a"
-
-    bgStr result;
-    flatten(result, seq, sizeof(seq) / sizeof(seq[0]));
-    printf("%ls\n", result);
-
-
-    bgStr chr = L"u";
-    add_tone_to_char(chr, TONE_ACUTE);
-
-    printf("%ls\n", chr);
-    return 0;
-}

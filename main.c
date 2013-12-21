@@ -3,32 +3,29 @@
 #include <stdlib.h>
 #include <wchar.h>
 
-#include "tone.h"
-#include "mark.h"
+#include "bogo.h"
 
-int main(int argc, char const *argv[])
-{
+int main() {
     if (!setlocale(LC_CTYPE, "")) {
       fprintf(stderr, "Can't set the specified locale! "
               "Check LANG, LC_CTYPE, LC_ALL.\n");
       return 1;
     }
 
-    wchar_t *input = L"con";
-    wchar_t *output = add_tone_to_string(input, TONE_GRAVE);
-    printf("%ls\n", output);
+    struct TransT seq[] = {
+        {TRANS_APPEND, L"a", 0, 0, 0, 0},
+        {TRANS_MARK, L"a", MARK_HAT, {} , 1, 0}
+    };
+    seq[1].targets[0] = &seq[0]; // The second "a" targets the first "a"
 
-    printf("%ls\n", add_tone_to_string(L"meo", TONE_GRAVE));
-    printf("%ls\n", add_tone_to_string(L"hoan", TONE_GRAVE));
-    printf("%ls\n", add_tone_to_string(L"khuyu", TONE_HOOK));
-    printf("%ls\n", add_tone_to_string(L"huyên", TONE_HOOK));
-    printf("%ls\n", add_tone_to_string(L"hương", TONE_HOOK));
+    bgStr result;
+    flatten(result, seq, sizeof(seq) / sizeof(seq[0]));
+    printf("%ls\n", result);
 
-    printf("%lc\n", strip_mark_from_char(L'ư'));
-    printf("%lc\n", add_mark_to_char(L'u', MARK_HORN));
 
-    printf("%ls\n", add_mark_to_string(L"tuong", MARK_HORN));
-    printf("%ls\n", add_mark_to_string(L"tuơng", MARK_HORN));
+    bgStr chr = L"u";
+    addToneToChar(chr, TONE_ACUTE);
 
+    printf("%ls\n", chr);
     return 0;
 }
