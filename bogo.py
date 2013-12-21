@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import copy
+import re
 
 
 class Tone:
@@ -25,48 +26,84 @@ VOWELS = "àáảãạaằắẳẵặăầấẩẫậâèéẻẽẹeềếể
 
 # FIXME This design cannot encode w-MARK-BREVE-a and w-MARK-HORN-o-w at the same
 # time.
-input_rules = {
-    "s": {
+input_rules = [
+    {
+        "key": "s",
         "type": "TONE",
         "effect": Tone.ACUTE
     },
-    "f": {
+    {
+        "key": "f",
         "type": "TONE",
         "effect": Tone.GRAVE
     },
-    "x": {
+    {
+        "key": "x",
         "type": "TONE",
         "effect": Tone.TILDE
     },
-    "j": {
+    {
+        "key": "j",
         "type": "TONE",
         "effect": Tone.DOT
     },
-    "r": {
+    {
+        "key": "r",
         "type": "TONE",
         "effect": Tone.HOOK
     },
-    "a": {
+    {
+        "key": "a",
         "type": "MARK",
         "effect": Mark.HAT,
-        "affinity": ["a"]
+        "on": "a"
     },
-    "e": {
+    {
+        "key": "e",
         "type": "MARK",
         "effect": Mark.HAT,
-        "affinity": ["e"]
+        "on": "e"
     },
-    "w": {
+    {
+        "key": "w",
         "type": "MARK",
         "effect": Mark.HORN,
-        "affinity": ["u", "o"]
+        "on": "u"
     },
-    "d": {
+    {
+        "key": "w",
+        "type": "MARK",
+        "effect": Mark.HORN,
+        "on": "o"
+    },
+    {
+        "key": "w",
+        "type": "MARK",
+        "effect": Mark.BREVE,
+        "on": "a"
+    },
+    {
+        "key": "d",
         "type": "MARK",
         "effect": Mark.BAR,
-        "affinity": ["d"]
-    }
-}
+        "on": "d"
+    },
+    {
+        "key": "w",
+        "type": "APPEND",
+        "effect": "ư"
+    },
+    {
+        "key": "]",
+        "type": "APPEND",
+        "effect": "ư"
+    },
+    {
+        "key": "[",
+        "type": "APPEND",
+        "effect": "ơ"
+    },
+]
 
 
 #
@@ -125,14 +162,14 @@ def find_mark_target(trans_list, trans):
     i = len(trans_list) - 1
     target_count = 0
 
-    while i > -1 and target_count < len(trans["affinity"]):
+    while i > -1 and target_count < len(trans["on"]):
         if trans_list[i]["type"] == "APPEND" and \
-                trans_list[i]["key"] in trans["affinity"]:
+                trans_list[i]["key"] in trans["on"]:
             target_count += 1
             try:
-                trans["target"].append(i)
+                trans["target"] = i
             except:
-                trans["target"] = [i]
+                trans["target"] = i
         i -= 1
 
     if target_count == 0:
@@ -187,14 +224,16 @@ def find_tone_target(trans_list, trans):
     vlen = len(vowels)
 
     if vlen == 1:
-        trans["target"] = [vowels[0]]
+        trans["target"] = vowels[0]
     elif vlen == 2:
         if next_append(trans_list, vowels[1]) is None:
-            trans["target"] = [vowels[0]]
+            trans["target"] = vowels[0]
         else:
-            trans["target"] = [vowels[1]]
+            trans["target"] = vowels[1]
     elif vlen == 3:
-        trans["target"] = [vowels[2]]
+        trans["target"] = vowels[2]
+    else:
+        trans["type"] = "APPEND"
 
 
 #
@@ -202,19 +241,51 @@ def find_tone_target(trans_list, trans):
 #
 
 
-def process_char(trans_list, chr):
-    if not chr in input_rules:
-        trans = {
-            "type": "APPEND",
-            "key": chr
-        }
+def process_char(trans_list, char):
+    # A keypress can behave differently when it goes with a certain key
+    # e.g.
+    # Input: aouw
+    # the letter w may add a breve to a or add a horn to both o and w
+    applicable_rules = [copy.deepcopy(rule)
+                        for rule in input_rules if rule["key"] == char]
+
+    append_trans = {
+        "type": "APPEND",
+        "key": char,
+        "effect": char
+    }
+
+    if len(applicable_rules) == 0:
+        trans_list.append(append_trans)
     else:
-        trans = copy.deepcopy(input_rules[chr])
-        trans["key"] = chr
-        if trans["type"] == "MARK":
-            find_mark_target(trans_list, trans)
-        elif trans["type"] == "TONE":
-            find_tone_target(trans_list, trans)
+        for rule in applicable_rules:
+            if rule["type"] == "MARK":
+                find_mark_target(trans_list, rule)
+            elif rule["type"] == "TONE":
+                find_tone_target(trans_list, rule)
+
+        preprocessed_rules = [rule for rule in applicable_rules
+                              if rule["type"] != "APPEND"]
+
+        preprocessed_rules.sort(key=lambda rule: rule["target"], reverse=True)
+
+        l = len(preprocessed_rules)
+        if l >= 2:
+            fst_tgt = preprocessed_rules[0]["target"]
+            snd_tgt = preprocessed_rules[1]["target"]
+
+            if trans_list[fst_tgt]["effect"] == "o" and \
+                    trans_list[snd_tgt]["effect"] == "u":
+                trans_list.append(preprocessed_rules[1])
+                trans_list.append(preprocessed_rules[0])
+        elif l == 1:
+            trans_list.append(preprocessed_rules[0])
+        else:
+            trans = {
+                "type": "APPEND",
+                "key": char,
+                "effect": char
+            }
 
     trans_list.append(trans)
 
@@ -231,22 +302,24 @@ def process_string(string, trans_list=None):
 def flatten(trans_list):
 
     def apply_trans(trans, function):
-        for target in trans["target"]:
-            dest_index = trans_list[target]["dest"]
-            result[dest_index] = function(
-                result[dest_index], trans["effect"])
+        target_index = trans["target"]
+        dest_index = trans_list[target_index]["dest"]
+        result[dest_index] = function(
+            result[dest_index], trans["effect"])
 
     result = []
     for trans in trans_list:
         if trans["type"] == "APPEND":
-            result.append(trans["key"])
+            result.append(trans["effect"])
             trans["dest"] = len(result) - 1
         elif trans["type"] == "TONE":
             apply_trans(trans, add_tone_to_char)
         elif trans["type"] == "MARK":
             apply_trans(trans, add_mark_to_char)
 
-    return "".join(result)
+    flat_tmp = "".join(result)
+    flat_tmp = re.sub('(.*)u([ờớởỡợơ].+)', '\\1ư\\2', flat_tmp)
+    return flat_tmp
 
 
 #
@@ -287,12 +360,9 @@ def remove_last_char(trans_list):
     remove_list = [last_append_index]
     for i, trans in enumerate(trans_list):
         try:
-            if last_append_index in trans["target"]:
-                if len(trans["target"]) == 1:
-                    remove_list.append(i)
-                else:
-                    trans["target"].remove(last_append_index)
-        except:
+            if last_append_index == trans["target"]:
+                remove_list.append(i)
+        except KeyError:
             pass
 
     # Finally, remove those transformations
@@ -308,6 +378,7 @@ def clear_transformations(trans_list):
     trans_list = copy.deepcopy(trans_list)
     for trans in trans_list:
         trans["type"] = "APPEND"
+        trans["effect"] = trans["key"]
 
     return trans_list
 
@@ -315,42 +386,48 @@ def clear_transformations(trans_list):
 test_array = [
     {
         "type": "APPEND",
-        "key": "h"
+        "key": "h",
+        "effect": "h"
     },
     {
         "type": "APPEND",
-        "key": "a"
+        "key": "a",
+        "effect": "a"
     },
     {
         "type": "TONE",
         "key": "f",
         "effect": Tone.GRAVE,
-        "target": [1]
+        "target": 1
     },
     {
         "type": "APPEND",
-        "key": "n"
+        "key": "n",
+        "effect": "n"
     }
 ]
 
 test_array2 = [
     {
         "type": "APPEND",
-        "key": "h"
+        "key": "h",
+        "effect": "h"
     },
     {
         "type": "APPEND",
-        "key": "u"
+        "key": "u",
+        "effect": "u"
     },
     {
         "type": "APPEND",
-        "key": "o"
+        "key": "o",
+        "effect": "o"
     },
     {
         "type": "MARK",
         "key": "w",
         "effect": Mark.HORN,
-        "target": [1, 2]
+        "target": 2
     }
 ]
 
@@ -365,3 +442,4 @@ print(process_string("meofe")[0])      # mều
 print(process_string("dieend")[0])    # điên
 print(process_string("vaix")[0])      # vãi
 print(process_string("chuongwr")[0])  # chưởng
+print(process_string("w")[0])  # chưởng
