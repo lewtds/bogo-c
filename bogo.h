@@ -1,6 +1,7 @@
 #ifndef BOGO_H
 #define BOGO_H
 
+#include "list.h"
 #include "common.h"
 
 enum TransEnum {
@@ -49,7 +50,7 @@ struct RuleT {
     union TransTypeUnion transMethod;
 };
 
-void flatten(bgStr output, const struct TransT *transList, size_t transListLen);
+void flatten(bgStr output, struct List *transList);
 void addToneToChar(bgStr chr, enum ToneEnum tone);
 void addMarkToChar(bgStr chr, enum MarkEnum mark);
 

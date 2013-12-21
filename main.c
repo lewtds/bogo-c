@@ -4,6 +4,7 @@
 #include <wchar.h>
 
 #include "bogo.h"
+#include "list.h"
 
 int main() {
     if (!setlocale(LC_CTYPE, "")) {
@@ -12,14 +13,19 @@ int main() {
       return 1;
     }
 
-    struct TransT seq[] = {
+    struct TransT items[] = {
         {TRANS_APPEND, L"a", 0, 0, 0, 0},
         {TRANS_MARK, L"a", MARK_HAT, {} , 1, 0}
     };
-    seq[1].targets[0] = &seq[0]; // The second "a" targets the first "a"
+
+    struct List *seq = new(struct List);
+    listFromArray(seq, items, sizeof(struct TransT), 2);
+
+    ((struct TransT *) listIndex(seq, 1)->item)->targets[0] = (struct TransT *) listIndex(seq, 0)->item;
+//    seq[1].targets[0] = &seq[0]; // The second "a" targets the first "a"
 
     bgStr result;
-    flatten(result, seq, sizeof(seq) / sizeof(seq[0]));
+    flatten(result, seq);
     printf("%ls\n", result);
 
 

@@ -69,6 +69,7 @@
 #include <wchar.h>
 
 #include "string.h"
+#include "list.h"
 #include "bogo.h"
 
 
@@ -94,16 +95,16 @@ input_list = [{
 output = "á"
 */
 void flatten(bgStr output,
-             const struct TransT *transList,
-             size_t transListLen)
+             struct List *transList)
 {
-
     int output_index = 0;
-    for (int i = 0; i < transListLen; i++) {
 
-        struct TransT trans = transList[i];
+    struct ListItem *iterator = transList->first;
+    while (iterator != NULL) {
 
-        switch (transList[i].type) {
+        struct TransT trans = *((struct TransT *) iterator->item);
+
+        switch (trans.type) {
         case TRANS_APPEND:
             strAssign(output + output_index, trans.key);
             trans.dest_index = output_index;
@@ -122,10 +123,10 @@ void flatten(bgStr output,
             }
             break;
         }
+
+        iterator = iterator->next;
     }
 }
-
-
 
 void addToneToChar(bgStr chr, enum ToneEnum tone)
 {
@@ -153,4 +154,40 @@ void addMarkToChar(bgStr chr, enum MarkEnum mark)
     }
 }
 
+/***
+ * index - index of the last position in transList
+ */
+void processChar(struct List *rules, struct List *transList, bgStr chr) {
+    struct List *applicable_rules = new(struct List);
+    // Build a list of applicable rules
+    // ...
+
+    if (applicable_rules->length == 0) {
+        struct TransT *appendTrans = new(struct TransT);
+        appendTrans->type = TRANS_APPEND;
+        strAssign(appendTrans->key, chr);
+
+        listAppend(transList, appendTrans);
+    } else {
+        struct ListItem *ruleIter = rules->first;
+        while (ruleIter != NULL) {
+            struct RuleT rule = *((struct RuleT *) ruleIter->item);
+
+            ruleIter = ruleIter->next;
+        }
+    }
+}
+
+
+void processString(struct List *rules, bgStr output, const bgStr input) {
+    struct List *transList = new(struct List);
+
+    for (int i = 0; i < strLen(input); ++i) {
+        bgStr chr;
+        strIndex(chr, input, i);
+        processChar(NULL, transList, chr);
+    }
+
+    flatten(output, transList);
+}
 
