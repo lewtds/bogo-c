@@ -52,7 +52,5 @@ struct RuleT {
 void flatten(bgStr output, const struct TransT *transList, size_t transListLen);
 void addToneToChar(bgStr chr, enum ToneEnum tone);
 void addMarkToChar(bgStr chr, enum MarkEnum mark);
-void strToTrans(struct RuleT *rule, const bgStr str);
-void strToTransType(union TransTypeUnion *transType, const bgStr str);
 
 #endif // BOGO_H

@@ -1,6 +1,8 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include <wchar.h>
+
 #define MAXSTRLEN 4096
 #define MAXTRANSLEN 20
 
