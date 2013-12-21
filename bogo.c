@@ -117,24 +117,9 @@
 #include <stdlib.h>
 #include <wchar.h>
 
+#include "string.h"
 
-#define MAXSTRLEN 4096
-#define MAXTRANSLEN 20
 
-#ifndef bool
-#define bool char
-#endif
-
-#ifndef TRUE
-#define TRUE 1
-#endif
-
-#ifndef FALSE
-#define FALSE 0
-#endif
-
-typedef wchar_t bgChar;
-typedef wchar_t bgStr[MAXSTRLEN];
 
 enum TransEnum {
     TRANS_TONE = 0,
@@ -189,18 +174,8 @@ void flatten(bgStr output, const struct TransT *transList, size_t transListLen);
 void add_tone_to_char(bgStr chr, enum ToneEnum tone);
 void add_mark_to_char(bgStr chr, enum MarkEnum mark);
 void strToTrans(struct RuleT *rule, const bgStr str);
-
-void strSubstr(bgStr dest, const bgStr src, int position, int len);
-void stripSpaces(bgStr dest, const bgStr src);
-void strAssign(bgStr dest, const bgStr src);
-bool strStartsWith(const bgStr str, const bgStr pattern);
-int strIndexOf(const bgStr str, const bgStr pattern, int startFrom);
-size_t strLen(const bgStr);
-bool strIsEmpty(const bgStr str);
 void strToTransType(union TransTypeUnion *transType, const bgStr str);
-bool charEqual(bgChar left, bgChar right);
-bool strEqual(const bgStr left, const bgStr right);
-void strGetLastChar(bgStr lastChar, const bgStr str);
+
 
 
 /*
@@ -290,6 +265,31 @@ void flatten(bgStr output,
     }
 }
 
+
+void strToTransType(union TransTypeUnion *transType, const bgStr str)
+{
+    if (strEqual(str, L"'")) {
+        (*transType).tone = TONE_ACUTE;
+    } else if (strEqual(str, L"`")) {
+        (*transType).tone = TONE_GRAVE;
+    } else if (strEqual(str, L"?")) {
+        (*transType).tone = TONE_HOOK;
+    } else if (strEqual(str, L"~")) {
+        (*transType).tone = TONE_TILDE;
+    } else if (strEqual(str, L".")) {
+        (*transType).tone = TONE_DOT;
+    } else if (strEqual(str, L"^")) {
+        (*transType).mark = MARK_HAT;
+    } else if (strEqual(str, L"(")) {
+        (*transType).mark = MARK_BREVE;
+    } else if (strEqual(str, L"+")) {
+        (*transType).mark = MARK_HORN;
+    } else if (strEqual(str, L"-")) {
+        (*transType).mark = MARK_DASH;
+    }
+}
+
+
 void add_tone_to_char(bgStr chr, enum ToneEnum tone)
 {
     int index = strIndexOf(VOWELS, chr, 0);
@@ -316,132 +316,6 @@ void add_mark_to_char(bgStr chr, enum MarkEnum mark)
     }
 }
 
-bool charEqual(bgChar left, bgChar right) {
-    return left == right;
-}
-
-bool strEqual(const bgStr left, const bgStr right) {
-    int i = 0;
-    while(!charEqual(left[i], L'\0')) {
-        if (!charEqual(left[i], right[i])) {
-            return FALSE;
-        }
-        i++;
-    }
-    return charEqual(right[i], L'\0');
-}
-
-/*
- * Strip leading and trailing spaces.
- * TODO Actually implement it
- */
-void stripSpaces(bgStr dest, const bgStr src)
-{
-    int i = 0, k = 0;
-
-    // Leading spaces
-    while(!charEqual(src[i], L'\0') && charEqual(src[i], L' ')) {
-        i++;
-    }
-    int start = i;
-
-    i = strLen(src) - 1;
-    while(i > -1 && charEqual(src[i], L' ')) {
-        i--;
-    }
-    int end = i + 1;
-
-    strSubstr(dest, src, start, end - start);
-}
-
-/*
- * Copy strings
- */
-void strAssign(bgStr dest, const bgStr src)
-{
-    int i = 0;
-    while(!charEqual(src[i], L'\0')) {
-        dest[i] = src[i];
-        i++;
-    }
-}
-
-bool strStartsWith(const bgStr str, const bgStr pattern)
-{
-    int i = 0;
-    while(!charEqual(pattern[i], L'\0')) {
-        if (str[i] != pattern[i]) {
-            return FALSE;
-        }
-        i++;
-    }
-    return TRUE;
-}
-
-int strIndexOf(const bgStr str, const bgStr pattern, int startFrom)
-{
-    int i = 0;
-    while(!charEqual(str[i], L'\0')) {
-        if (strStartsWith(str + startFrom + i, pattern)) {
-            return i + startFrom;
-        }
-        i++;
-    }
-    return -1;
-}
-
-size_t strLen(const bgStr str)
-{
-    int i = 0;
-    while(!charEqual(str[i], L'\0')) {
-        i++;
-    }
-    return i;
-}
-
-bool strIsEmpty(const bgStr str)
-{
-    return strLen(str) == 0;
-}
-
-void strSubstr(bgStr dest, const bgStr src, int position, int len) {
-    int dest_index = 0;
-    for (int i = position; dest_index < len; i++) {
-        dest[dest_index] = src[i];
-        dest_index++;
-    }
-}
-
-void strToTransType(union TransTypeUnion *transType, const bgStr str)
-{
-    if (strEqual(str, L"'")) {
-        (*transType).tone = TONE_ACUTE;
-    } else if (strEqual(str, L"`")) {
-        (*transType).tone = TONE_GRAVE;
-    } else if (strEqual(str, L"?")) {
-        (*transType).tone = TONE_HOOK;
-    } else if (strEqual(str, L"~")) {
-        (*transType).tone = TONE_TILDE;
-    } else if (strEqual(str, L".")) {
-        (*transType).tone = TONE_DOT;
-    } else if (strEqual(str, L"^")) {
-        (*transType).mark = MARK_HAT;
-    } else if (strEqual(str, L"(")) {
-        (*transType).mark = MARK_BREVE;
-    } else if (strEqual(str, L"+")) {
-        (*transType).mark = MARK_HORN;
-    } else if (strEqual(str, L"-")) {
-        (*transType).mark = MARK_DASH;
-    }
-}
-
-void strGetLastChar(bgStr lastChar, const bgStr str) {
-    int i = 0;
-    while(!charEqual(str[i], L'\0')) {
-        i++;
-    }
-    strAssign(lastChar, str + i - 1);
-}
 
 int main() {
     if (!setlocale(LC_CTYPE, "")) {
