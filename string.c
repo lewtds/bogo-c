@@ -103,3 +103,7 @@ void strGetLastChar(bgStr lastChar, const bgStr str) {
     }
     strAssign(lastChar, str + i - 1);
 }
+
+void strIndex(bgStr output, const bgStr input, int position) {
+
+}

@@ -15,4 +15,6 @@ bool charEqual(bgChar left, bgChar right);
 bool strEqual(const bgStr left, const bgStr right);
 void strGetLastChar(bgStr lastChar, const bgStr str);
 
+void strIndex(bgStr output, const bgStr input, int position);
+
 #endif // STRING_H
