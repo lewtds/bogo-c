@@ -171,7 +171,7 @@ void findMarkTarget(struct List *transList, struct TransT *trans, struct RuleT *
 
 
 void processChar(struct List *rules, struct List *transList, bgStr chr) {
-    struct List *applicable_rules = new(struct List);
+    struct List *applicable_rules = listNew();
 
     // Build a list of applicable rules whose key matches chr
     struct ListItem *iter = rules->first;
@@ -203,12 +203,14 @@ void processChar(struct List *rules, struct List *transList, bgStr chr) {
             ruleIter = ruleIter->next;
         }
     }
+
     listAppend(transList, newTrans);
+    freeList(applicable_rules);
 }
 
 
 void processString(struct List *rules, bgStr output, const bgStr input) {
-    struct List *transList = new(struct List);
+    struct List *transList = listNew();
 
     for (int i = 0; i < strLen(input); ++i) {
         bgStr chr;
@@ -217,5 +219,7 @@ void processString(struct List *rules, bgStr output, const bgStr input) {
     }
 
     flatten(output, transList);
+
+    freeList(transList);
 }
 

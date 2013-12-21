@@ -1,7 +1,12 @@
 #include <malloc.h>
+#include <string.h>
 #include "list.h"
 #include "common.h"
 
+struct List *listNew() {
+    struct List *newList = malloc(sizeof(struct List));
+    memset(newList, 0x00, sizeof(struct List));
+}
 
 struct List *listAppend(struct List *list, void *item)
 {
@@ -44,4 +49,16 @@ struct ListItem *listIndex(struct List *list, int index) {
         iter = iter->next;
     }
     return iter;
+}
+
+
+void freeList(struct List *list)
+{
+    struct ListItem *iter = list->first;
+    while (iter != NULL) {
+        struct ListItem *next = iter->next;
+        free(iter);
+        iter = next;
+    }
+    free(list);
 }
