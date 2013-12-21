@@ -48,6 +48,7 @@ void strAssign(bgStr dest, const bgStr src)
         dest[i] = src[i];
         i++;
     }
+    dest[i] = L'\0';
 }
 
 bool strStartsWith(const bgStr str, const bgStr pattern)
@@ -94,6 +95,7 @@ void strSubstr(bgStr dest, const bgStr src, int position, int len) {
         dest[dest_index] = src[i];
         dest_index++;
     }
+    dest[dest_index] = L'\0';
 }
 
 void strGetLastChar(bgStr lastChar, const bgStr str) {
@@ -105,5 +107,5 @@ void strGetLastChar(bgStr lastChar, const bgStr str) {
 }
 
 void strIndex(bgStr output, const bgStr input, int position) {
-
+    strSubstr(output, input, position, 1);
 }
