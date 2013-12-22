@@ -2,6 +2,7 @@
 #define COMMON_H
 
 #include <wchar.h>
+#include "utf8small.h"
 
 #define MAXSTRLEN 4096
 #define MAXTRANSLEN 20
@@ -18,8 +19,8 @@
 #define FALSE 0
 #endif
 
-typedef wchar_t bgChar;
-typedef wchar_t bgstr[MAXSTRLEN];
+//typedef wchar_t bgChar;
+//typedef wchar_t bgstr[MAXSTRLEN];
 
 #define new(type) malloc(sizeof(type))
 #define ITERITEM(iter, type, name) type* name = (type*) iter->item

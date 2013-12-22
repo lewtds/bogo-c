@@ -102,4 +102,7 @@ int bgstrCmpI        (const bgstr str1, const bgstr str2);
 bgbool bgStartsWith  (const bgstr str, bgstr pattern);
 bgbool bgEndsWith    (const bgstr str, bgstr pattern);
 
+void stripSpaces(bgstr dest, const bgstr src);
+bgbool strIsEmpty(const bgstr str);
+int strIndexOf(const bgstr str, const bgstr pattern, int startFrom);
 #endif

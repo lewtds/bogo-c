@@ -1,6 +1,6 @@
-#include "string.h"
 #include "bogo.h"
 #include "dsl.h"
+#include "utf8small.h"
 
 /*
  * DSL:

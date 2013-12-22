@@ -33,10 +33,10 @@
 /*
  * Helpers:
  *
- * void  strSubstr(output, theString, position, numberOfCharacters);
- * int   strIndexOf(theString, theSubstring, startFrom);
+ * void  strSubStr(output, theString, position, numberOfCharacters);
+ * int   strIndexOf(theString, theSubString, startFrom);
  * void  strAssign(destString, inputString);
- * bool  strStartsWith(theString, theSubstring);
+ * bool  strStartsWith(theString, theSubString);
  *
  * void  hashGetValuerUnion(outputAsUnion, hashTable, key);
  * void  hashGetValueStr(outputAsString, hashTable, key);
@@ -69,7 +69,6 @@
 #include <wchar.h>
 #include <string.h>
 
-#include "string.h"
 #include "list.h"
 #include "bogo.h"
 
@@ -142,7 +141,7 @@ void addToneToChar(bgstr chr, enum ToneEnum tone)
         int current_tone = index % 6;
         int offset = tone - current_tone;
 
-        bgstrSubstr(chr, VOWELS, index + offset, 1);
+        bgstrSubStr(chr, VOWELS, index + offset, 1);
     }
 }
 
@@ -154,7 +153,7 @@ void addMarkToChar(bgstr chr, enum MarkEnum mark)
 
     for (int i = 0; i < 5; i++) {
         if (strIndexOf(mark_groups[i], chr, 0) != -1) {
-            bgstrSubstr(chr, mark_groups[i], mark, 1);
+            bgstrSubStr(chr, mark_groups[i], mark, 1);
             break;
         }
     }

@@ -296,3 +296,31 @@ void bgstrGetCharAt (const bgstr source,
     memcpy (target, source + currentBytePos, charLength);
     target[charLength] = 0;
 }
+
+int bgstrCmp (const bgstr str1, const bgstr str2) {
+
+}
+
+
+bgbool bgStartsWith(const bgstr str, bgstr pattern)
+{
+
+}
+
+
+bgbool strIsEmpty(const bgstr str)
+{
+
+}
+
+
+void stripSpaces(bgstr dest, const bgstr src)
+{
+
+}
+
+
+int strIndexOf(const bgstr str, const bgstr pattern, int startFrom)
+{
+
+}
