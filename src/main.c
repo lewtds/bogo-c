@@ -16,14 +16,14 @@ int main() {
 
     struct List *rules = new(struct RuleT);
     struct RuleT aHatRule;
-    bgstrAssign(aHatRule.effectOn, L"a");
-    bgstrAssign(aHatRule.key, L"a");
+    bgstrAssign(aHatRule.effectOn, "a");
+    bgstrAssign(aHatRule.key, "a");
     aHatRule.type = TRANS_MARK;
     aHatRule.transMethod.mark = MARK_HAT;
 
     listAppend(rules, &aHatRule);
 
-    bgstr input = L"aa";
+    bgstr input = "aa";
     bgstr output;
 
     processString(rules, output, input);

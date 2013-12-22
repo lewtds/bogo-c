@@ -74,15 +74,15 @@
 #include "bogo.h"
 
 
-const bgstr VOWELS = L"àáảãạaằắẳẵặăầấẩẫậâèéẻẽẹeềếểễệêìíỉĩịi" \
+const bgstr VOWELS = "àáảãạaằắẳẵặăầấẩẫậâèéẻẽẹeềếểễệêìíỉĩịi" \
                         "òóỏõọoồốổỗộôờớởỡợơùúủũụuừứửữựưỳýỷỹỵy";
 
 // Note that some text editors/IDEs doesn't understand designated initialization yet
 // and will flag this as syntax error.
 
 const struct RuleT APPEND_RULE = {
-    .key = L"",
-    .effectOn = L"",
+    .key = "",
+    .effectOn = "",
     .type = TRANS_APPEND,
     .transMethod = 0
 };
@@ -150,7 +150,7 @@ void addMarkToChar(bgstr chr, enum MarkEnum mark)
 {
     // TODO Backup and restore the tone
     static bgstr mark_groups[] =
-    {L"aâăaa", L"eêeee", L"oôoơo", L"uuuưu", L"ddddđ"};
+    {"aâăaa", "eêeee", "oôoơo", "uuuưu", "ddddđ"};
 
     for (int i = 0; i < 5; i++) {
         if (strIndexOf(mark_groups[i], chr, 0) != -1) {
