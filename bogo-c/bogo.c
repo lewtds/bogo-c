@@ -74,7 +74,7 @@
 #include "bogo.h"
 
 
-const bgStr VOWELS = L"àáảãạaằắẳẵặăầấẩẫậâèéẻẽẹeềếểễệêìíỉĩịi" \
+const bgstr VOWELS = L"àáảãạaằắẳẵặăầấẩẫậâèéẻẽẹeềếểễệêìíỉĩịi" \
                         "òóỏõọoồốổỗộôờớởỡợơùúủũụuừứửữựưỳýỷỹỵy";
 
 // Note that some text editors/IDEs doesn't understand designated initialization yet
@@ -104,7 +104,7 @@ input_list = [{
 
 output = "á"
 */
-void flatten(bgStr output,
+void flatten(bgstr output,
              struct List *transList)
 {
     int output_index = 0;
@@ -134,7 +134,7 @@ void flatten(bgStr output,
     }
 }
 
-void addToneToChar(bgStr chr, enum ToneEnum tone)
+void addToneToChar(bgstr chr, enum ToneEnum tone)
 {
     int index = strIndexOf(VOWELS, chr, 0);
 
@@ -146,10 +146,10 @@ void addToneToChar(bgStr chr, enum ToneEnum tone)
     }
 }
 
-void addMarkToChar(bgStr chr, enum MarkEnum mark)
+void addMarkToChar(bgstr chr, enum MarkEnum mark)
 {
     // TODO Backup and restore the tone
-    static bgStr mark_groups[] =
+    static bgstr mark_groups[] =
     {L"aâăaa", L"eêeee", L"oôoơo", L"uuuưu", L"ddddđ"};
 
     for (int i = 0; i < 5; i++) {
@@ -178,7 +178,7 @@ void findMarkTarget(struct List *transList, struct TransT *trans, struct RuleT *
 }
 
 
-void processChar(struct List *rules, struct List *transList, bgStr chr) {
+void processChar(struct List *rules, struct List *transList, bgstr chr) {
     struct List *applicable_rules = listNew();
 
     // Build a list of applicable rules whose key matches chr
@@ -219,11 +219,11 @@ void processChar(struct List *rules, struct List *transList, bgStr chr) {
 }
 
 
-void processString(struct List *rules, bgStr output, const bgStr input) {
+void processString(struct List *rules, bgstr output, const bgstr input) {
     struct List *transList = listNew();
 
     for (int i = 0; i < strLen(input); ++i) {
-        bgStr chr;
+        bgstr chr;
         strIndex(chr, input, i);
         processChar(rules, transList, chr);
     }

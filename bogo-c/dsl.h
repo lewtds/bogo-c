@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-void strToTrans(struct RuleT *rule, const bgStr str);
-void strToTransType(union TransTypeUnion *transType, const bgStr str);
+void strToTrans(struct RuleT *rule, const bgstr str);
+void strToTransType(union TransTypeUnion *transType, const bgstr str);
 
 #endif // DSL_H

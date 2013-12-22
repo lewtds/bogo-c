@@ -4,17 +4,17 @@
 #include <wchar.h>
 #include "common.h"
 
-void strSubstr(bgStr dest, const bgStr src, int position, int len);
-void stripSpaces(bgStr dest, const bgStr src);
-void strAssign(bgStr dest, const bgStr src);
-bool strStartsWith(const bgStr str, const bgStr pattern);
-int strIndexOf(const bgStr str, const bgStr pattern, int startFrom);
-size_t strLen(const bgStr);
-bool strIsEmpty(const bgStr str);
+void strSubstr(bgstr dest, const bgstr src, int position, int len);
+void stripSpaces(bgstr dest, const bgstr src);
+void strAssign(bgstr dest, const bgstr src);
+bool strStartsWith(const bgstr str, const bgstr pattern);
+int strIndexOf(const bgstr str, const bgstr pattern, int startFrom);
+size_t strLen(const bgstr);
+bool strIsEmpty(const bgstr str);
 bool charEqual(bgChar left, bgChar right);
-bool strEqual(const bgStr left, const bgStr right);
-void strGetLastChar(bgStr lastChar, const bgStr str);
+bool strEqual(const bgstr left, const bgstr right);
+void strGetLastChar(bgstr lastChar, const bgstr str);
 
-void strIndex(bgStr output, const bgStr input, int position);
+void strIndex(bgstr output, const bgstr input, int position);
 
 #endif // STRING_H

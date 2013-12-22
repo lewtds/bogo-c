@@ -66,9 +66,9 @@ E.g.
 
 */
 void strToTrans(struct RuleT *rule,
-                const bgStr str)
+                const bgstr str)
 {
-    bgStr tmp;
+    bgstr tmp;
 
     stripSpaces(tmp, str); /* Safe, not that stripSpaces(str, str) */
 
@@ -86,12 +86,12 @@ void strToTrans(struct RuleT *rule,
     *rule->effectOn = tmp[2];
 
     /* Last part: transformation type */
-    bgStr lastChar;
+    bgstr lastChar;
     strGetLastChar(lastChar, tmp);
     strToTransType(&(rule->transMethod), lastChar);
 }
 
-void strToTransType(union TransTypeUnion *transType, const bgStr str)
+void strToTransType(union TransTypeUnion *transType, const bgstr str)
 {
     if (strEqual(str, L"'")) {
         (*transType).tone = TONE_ACUTE;

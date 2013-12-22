@@ -41,16 +41,16 @@ struct TransT {
 };
 
 struct RuleT {
-    bgStr key;
-    bgStr effectOn;
+    bgstr key;
+    bgstr effectOn;
     enum TransEnum type;
     union TransTypeUnion transMethod;
 };
 
-void flatten(bgStr output, struct List *transList);
-void addToneToChar(bgStr chr, enum ToneEnum tone);
-void addMarkToChar(bgStr chr, enum MarkEnum mark);
+void flatten(bgstr output, struct List *transList);
+void addToneToChar(bgstr chr, enum ToneEnum tone);
+void addMarkToChar(bgstr chr, enum MarkEnum mark);
 
-void processString(struct List *rules, bgStr output, const bgStr input);
+void processString(struct List *rules, bgstr output, const bgstr input);
 
 #endif // BOGO_H

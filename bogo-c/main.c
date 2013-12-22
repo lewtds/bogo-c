@@ -23,8 +23,8 @@ int main() {
 
     listAppend(rules, &aHatRule);
 
-    bgStr input = L"aa";
-    bgStr output;
+    bgstr input = L"aa";
+    bgstr output;
 
     processString(rules, output, input);
 
