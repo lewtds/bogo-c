@@ -1,5 +1,8 @@
 UTF8_SRC = utf8small.c utf8small.h
 UNITTEST_SRC = unittest.h unittest.c
+BOGO_SRC = main.c bogo.c list.c dsl.c
+
+BOGO_EXEC = $(BUILD_DIR)/bogo
 
 TRYOUT_MAIN_SRC           = tryout/tryout.c
 TRYOUT_UNITTEST_PASS_SRC  = tryout/tryout_unittest_pass.c
@@ -45,3 +48,12 @@ tryout_unittest:
 
 	$(TRYOUT_UNITTEST_PASS_EXEC)
 	$(TRYOUT_UNITTEST_FAIL_EXEC)
+
+bogo: $(BOGO_SRC)
+	@mkdir -p $(BUILD_DIR)
+
+	@$(CC) -o $(BOGO_EXEC) \
+		-I$(INCLUDE) \
+		-std=c99 \
+		$(BOGO_SRC) \
+		$(UTF8_SRC)
