@@ -67,6 +67,7 @@
 #include <locale.h>
 #include <stdlib.h>
 #include <wchar.h>
+#include <string.h>
 
 #include "string.h"
 #include "list.h"
@@ -76,6 +77,15 @@
 const bgStr VOWELS = L"àáảãạaằắẳẵặăầấẩẫậâèéẻẽẹeềếểễệêìíỉĩịi" \
                         "òóỏõọoồốổỗộôờớởỡợơùúủũụuừứửữựưỳýỷỹỵy";
 
+// Note that some text editors/IDEs doesn't understand designated initialization yet
+// and will flag this as syntax error.
+
+const struct RuleT APPEND_RULE = {
+    .key = L"",
+    .effectOn = L"",
+    .type = TRANS_APPEND,
+    .transMethod = 0
+};
 
 
 /*
@@ -104,19 +114,19 @@ void flatten(bgStr output,
 
         struct TransT trans = *((struct TransT *) iterator->item);
 
-        switch (trans.type) {
+        switch (trans.rule->type) {
         case TRANS_APPEND:
-            strAssign(output + output_index, trans.key);
+            strAssign(output + output_index, trans.rule->key);
             trans.dest_index = output_index;
             output_index++;  // Only TRANS_APPEND creates a new char
             break;
         case TRANS_TONE:
             addToneToChar(output + trans.target->dest_index,
-                             trans.effect.tone);
+                             trans.rule->transMethod.tone);
             break;
         case TRANS_MARK:
             addMarkToChar(output + trans.target->dest_index,
-                             trans.effect.mark);
+                             trans.rule->transMethod.mark);
             break;
         }
 
@@ -154,18 +164,16 @@ void findMarkTarget(struct List *transList, struct TransT *trans, struct RuleT *
     struct ListItem *iter = transList->last;
     while (iter != NULL) {
         ITERITEM(iter, struct TransT, currentTrans);
-        if (strEqual(currentTrans->key, rule->effectOn)) {
+        if (strEqual(currentTrans->rule->key, rule->effectOn)) {
             trans->target = currentTrans;
             break;
         }
         iter = iter->prev;
     }
 
-    if (trans->target == NULL) {
-        trans->type = TRANS_APPEND;
-    } else {
-        trans->type = TRANS_MARK;
-        trans->effect = rule->transMethod;
+    if (trans->target != NULL) {
+        free(trans->rule);
+        trans->rule = rule;
     }
 }
 
@@ -184,11 +192,13 @@ void processChar(struct List *rules, struct List *transList, bgStr chr) {
     }
 
     struct TransT *newTrans = new(struct TransT);
-    strAssign(newTrans->key, chr);
 
-    if (applicable_rules->length == 0) {
-        newTrans->type = TRANS_APPEND;
-    } else {
+    // A transformation is by default an appending one
+    newTrans->rule = new(struct RuleT);
+    memcpy(newTrans->rule, &APPEND_RULE, sizeof(struct RuleT));
+    strAssign(newTrans->rule->key, chr);
+
+    if (applicable_rules->length != 0) {
         struct ListItem *ruleIter = rules->first;
         while (ruleIter != NULL) {
             struct RuleT *rule = (struct RuleT *) ruleIter->item;

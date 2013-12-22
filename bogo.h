@@ -33,9 +33,7 @@ union TransTypeUnion {
 };
 
 struct TransT {
-    enum TransEnum         type;        /* Can be TRANS_TONE or TRANS_MARK    */
-    bgStr                  key;         /* "a"                                */
-    union TransTypeUnion   effect;      /* MARK_HAT, TONE_ACUTE...            */
+    const struct RuleT           *rule;
     struct TransT          *target;
     int                    dest_index;  /* For TRANS_APPEND, a pointer to the */
                                         /* char in the flattened string made  */
