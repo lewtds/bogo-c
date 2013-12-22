@@ -73,12 +73,12 @@ void strToTrans(struct RuleT *rule,
     stripSpaces(tmp, str); /* Safe, not that stripSpaces(str, str) */
 
     /* By default, the transformation is appending */
-    strAssign(rule->key, L"");
-    strAssign(rule->effectOn, L"");
+    bgstrAssign(rule->key, L"");
+    bgstrAssign(rule->effectOn, L"");
     rule->type = TRANS_APPEND;
 
     /* Ignore comments and blank strings */
-    if (strStartsWith(tmp, L"#") || strIsEmpty(tmp)) {
+    if (bgStartsWith(tmp, L"#") || strIsEmpty(tmp)) {
         return;
     }
 
@@ -87,29 +87,29 @@ void strToTrans(struct RuleT *rule,
 
     /* Last part: transformation type */
     bgstr lastChar;
-    strGetLastChar(lastChar, tmp);
+    bgstrLastChar(lastChar, tmp);
     strToTransType(&(rule->transMethod), lastChar);
 }
 
 void strToTransType(union TransTypeUnion *transType, const bgstr str)
 {
-    if (strEqual(str, L"'")) {
+    if (bgstrCmp(str, L"'")) {
         (*transType).tone = TONE_ACUTE;
-    } else if (strEqual(str, L"`")) {
+    } else if (bgstrCmp(str, L"`")) {
         (*transType).tone = TONE_GRAVE;
-    } else if (strEqual(str, L"?")) {
+    } else if (bgstrCmp(str, L"?")) {
         (*transType).tone = TONE_HOOK;
-    } else if (strEqual(str, L"~")) {
+    } else if (bgstrCmp(str, L"~")) {
         (*transType).tone = TONE_TILDE;
-    } else if (strEqual(str, L".")) {
+    } else if (bgstrCmp(str, L".")) {
         (*transType).tone = TONE_DOT;
-    } else if (strEqual(str, L"^")) {
+    } else if (bgstrCmp(str, L"^")) {
         (*transType).mark = MARK_HAT;
-    } else if (strEqual(str, L"(")) {
+    } else if (bgstrCmp(str, L"(")) {
         (*transType).mark = MARK_BREVE;
-    } else if (strEqual(str, L"+")) {
+    } else if (bgstrCmp(str, L"+")) {
         (*transType).mark = MARK_HORN;
-    } else if (strEqual(str, L"-")) {
+    } else if (bgstrCmp(str, L"-")) {
         (*transType).mark = MARK_DASH;
     }
 }
