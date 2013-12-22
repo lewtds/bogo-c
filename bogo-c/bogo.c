@@ -116,7 +116,7 @@ void flatten(bgstr output,
 
         switch (trans.rule->type) {
         case TRANS_APPEND:
-            strAssign(output + output_index, trans.rule->key);
+            bgstrAssign(output + output_index, trans.rule->key);
             trans.dest_index = output_index;
             output_index++;  // Only TRANS_APPEND creates a new char
             break;
@@ -142,7 +142,7 @@ void addToneToChar(bgstr chr, enum ToneEnum tone)
         int current_tone = index % 6;
         int offset = tone - current_tone;
 
-        strSubstr(chr, VOWELS, index + offset, 1);
+        bgstrSubstr(chr, VOWELS, index + offset, 1);
     }
 }
 
@@ -154,7 +154,7 @@ void addMarkToChar(bgstr chr, enum MarkEnum mark)
 
     for (int i = 0; i < 5; i++) {
         if (strIndexOf(mark_groups[i], chr, 0) != -1) {
-            strSubstr(chr, mark_groups[i], mark, 1);
+            bgstrSubstr(chr, mark_groups[i], mark, 1);
             break;
         }
     }
@@ -164,7 +164,7 @@ void findMarkTarget(struct List *transList, struct TransT *trans, struct RuleT *
     struct ListItem *iter = transList->last;
     while (iter != NULL) {
         ITERITEM(iter, struct TransT, currentTrans);
-        if (strEqual(currentTrans->rule->key, rule->effectOn)) {
+        if (bgstrCmp(currentTrans->rule->key, rule->effectOn)) {
             trans->target = currentTrans;
             break;
         }
@@ -185,7 +185,7 @@ void processChar(struct List *rules, struct List *transList, bgstr chr) {
     struct ListItem *iter = rules->first;
     while (iter != NULL) {
         struct RuleT *rule = (struct RuleT *) iter->item;
-        if (strEqual(rule->key, chr)) {
+        if (bgstrCmp(rule->key, chr)) {
             listAppend(applicable_rules, rule);
         }
         iter = iter->next;
@@ -196,7 +196,7 @@ void processChar(struct List *rules, struct List *transList, bgstr chr) {
     // A transformation is by default an appending one
     newTrans->rule = new(struct RuleT);
     memcpy(newTrans->rule, &APPEND_RULE, sizeof(struct RuleT));
-    strAssign(newTrans->rule->key, chr);
+    bgstrAssign(newTrans->rule->key, chr);
 
     if (applicable_rules->length != 0) {
         struct ListItem *ruleIter = rules->first;
@@ -222,9 +222,9 @@ void processChar(struct List *rules, struct List *transList, bgstr chr) {
 void processString(struct List *rules, bgstr output, const bgstr input) {
     struct List *transList = listNew();
 
-    for (int i = 0; i < strLen(input); ++i) {
+    for (int i = 0; i < bgstrLen(input); ++i) {
         bgstr chr;
-        strIndex(chr, input, i);
+        bgstrGetCharAt(chr, input, i);
         processChar(rules, transList, chr);
     }
 

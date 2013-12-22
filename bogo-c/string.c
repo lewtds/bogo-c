@@ -4,7 +4,7 @@ bool charEqual(bgChar left, bgChar right) {
     return left == right;
 }
 
-bool strEqual(const bgstr left, const bgstr right) {
+bool bgstrCmp(const bgstr left, const bgstr right) {
     int i = 0;
     while(!charEqual(left[i], L'\0')) {
         if (!charEqual(left[i], right[i])) {
@@ -29,19 +29,19 @@ void stripSpaces(bgstr dest, const bgstr src)
     }
     int start = i;
 
-    i = strLen(src) - 1;
+    i = bgstrLen(src) - 1;
     while(i > -1 && charEqual(src[i], L' ')) {
         i--;
     }
     int end = i + 1;
 
-    strSubstr(dest, src, start, end - start);
+    bgstrSubstr(dest, src, start, end - start);
 }
 
 /*
  * Copy strings
  */
-void strAssign(bgstr dest, const bgstr src)
+void bgstrAssign(bgstr dest, const bgstr src)
 {
     int i = 0;
     while(!charEqual(src[i], L'\0')) {
@@ -51,7 +51,7 @@ void strAssign(bgstr dest, const bgstr src)
     dest[i] = L'\0';
 }
 
-bool strStartsWith(const bgstr str, const bgstr pattern)
+bool bgStartsWith(const bgstr str, const bgstr pattern)
 {
     int i = 0;
     while(!charEqual(pattern[i], L'\0')) {
@@ -67,7 +67,7 @@ int strIndexOf(const bgstr str, const bgstr pattern, int startFrom)
 {
     int i = 0;
     while(!charEqual(str[i], L'\0')) {
-        if (strStartsWith(str + startFrom + i, pattern)) {
+        if (bgStartsWith(str + startFrom + i, pattern)) {
             return i + startFrom;
         }
         i++;
@@ -75,7 +75,7 @@ int strIndexOf(const bgstr str, const bgstr pattern, int startFrom)
     return -1;
 }
 
-size_t strLen(const bgstr str)
+size_t bgstrLen(const bgstr str)
 {
     int i = 0;
     while(!charEqual(str[i], L'\0')) {
@@ -86,10 +86,10 @@ size_t strLen(const bgstr str)
 
 bool strIsEmpty(const bgstr str)
 {
-    return strLen(str) == 0;
+    return bgstrLen(str) == 0;
 }
 
-void strSubstr(bgstr dest, const bgstr src, int position, int len) {
+void bgstrSubstr(bgstr dest, const bgstr src, int position, int len) {
     int dest_index = 0;
     for (int i = position; dest_index < len; i++) {
         dest[dest_index] = src[i];
@@ -98,14 +98,14 @@ void strSubstr(bgstr dest, const bgstr src, int position, int len) {
     dest[dest_index] = L'\0';
 }
 
-void strGetLastChar(bgstr lastChar, const bgstr str) {
+void bgstrLastChar(bgstr lastChar, const bgstr str) {
     int i = 0;
     while(!charEqual(str[i], L'\0')) {
         i++;
     }
-    strAssign(lastChar, str + i - 1);
+    bgstrAssign(lastChar, str + i - 1);
 }
 
-void strIndex(bgstr output, const bgstr input, int position) {
-    strSubstr(output, input, position, 1);
+void bgstrGetCharAt(bgstr output, const bgstr input, int position) {
+    bgstrSubstr(output, input, position, 1);
 }
