@@ -37,8 +37,8 @@ typedef char      bgbool;
 /* Helper */
 /* Copy string using memcpy instead of strncpy and make sure it's
    NULL-terminated */
-void strCopy (const char *source,
-              char *target,
+void strCopy (char *target,
+              const char *source,
               bglen_t fromByte,
               bglen_t count);
 
@@ -65,36 +65,36 @@ bglen_t bgcharLen          (const bgchar ch);
 bglen_t bgstrLen           (const bgstr str);
 bglen_t bgcharCountBytesAt (const bgstr str, bglen_t position);
 bglen_t bgstrGetCharLenAt  (const bgstr str, bglen_t position);
-void bgstrGetCharAt        (const bgstr str, bgstr target, bglen_t position);
+void bgstrGetCharAt        (bgstr target, const bgstr str, bglen_t position);
 
 /* Convert n-th UTF8 char to its corresponding n-th byte */
 bglen_t bgNthBgcharToNthByte (const bgstr str, bglen_t position);
 
-void bgstrDup        (const bgstr source, bgstr target);
-void strToBgstr      (const char *source, bgstr target);
-void bgstrToStr      (const bgstr source, char *target);
+void bgstrDup        (bgstr target, const bgstr source);
+void strToBgstr      (bgstr target, const char *source);
+void bgstrToStr      (char *target, const bgstr source);
 void bgstrAssign     (bgstr target, bgstr source);
 
-void bgstrCopy    (bgstr source, bgstr target, bglen_t from, bglen_t count);
-void bgstrSubStr  (bgstr source, bgstr target, bglen_t from, bglen_t count);
+void bgstrCopy    (bgstr target, bgstr source, bglen_t from, bglen_t count);
+void bgstrSubStr  (bgstr target, bgstr source, bglen_t from, bglen_t count);
 
-void bgstrInsertStrAt  (bgstr source,
-                        bgstr target,
+void bgstrInsertStrAt  (bgstr target,
+                        bgstr source,
                         bgstr str,
                         bglen_t position);
-void bgstrInsertCharAt  (bgstr source,
-                         bgstr target,
+void bgstrInsertCharAt  (bgstr target,
+                         bgstr source,
                          bgstr ch,
                          bglen_t position);
-void bgstrRemoveCharAt  (bgstr source, bgstr target, bglen_t position);
-void bgstrAppend        (bgstr source, bgstr target, bgstr str);
-void bgstrPrepend       (bgstr source, bgstr target, bgstr str);
+void bgstrRemoveCharAt  (bgstr target, bgstr source, bglen_t position);
+void bgstrAppend        (bgstr target, bgstr source, bgstr str);
+void bgstrPrepend       (bgstr target, bgstr source, bgstr str);
 
-void bgstrFirstChar     (const bgstr source, bgstr target);
-void bgstrLastChar      (const bgstr source, bgstr target);
+void bgstrFirstChar     (bgstr target, const bgstr source);
+void bgstrLastChar      (bgstr target, const bgstr source);
 
-void bgstrToLower    (const bgstr source, bgstr target);
-void bgstrToUpper    (const bgstr source, bgstr target);
+void bgstrToLower    (bgstr target, const bgstr source);
+void bgstrToUpper    (bgstr target, const bgstr source);
 
 int bgstrCmp         (const bgstr str1, const bgstr str2);
 int bgstrCmpI        (const bgstr str1, const bgstr str2);

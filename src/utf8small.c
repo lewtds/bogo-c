@@ -67,32 +67,32 @@ void printBgstrNewline (const bgstr str) {
 /* ----------------------------------------------------------------------- */
 /* Main */
 
-void bgstrFirstChar (const bgstr source,
-                     bgstr target) {
-    bgstrGetCharAt (source, target, 0);
+void bgstrFirstChar (bgstr target,
+                     const bgstr source) {
+    bgstrGetCharAt (target, source, 0);
 }
 
-void bgstrLastChar (const bgstr source,
-                    bgstr target) {
-    bgstrGetCharAt (source, target, bgstrLen (source) - 1);
+void bgstrLastChar (bgstr target,
+                    const bgstr source) {
+    bgstrGetCharAt (target, source, bgstrLen (source) - 1);
 }
 
-void bgstrPrepend (bgstr source,
-                   bgstr target,
+void bgstrPrepend (bgstr target,
+                   bgstr source,
                    bgstr str) {
-    bgstrInsertStrAt (source, target, str, 0);
+    bgstrInsertStrAt (target, source, str, 0);
 }
 
-void bgstrAppend (bgstr source,
-                  bgstr target,
+void bgstrAppend (bgstr target,
+                  bgstr source,
                   bgstr str) {
-    bgstrInsertStrAt (source, target, str, bgstrLen (source));
+    bgstrInsertStrAt (target, source, str, bgstrLen (source));
 }
 
 bglen_t bgcharCountBytesAt (const bgstr str,
                             bglen_t position) {
     bgchar ch;
-    bgstrGetCharAt (str, ch, position);
+    bgstrGetCharAt (ch, str, position);
     return bgcharCountBytes (ch);
 }
 
@@ -118,7 +118,7 @@ bglen_t bgNthBgcharToNthByte (const bgstr str,
 bglen_t bgcharCountBytes (const bgchar ch) {
     bgchar tmpChar;
 
-    bgstrGetCharAt (ch, tmpChar, 0);
+    bgstrGetCharAt (tmpChar, ch, 0);
     return bgstrCountBytes (tmpChar);
 }
 
@@ -126,8 +126,8 @@ bglen_t bgstrCountBytes (const bgstr str) {
     return strlen_ (str);
 }
 
-void bgstrInsertStrAt  (bgstr source,
-                        bgstr target,
+void bgstrInsertStrAt  (bgstr target,
+                        bgstr source,
                         bgstr ch,
                         bglen_t position) {
     bglen_t length = bgstrLen (source);
@@ -143,8 +143,8 @@ void bgstrInsertStrAt  (bgstr source,
         return;
     }
 
-    bgstrSubStr (source, substr1, 0, position);
-    bgstrSubStr (source, substr2, position, -1);
+    bgstrSubStr (substr1, source, 0, position);
+    bgstrSubStr (substr2, source, position, -1);
 
     strcat (result, substr1);
     strcat (result, ch);
@@ -152,45 +152,45 @@ void bgstrInsertStrAt  (bgstr source,
     newLength = bgstrCountBytes (source) + bgstrCountBytes (ch);
     result[newLength + 1] = 0;      /* Make sure it's NULL-terminated */
 
-    bgstrAssign (target, result);
+    bgstrAssign (result, target);
 }
 
-void bgstrInsertCharAt  (bgstr source,
-                         bgstr target,
+void bgstrInsertCharAt  (bgstr target,
+                         bgstr source,
                          bgstr ch,
                          bglen_t position) {
     bgstrInsertStrAt (source, target, ch, position);
 }
 
-void bgstrAssign (bgstr target,
-                bgstr source) {
-    bgstrDup (source, target);
+void bgstrAssign (bgstr source,
+                  bgstr target) {
+    bgstrDup (target, source);
 }
 
 bglen_t bgstrGetCharLenAt (const bgstr str,
                            bglen_t position) {
     bgchar ch;
-    bgstrGetCharAt (str, ch, position);
+    bgstrGetCharAt (ch, str, position);
     return bgcharLen (ch);
 }
 
-void bgstrSubStr (bgstr source,
-                  bgstr target,
+void bgstrSubStr (bgstr target,
+                  bgstr source,
                   bglen_t from,
                   bglen_t count) {
-    bgstrCopy (source, target, from, count);
+    bgstrCopy (target, source, from, count);
 }
 
-void strCopy (const char *source,
-              char *target,
+void strCopy (char *target,
+              const char *source,
               bglen_t fromByte,
               bglen_t count) {
     memcpy (target, source + fromByte, count);
     target[count] = 0;          /* Make sure the string is properly ended */
 }
 
-void bgstrCopy (bgstr source,
-                bgstr target,
+void bgstrCopy (bgstr target,
+                bgstr source,
                 bglen_t from,
                 bglen_t count) {
     bglen_t length = bgstrLen (source);
@@ -213,16 +213,16 @@ void bgstrCopy (bgstr source,
 
     lastCharPosition = from + count - 1;
 
-    startFrom = bgNthBgcharToNthByte (source, from);
-    nBytes    = bgNthBgcharToNthByte (source, from + count - 1)
+    startFrom = bgNthBgcharToNthByte (from, source);
+    nBytes    = bgNthBgcharToNthByte (from + count - 1, source)
         + bgstrGetCharLenAt (source, lastCharPosition) - startFrom;
 
-    strCopy (source, result, startFrom, nBytes);
-    bgstrAssign (target, result); /* Guard in case source == target */
+    strCopy (result, source, startFrom, nBytes);
+    bgstrAssign (result, target); /* Guard in case source == target */
 }
 
-void bgstrDup (const bgstr source,
-               bgstr target) {
+void bgstrDup (bgstr target,
+               const bgstr source) {
     memset (target, 0, sizeof (target));
 
     /* Empty string */
@@ -230,17 +230,17 @@ void bgstrDup (const bgstr source,
         return;
     }
 
-    strCopy (source, target, 0, strlen_ (source));
+    strCopy (target, source, 0, strlen_ (source));
 }
 
-void strToBgstr (const char *source,
-                 bgstr target) {
-    bgstrDup (source, target);
+void strToBgstr (bgstr target,
+                 const char *source) {
+    bgstrDup (target, source);
 }
 
-void bgstrToStr (const bgstr source,
-                 char *target) {
-    bgstrDup (source, target);
+void bgstrToStr (char *target,
+                 const bgstr source) {
+    bgstrDup (target, source);
 }
 
 bglen_t bgcharLen (const bgchar ch) {
@@ -274,8 +274,8 @@ bglen_t bgstrLen (const bgstr str) {
     return res;
 }
 
-void bgstrGetCharAt (const bgstr source,
-                     bgstr target,
+void bgstrGetCharAt (bgstr target,
+                     const bgstr source,
                      bglen_t pos) {
     /* Out-of-range guard */
     if (pos < 0 || bgstrLen (source) <= pos) {
@@ -298,7 +298,7 @@ void bgstrGetCharAt (const bgstr source,
 }
 
 int bgstrCmp (const bgstr str1, const bgstr str2) {
-
+    return strcmp(str1, str2);
 }
 
 
@@ -310,7 +310,7 @@ bgbool bgStartsWith(const bgstr str, bgstr pattern)
 
 bgbool strIsEmpty(const bgstr str)
 {
-
+    return bgstrLen(str) == 0;
 }
 
 
