@@ -54,7 +54,7 @@ union TransTypeUnion {
 };
 
 struct TransT {
-    const struct RuleT           *rule;
+    struct RuleT           *rule;
     struct TransT          *target;
     int                    dest_index;  /* For TRANS_APPEND, a pointer to the */
                                         /* char in the flattened string made  */

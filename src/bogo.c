@@ -219,7 +219,7 @@ void findMarkTarget(struct List *transList, struct TransT *trans, struct RuleT *
 
     if (trans->target != NULL) {
         free(trans->rule);
-        trans->rule = rule;
+        memcpy(trans->rule, rule, sizeof(struct RuleT));
     }
 }
 
