@@ -3,6 +3,7 @@
   This file is a part of bogoengine project.
 
   Copyright (C) 2012-2013 Duong H. Nguyen <cmpitgATgmaildotcom>
+  Copyright (C) 2013 Trung Ngo <ndtrung4419 AT gmail DOT com>
 
   bogoengine is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
