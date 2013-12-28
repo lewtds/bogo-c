@@ -26,7 +26,7 @@ int main() {
 
     for (int i = 0; i < 2; ++i) {
         struct RuleT *rule = new(struct RuleT);
-        strToTrans(rule, ruleTemplates[i]);
+        parseRuleFromString(rule, ruleTemplates[i]);
         listAppend(rules, rule);
     }
 
