@@ -163,7 +163,7 @@ void findMarkTarget(struct List *transList, struct TransT *trans, struct RuleT *
     struct ListItem *iter = transList->last;
     while (iter != NULL) {
         ITERITEM(iter, struct TransT, currentTrans);
-        if (bgstrCmp(currentTrans->rule->key, rule->effectOn)) {
+        if (bgstrEqual(currentTrans->rule->key, rule->effectOn)) {
             trans->target = currentTrans;
             break;
         }
@@ -193,9 +193,11 @@ void processChar(struct List *rules, struct List *transList, bgstr chr) {
     struct TransT *newTrans = new(struct TransT);
 
     // A transformation is by default an appending one
-    newTrans->rule = new(struct RuleT);
-    memcpy(newTrans->rule, &APPEND_RULE, sizeof(struct RuleT));
-    bgstrAssign(newTrans->rule->key, chr);
+    struct RuleT *rule = new(struct RuleT);
+    memcpy(rule, &APPEND_RULE, sizeof(struct RuleT));
+    bgstrAssign(rule->key, chr);
+
+    newTrans->rule = rule;
 
     if (applicable_rules->length != 0) {
         struct ListItem *ruleIter = rules->first;
