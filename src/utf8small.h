@@ -78,7 +78,7 @@ void strToBgstr      (bgstr target, const char *source);
 void bgstrToStr      (char *target, const bgstr source);
 void bgstrAssign     (bgstr target, const bgstr source);
 
-void bgstrCopy    (bgstr target, bgstr source, bglen_t from, bglen_t count);
+void bgstrCopy    (bgstr target, const bgstr source, bglen_t from, bglen_t count);
 void bgstrSubStr  (bgstr target, const bgstr source, bglen_t from, bglen_t count);
 
 void bgstrInsertStrAt  (bgstr target,
@@ -102,8 +102,8 @@ void bgstrToUpper    (bgstr target, const bgstr source);
 int bgstrCmp         (const bgstr str1, const bgstr str2);
 int bgstrCmpI        (const bgstr str1, const bgstr str2);
 
-bgbool bgStartsWith  (const bgstr str, bgstr pattern);
-bgbool bgEndsWith    (const bgstr str, bgstr pattern);
+bgbool bgStartsWith  (const bgstr str, const bgstr pattern);
+bgbool bgEndsWith    (const bgstr str, const bgstr pattern);
 
 void stripSpaces(bgstr dest, const bgstr src);
 bgbool strIsEmpty(const bgstr str);

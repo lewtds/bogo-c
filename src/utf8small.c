@@ -191,7 +191,7 @@ void strCopy (char *target,
 }
 
 void bgstrCopy (bgstr target,
-                bgstr source,
+                const bgstr source,
                 bglen_t from,
                 bglen_t count) {
     bglen_t length = bgstrLen (source);
@@ -303,7 +303,7 @@ int bgstrCmp (const bgstr str1, const bgstr str2) {
 }
 
 
-bgbool bgStartsWith(const bgstr str, bgstr pattern)
+bgbool bgStartsWith(const bgstr str, const bgstr pattern)
 {
     int i = 0;
     while(pattern[i] != '\0') {
