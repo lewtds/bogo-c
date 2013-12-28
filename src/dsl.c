@@ -88,29 +88,46 @@ void strToTrans(struct RuleT *rule,
     /* Last part: transformation type */
     bgstr lastChar;
     bgstrLastChar(lastChar, tmp);
-    strToTransType(&(rule->transMethod), lastChar);
+    parseTransType(&(rule->type), &(rule->transMethod), lastChar);
 }
 
-void strToTransType(union TransTypeUnion *transType, const bgstr str)
+void parseTransType(enum TransEnum *transType, union TransTypeUnion *transMethod, const bgstr str)
 {
-    if (bgstrCmp(str, "'")) {
-        (*transType).tone = TONE_ACUTE;
-    } else if (bgstrCmp(str, "`")) {
-        (*transType).tone = TONE_GRAVE;
-    } else if (bgstrCmp(str, "?")) {
-        (*transType).tone = TONE_HOOK;
-    } else if (bgstrCmp(str, "~")) {
-        (*transType).tone = TONE_TILDE;
-    } else if (bgstrCmp(str, ".")) {
-        (*transType).tone = TONE_DOT;
-    } else if (bgstrCmp(str, "^")) {
-        (*transType).mark = MARK_HAT;
-    } else if (bgstrCmp(str, "(")) {
-        (*transType).mark = MARK_BREVE;
-    } else if (bgstrCmp(str, "+")) {
-        (*transType).mark = MARK_HORN;
-    } else if (bgstrCmp(str, "-")) {
-        (*transType).mark = MARK_DASH;
+    if (bgstrEqual(str, "'")) {
+        *transType = TRANS_TONE;
+        transMethod->tone = TONE_ACUTE;
+
+    } else if (bgstrEqual(str, "`")) {
+        *transType = TRANS_TONE;
+        transMethod->tone = TONE_GRAVE;
+
+    } else if (bgstrEqual(str, "?")) {
+        *transType = TRANS_TONE;
+        transMethod->tone = TONE_HOOK;
+
+    } else if (bgstrEqual(str, "~")) {
+        *transType = TRANS_TONE;
+        transMethod->tone = TONE_TILDE;
+
+    } else if (bgstrEqual(str, ".")) {
+        *transType = TRANS_TONE;
+        transMethod->tone = TONE_DOT;
+
+    } else if (bgstrEqual(str, "^")) {
+        *transType = TRANS_MARK;
+        transMethod->mark = MARK_HAT;
+
+    } else if (bgstrEqual(str, "(")) {
+        *transType = TRANS_MARK;
+        transMethod->mark = MARK_BREVE;
+
+    } else if (bgstrEqual(str, "+")) {
+        *transType = TRANS_MARK;
+        transMethod->mark = MARK_HORN;
+
+    } else if (bgstrEqual(str, "-")) {
+        *transType = TRANS_MARK;
+        transMethod->mark = MARK_DASH;
     }
 }
 
