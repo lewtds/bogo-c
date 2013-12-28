@@ -263,7 +263,7 @@ void processChar(struct List *rules, struct List *transList, bgstr chr) {
     }
 
     listAppend(transList, newTrans);
-    freeList(applicable_rules);
+    listFree(applicable_rules);
 }
 
 
@@ -278,6 +278,6 @@ void processString(struct List *rules, bgstr output, const bgstr input) {
 
     flatten(output, transList);
 
-    freeList(transList);
+    listFree(transList);
 }
 

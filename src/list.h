@@ -36,11 +36,13 @@ struct List {
 };
 
 
-struct List *listNew();
-struct ListItem *listNext(struct ListItem *list);
-struct List *listAppend(struct List *list, void *item);
-void listFromArray(struct List *list, void *array, int itemSize, int len);
-struct ListItem *listIndex(struct List *list, int index);
-void freeList(struct List *list);
+struct List *listNew (void);
+void listFree        (struct List *list);
+void listFromArray   (struct List *list, void *array, int itemSize, int len);
+
+struct List *listAppend (struct List *list, void *item);
+
+struct ListItem *listIndex (struct List *list, int index);
+struct ListItem *listNext  (struct ListItem *list);
 
 #endif // LIST_H

@@ -74,7 +74,7 @@ struct ListItem *listIndex(struct List *list, int index) {
 }
 
 
-void freeList(struct List *list)
+void listFree(struct List *list)
 {
     struct ListItem *iter = list->first;
     while (iter != NULL) {
