@@ -135,7 +135,7 @@ void flatten(bgstr output,
 
 void addToneToChar(bgstr chr, enum ToneEnum tone)
 {
-    int index = strIndexOf(VOWELS, chr, 0);
+    int index = bgstrIndexOf(VOWELS, chr, 0);
 
     if (index != -1) {
         int current_tone = index % 6;
@@ -152,7 +152,7 @@ void addMarkToChar(bgstr chr, enum MarkEnum mark)
     {"aâăaa", "eêeee", "oôoơo", "uuuưu", "ddddđ"};
 
     for (int i = 0; i < 5; i++) {
-        if (strIndexOf(mark_groups[i], chr, 0) != -1) {
+        if (bgstrIndexOf(mark_groups[i], chr, 0) != -1) {
             bgstrSubStr(chr, mark_groups[i], mark, 1);
             break;
         }
