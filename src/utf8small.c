@@ -324,3 +324,9 @@ int strIndexOf(const bgstr str, const bgstr pattern, int startFrom)
 {
 
 }
+
+
+bgbool bgstrEqual(const bgstr left, const bgstr right)
+{
+    return strcmp(left, right) == 0;
+}

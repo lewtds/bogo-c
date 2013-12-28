@@ -105,4 +105,6 @@ bgbool bgEndsWith    (const bgstr str, bgstr pattern);
 void stripSpaces(bgstr dest, const bgstr src);
 bgbool strIsEmpty(const bgstr str);
 int strIndexOf(const bgstr str, const bgstr pattern, int startFrom);
+
+bgbool bgstrEqual(const bgstr left, const bgstr right);
 #endif

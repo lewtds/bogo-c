@@ -184,7 +184,7 @@ void processChar(struct List *rules, struct List *transList, bgstr chr) {
     struct ListItem *iter = rules->first;
     while (iter != NULL) {
         struct RuleT *rule = (struct RuleT *) iter->item;
-        if (bgstrCmp(rule->key, chr)) {
+        if (bgstrEqual(rule->key, chr)) {
             listAppend(applicable_rules, rule);
         }
         iter = iter->next;
