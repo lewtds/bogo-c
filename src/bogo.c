@@ -115,30 +115,30 @@ void flatten(bgstr output,
     struct ListItem *iterator = transList->first;
     while (iterator != NULL) {
 
-        struct TransT trans = *((struct TransT *) iterator->item);
+        struct TransT *trans = (struct TransT *) iterator->item;
 
         bgstrheap toBeAppended;
         bgstrheap toBeChanged;
 
-        switch (trans.rule->type) {
+        switch (trans->rule->type) {
         case TRANS_APPEND:
             toBeAppended = malloc(MAXSTRLEN);
 
-            bgstrAssign(toBeAppended, trans.rule->key);
+            bgstrAssign(toBeAppended, trans->rule->key);
             listAppend(outputArray, toBeAppended);
 
-            trans.dest_index = output_index;
+            trans->dest_index = output_index;
             output_index++;  // Only TRANS_APPEND creates a new char
             break;
         case TRANS_TONE:
-            toBeChanged = listIndex(outputArray, trans.target->dest_index)->item;
+            toBeChanged = listIndex(outputArray, trans->target->dest_index)->item;
             addToneToChar(toBeChanged,
-                             trans.rule->transMethod.tone);
+                             trans->rule->transMethod.tone);
             break;
         case TRANS_MARK:
-            toBeChanged = listIndex(outputArray, trans.target->dest_index)->item;
+            toBeChanged = listIndex(outputArray, trans->target->dest_index)->item;
             addMarkToChar(toBeChanged,
-                             trans.rule->transMethod.mark);
+                             trans->rule->transMethod.mark);
             break;
         }
 
