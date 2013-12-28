@@ -162,8 +162,8 @@ void bgstrInsertCharAt  (bgstr target,
     bgstrInsertStrAt (source, target, ch, position);
 }
 
-void bgstrAssign (bgstr source,
-                  bgstr target) {
+void bgstrAssign (bgstr target,
+                  bgstr source) {
     bgstrDup (target, source);
 }
 
