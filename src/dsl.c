@@ -65,7 +65,7 @@ E.g.
   strToTrans(_, "   ")         _ => { key: "",  effectOn: "",  transType: APPEND     }
 
 */
-void strToTrans(struct RuleT *rule,
+void parseRuleFromString(struct RuleT *rule,
                 const bgstr str)
 {
     bgstr tmp;
