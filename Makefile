@@ -34,3 +34,5 @@ tryout:
 
 tryout_unittest:
 	@cd src; make tryout_unittest
+
+all: clean test
