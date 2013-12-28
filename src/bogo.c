@@ -71,6 +71,7 @@
 
 #include "list.h"
 #include "bogo.h"
+#include "utf8small.h"
 
 
 const bgstr VOWELS = "àáảãạaằắẳẵặăầấẩẫậâèéẻẽẹeềếểễệêìíỉĩịi" \
@@ -108,26 +109,49 @@ void flatten(bgstr output,
 {
     int output_index = 0;
 
+    // Holds output characters to be joined into "output"
+    struct List *outputArray = listNew();
+
     struct ListItem *iterator = transList->first;
     while (iterator != NULL) {
 
         struct TransT trans = *((struct TransT *) iterator->item);
 
+        bgstrheap toBeAppended;
+        bgstrheap toBeChanged;
+
         switch (trans.rule->type) {
         case TRANS_APPEND:
-            bgstrAssign(output + output_index, trans.rule->key);
+            toBeAppended = malloc(MAXSTRLEN);
+
+            bgstrAssign(toBeAppended, trans.rule->key);
+            listAppend(outputArray, toBeAppended);
+
             trans.dest_index = output_index;
             output_index++;  // Only TRANS_APPEND creates a new char
             break;
         case TRANS_TONE:
-            addToneToChar(output + trans.target->dest_index,
+            toBeChanged = listIndex(outputArray, trans.target->dest_index)->item;
+            addToneToChar(toBeChanged,
                              trans.rule->transMethod.tone);
             break;
         case TRANS_MARK:
-            addMarkToChar(output + trans.target->dest_index,
+            toBeChanged = listIndex(outputArray, trans.target->dest_index)->item;
+            addMarkToChar(toBeChanged,
                              trans.rule->transMethod.mark);
             break;
         }
+
+        iterator = iterator->next;
+    }
+
+
+    // Join outputArray into "output"
+    output_index = 0;
+    iterator = outputArray->first;
+    while(iterator != NULL) {
+        bgstrAssign(output + output_index, iterator->item);
+        output_index += strlen(iterator->item);
 
         iterator = iterator->next;
     }
