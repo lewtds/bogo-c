@@ -9,17 +9,16 @@ UNITTEST_OBJ = $(patsubst %.c,%.o,$(UNITTEST_SRC))
 SRC_FILES = $(UTF8_SRC) $(UNITTEST_SRC)
 
 TEST_DSL_SRC = \
-	../src/dsl.o \
-	../src/utf8small.o \
-	test_dsl.o \
+	../src/dsl.c \
+	../src/utf8small.c \
+	test_dsl.c \
 	$(UNITTEST_SRC)
 TEST_DSL_OBJ = $(patsubst %.c,%.o,$(TEST_DSL_SRC))
 
 TEST_BOGO_SRC = \
-	../src/bogo.o \
-	../src/list.o \
-	../src/utf8small.o \
-	test_bogo.o \
+	../src/bogo.c \
+	../src/list.c \
+	../src/utf8small.c \
 	$(UNITTEST_SRC)
 TEST_BOGO_OBJ = $(patsubst %.c,%.o,$(TEST_BOGO_SRC))
 
