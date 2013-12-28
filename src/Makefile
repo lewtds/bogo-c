@@ -55,5 +55,6 @@ bogo: $(BOGO_SRC)
 	@$(CC) -o $(BOGO_EXEC) \
 		-I$(INCLUDE) \
 		-std=c99 \
+		-g \
 		$(BOGO_SRC) \
 		$(UTF8_SRC)
