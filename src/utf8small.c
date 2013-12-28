@@ -163,7 +163,7 @@ void bgstrInsertCharAt  (bgstr target,
 }
 
 void bgstrAssign (bgstr target,
-                  bgstr source) {
+                  const bgstr source) {
     bgstrDup (target, source);
 }
 
@@ -175,10 +175,10 @@ bglen_t bgstrGetCharLenAt (const bgstr str,
 }
 
 void bgstrSubStr (bgstr target,
-                  bgstr source,
+                  const bgstr source,
                   bglen_t from,
                   bglen_t count) {
-    bgstrCopy (target, source, from, count);
+     bgstrCopy (target, source, from, count);
 }
 
 void strCopy (char *target,
@@ -213,8 +213,8 @@ void bgstrCopy (bgstr target,
 
     lastCharPosition = from + count - 1;
 
-    startFrom = bgNthBgcharToNthByte (from, source);
-    nBytes    = bgNthBgcharToNthByte (from + count - 1, source)
+    startFrom = bgNthBgcharToNthByte (source, from);
+    nBytes    = bgNthBgcharToNthByte (source, from + count - 1)
         + bgstrGetCharLenAt (source, lastCharPosition) - startFrom;
 
     strCopy (result, source, startFrom, nBytes);

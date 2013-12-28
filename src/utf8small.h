@@ -73,10 +73,10 @@ bglen_t bgNthBgcharToNthByte (const bgstr str, bglen_t position);
 void bgstrDup        (bgstr target, const bgstr source);
 void strToBgstr      (bgstr target, const char *source);
 void bgstrToStr      (char *target, const bgstr source);
-void bgstrAssign     (bgstr target, bgstr source);
+void bgstrAssign     (bgstr target, const bgstr source);
 
 void bgstrCopy    (bgstr target, bgstr source, bglen_t from, bglen_t count);
-void bgstrSubStr  (bgstr target, bgstr source, bglen_t from, bglen_t count);
+void bgstrSubStr  (bgstr target, const bgstr source, bglen_t from, bglen_t count);
 
 void bgstrInsertStrAt  (bgstr target,
                         bgstr source,
