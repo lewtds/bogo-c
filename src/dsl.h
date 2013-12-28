@@ -27,7 +27,7 @@
 #include "common.h"
 #include "bogo.h"
 
-void parseRuleFromString(struct RuleT *rule, const bgstr str);
-void parseTransType(enum TransEnum *transType, union TransTypeUnion *transMethod, const bgstr str);
+void parseRuleFromString (struct RuleT *rule, const bgstr str);
+void parseTransType      (enum TransEnum *transType, union TransTypeUnion *transMethod, const bgstr str);
 
 #endif // DSL_H

@@ -60,9 +60,6 @@ struct RuleT {
     union TransTypeUnion transMethod;
 };
 
-void flatten(bgstr output, struct List *transList);
-void addToneToChar(bgstr chr, enum ToneEnum tone);
-void addMarkToChar(bgstr chr, enum MarkEnum mark);
 struct TransT {
     struct RuleT           rule;
     struct TransT          *target;
@@ -71,6 +68,10 @@ struct TransT {
                                         /* by this TransT                     */
 };
 
-void processString(struct List *rules, bgstr output, const bgstr input);
+void addToneToChar (bgstr chr, enum ToneEnum tone);
+void addMarkToChar (bgstr chr, enum MarkEnum mark);
+
+void flatten       (bgstr output, struct List *transList);
+void processString (struct List *rules, bgstr output, const bgstr input);
 
 #endif // BOGO_H
