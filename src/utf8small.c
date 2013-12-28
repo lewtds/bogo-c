@@ -20,6 +20,7 @@
 */
 
 #include <stdio.h>
+#include "common.h"
 #include "utf8small.h"
 
 /* ----------------------------------------------------------------------- */
@@ -304,7 +305,14 @@ int bgstrCmp (const bgstr str1, const bgstr str2) {
 
 bgbool bgStartsWith(const bgstr str, bgstr pattern)
 {
-
+    int i = 0;
+    while(pattern[i] != '\0') {
+        if (str[i] != pattern[i]) {
+            return FALSE;
+        }
+        i++;
+    }
+    return TRUE;
 }
 
 
@@ -320,9 +328,16 @@ void stripSpaces(bgstr dest, const bgstr src)
 }
 
 
-int strIndexOf(const bgstr str, const bgstr pattern, int startFrom)
+int bgstrIndexOf(const bgstr str, const bgstr pattern, int startFrom)
 {
-
+    int i = 0;
+    while(str[i] != '\0') {
+        if (bgStartsWith(str + startFrom + i, pattern)) {
+            return i + startFrom;
+        }
+        i++;
+    }
+    return -1;
 }
 
 
