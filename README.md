@@ -45,6 +45,7 @@ tệp `COPYING`.
 ## Bản quyền
 
 Bản quyền 2013 © thuộc về Nguyễn Hà Dương, cmpitgATgmaildotcom
+
 Bản quyền 2013 © thuộc về Trung Ngo, ndtrung4419 AT gmail DOT com
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/lewtds/bogo-c/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
