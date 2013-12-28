@@ -34,6 +34,8 @@ Một vài tài liệu hữu ích:
 
 * [Hướng dẫn tham gia dự án](https://github.com/cmpitg/bogoengine/wiki#d%C3%A0nh-cho-ng%C6%B0%E1%BB%9Di-ph%C3%A1t-tri%E1%BB%83n-bogoengine).
 
+* [HACKING](HACKING.md)
+
 ## Giấy phép xuất bản
 
 *bogoengine* được xuất bản dưới các điều khoản của Giấy phép Công cộng GNU
@@ -42,4 +44,7 @@ tệp `COPYING`.
 
 ## Bản quyền
 
-Bản quyền 2013 © thuộc về Nguyễn Hà Dương <cmpitgATgmaildotcom>
+Bản quyền 2013 © thuộc về Nguyễn Hà Dương, cmpitgATgmaildotcom
+Bản quyền 2013 © thuộc về Trung Ngo, ndtrung4419 AT gmail DOT com
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/lewtds/bogo-c/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
