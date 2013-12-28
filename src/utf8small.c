@@ -219,7 +219,7 @@ void bgstrCopy (bgstr target,
         + bgstrGetCharLenAt (source, lastCharPosition) - startFrom;
 
     strCopy (result, source, startFrom, nBytes);
-    bgstrAssign (result, target); /* Guard in case source == target */
+    bgstrAssign (target, result); /* Guard in case source == target */
 }
 
 void bgstrDup (bgstr target,
