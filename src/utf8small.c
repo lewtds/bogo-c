@@ -331,7 +331,8 @@ void stripSpaces(bgstr dest, const bgstr src)
 int bgstrIndexOf(const bgstr str, const bgstr pattern, int startFrom)
 {
     // FIXME: SLOW algorithm, should use something like a UTF-8 iterator
-    for (int i = 0; i < bgstrLen(str) - startFrom; ++i) {
+    bglen_t strLen = bgstrLen(str);
+    for (int i = 0; i < strLen - startFrom; ++i) {
         if (bgStartsWith(str + bgNthBgcharToNthByte(str, i + startFrom), pattern)) {
             return i;
         }
