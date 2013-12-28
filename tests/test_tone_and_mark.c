@@ -52,9 +52,30 @@ int testAddToneToChar(void) {
     return finishTestCase ();
 }
 
+int testAddMarkToChar(void) {
+    initTestCase("Add mark to char");
+
+    bgstr target = "a";
+    addMarkToChar(target, MARK_HAT);
+    assertStr("â", target);
+
+    // Char should stay the same if non-compatible mark is applied
+    bgstrAssign(target, "a");
+    addMarkToChar(target, MARK_DASH);
+    assertStr("a", target);
+
+    // Should change/remove mark
+    bgstrAssign(target, "â");
+    addMarkToChar(target, MARK_NONE);
+    assertStr("a", target);
+
+    return finishTestCase();
+}
+
 int main (int argc, char *argv[]) {
 
     addTest (testAddToneToChar);
+    addTest (testAddMarkToChar);
 
     runAllTests ();
 

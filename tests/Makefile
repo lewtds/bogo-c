@@ -33,9 +33,9 @@ TEST_UTF8_EXEC   = $(BUILD_TEST_DIR)/test_utf8
 
 CFLAGS = -g -std=c99 -I$(INCLUDE)
 
-test: test_dsl test_bogo
+test: test_dsl test_tone_and_mark
 	./test_dsl
-	./test_bogo
+	./test_tone_and_mark
 
 test_utf: $(TEST_UTF8_SRC)
 	@mkdir -p $(BUILD_TEST_DIR)
@@ -47,7 +47,9 @@ test_utf: $(TEST_UTF8_SRC)
 
 test_dsl: $(TEST_DSL_OBJ)
 
-test_bogo: $(TEST_BOGO_OBJ)
+# test_bogo: $(TEST_BOGO_OBJ)
+
+test_tone_and_mark: $(TEST_BOGO_OBJ) test_tone_and_mark.o
 
 clean:
 	rm -rf \
