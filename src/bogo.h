@@ -5,9 +5,9 @@
 #include "common.h"
 
 enum TransEnum {
-    TRANS_TONE = 0,
+    TRANS_APPEND,
+    TRANS_TONE,
     TRANS_MARK,
-    TRANS_APPEND
 };
 
 enum ToneEnum {
