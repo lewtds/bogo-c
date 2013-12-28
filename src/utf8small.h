@@ -29,10 +29,13 @@
 #define strlen_ strlen
 
 typedef uint8_t   bgbyte;
-typedef uint8_t   bgstr[BG_MAX_BUFFER];
-typedef bgstr     bgchar;
 typedef int32_t   bglen_t;
 typedef char      bgbool;
+
+typedef uint8_t   bgstr[BG_MAX_BUFFER];
+typedef bgstr     bgchar;
+typedef uint8_t*  bgstrheap;
+
 
 /* Helper */
 /* Copy string using memcpy instead of strncpy and make sure it's
