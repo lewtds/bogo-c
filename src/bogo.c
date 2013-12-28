@@ -143,11 +143,11 @@ void flatten(bgstr output,
         bgstrheap toBeAppended;
         bgstrheap toBeChanged;
 
-        switch (trans->rule->type) {
+        switch (trans->rule.type) {
         case TRANS_APPEND:
             toBeAppended = malloc(MAXSTRLEN);
 
-            bgstrAssign(toBeAppended, trans->rule->key);
+            bgstrAssign(toBeAppended, trans->rule.key);
             listAppend(outputArray, toBeAppended);
 
             trans->dest_index = output_index;
@@ -156,12 +156,12 @@ void flatten(bgstr output,
         case TRANS_TONE:
             toBeChanged = listIndex(outputArray, trans->target->dest_index)->item;
             addToneToChar(toBeChanged,
-                             trans->rule->transMethod.tone);
+                             trans->rule.transMethod.tone);
             break;
         case TRANS_MARK:
             toBeChanged = listIndex(outputArray, trans->target->dest_index)->item;
             addMarkToChar(toBeChanged,
-                             trans->rule->transMethod.mark);
+                             trans->rule.transMethod.mark);
             break;
         }
 
@@ -210,7 +210,7 @@ void findMarkTarget(struct List *transList, struct TransT *trans, struct RuleT *
     struct ListItem *iter = transList->last;
     while (iter != NULL) {
         ITERITEM(iter, struct TransT, currentTrans);
-        if (bgstrEqual(currentTrans->rule->key, rule->effectOn)) {
+        if (bgstrEqual(currentTrans->rule.key, rule->effectOn)) {
             trans->target = currentTrans;
             break;
         }
@@ -218,8 +218,7 @@ void findMarkTarget(struct List *transList, struct TransT *trans, struct RuleT *
     }
 
     if (trans->target != NULL) {
-        free(trans->rule);
-        memcpy(trans->rule, rule, sizeof(struct RuleT));
+        trans->rule = *rule;
     }
 }
 
@@ -240,11 +239,8 @@ void processChar(struct List *rules, struct List *transList, bgstr chr) {
     struct TransT *newTrans = new(struct TransT);
 
     // A transformation is by default an appending one
-    struct RuleT *rule = new(struct RuleT);
-    memcpy(rule, &APPEND_RULE, sizeof(struct RuleT));
-    bgstrAssign(rule->key, chr);
-
-    newTrans->rule = rule;
+    newTrans->rule = APPEND_RULE;
+    bgstrAssign(newTrans->rule.key, chr);
 
     if (applicable_rules->length != 0) {
         struct ListItem *ruleIter = rules->first;

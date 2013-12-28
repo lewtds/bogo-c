@@ -53,14 +53,6 @@ union TransTypeUnion {
     enum MarkEnum   mark;
 };
 
-struct TransT {
-    struct RuleT           *rule;
-    struct TransT          *target;
-    int                    dest_index;  /* For TRANS_APPEND, a pointer to the */
-                                        /* char in the flattened string made  */
-                                        /* by this TransT                     */
-};
-
 struct RuleT {
     bgstr key;
     bgstr effectOn;
@@ -71,6 +63,13 @@ struct RuleT {
 void flatten(bgstr output, struct List *transList);
 void addToneToChar(bgstr chr, enum ToneEnum tone);
 void addMarkToChar(bgstr chr, enum MarkEnum mark);
+struct TransT {
+    struct RuleT           rule;
+    struct TransT          *target;
+    int                    dest_index;  /* For TRANS_APPEND, a pointer to the */
+                                        /* char in the flattened string made  */
+                                        /* by this TransT                     */
+};
 
 void processString(struct List *rules, bgstr output, const bgstr input);
 
