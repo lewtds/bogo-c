@@ -35,4 +35,5 @@ tryout:
 tryout_unittest:
 	@cd src; make tryout_unittest
 
-all: clean test
+all: clean
+	@cd src; make bogo
