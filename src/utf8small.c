@@ -324,7 +324,7 @@ bgbool strIsEmpty(const bgstr str)
 
 void stripSpaces(bgstr dest, const bgstr src)
 {
-
+    bgstrAssign(dest, src);
 }
 
 
