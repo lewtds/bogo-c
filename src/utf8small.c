@@ -328,9 +328,16 @@ void stripSpaces(bgstr dest, const bgstr src)
 }
 
 
-int strIndexOf(const bgstr str, const bgstr pattern, int startFrom)
+int bgstrIndexOf(const bgstr str, const bgstr pattern, int startFrom)
 {
-
+    int i = 0;
+    while(str[i] != '\0') {
+        if (bgStartsWith(str + startFrom + i, pattern)) {
+            return i + startFrom;
+        }
+        i++;
+    }
+    return -1;
 }
 
 
