@@ -6,6 +6,7 @@
 #include "string.h"
 #include "bogo.h"
 #include "list.h"
+#include "dsl.h"
 
 int main() {
     if (!setlocale(LC_CTYPE, "")) {
@@ -16,14 +17,20 @@ int main() {
 
     struct List *rules = new(struct RuleT);
     struct RuleT aHatRule;
-    bgstrAssign(aHatRule.effectOn, "a");
-    bgstrAssign(aHatRule.key, "a");
-    aHatRule.type = TRANS_MARK;
-    aHatRule.transMethod.mark = MARK_HAT;
 
-    listAppend(rules, &aHatRule);
+    bgstr ruleTemplates[] = {
+        "a a a^",
+        "e e e^",
+        "o f o`"
+    };
 
-    bgstr input = "ana";
+    for (int i = 0; i < 2; ++i) {
+        struct RuleT *rule = new(struct RuleT);
+        strToTrans(rule, ruleTemplates[i]);
+        listAppend(rules, rule);
+    }
+
+    bgstr input = "aa";
     bgstr output;
 
     processString(rules, output, input);
