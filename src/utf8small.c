@@ -330,12 +330,11 @@ void stripSpaces(bgstr dest, const bgstr src)
 
 int bgstrIndexOf(const bgstr str, const bgstr pattern, int startFrom)
 {
-    int i = 0;
-    while(str[i] != '\0') {
-        if (bgStartsWith(str + startFrom + i, pattern)) {
-            return i + startFrom;
+    // FIXME: SLOW algorithm, should use something like a UTF-8 iterator
+    for (int i = 0; i < bgstrLen(str) - startFrom; ++i) {
+        if (bgStartsWith(str + bgNthBgcharToNthByte(str, i + startFrom), pattern)) {
+            return i;
         }
-        i++;
     }
     return -1;
 }
