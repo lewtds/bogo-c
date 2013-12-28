@@ -23,12 +23,12 @@ int main() {
 
     listAppend(rules, &aHatRule);
 
-    bgstr input = "aa";
+    bgstr input = "ana";
     bgstr output;
 
     processString(rules, output, input);
 
-    printf("%ls\n", output);
+    printf("%s\n", output);
 
     return 0;
 }
