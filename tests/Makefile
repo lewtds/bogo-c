@@ -15,12 +15,12 @@ TEST_DSL_SRC = \
 	$(UNITTEST_SRC)
 TEST_DSL_OBJ = $(patsubst %.c,%.o,$(TEST_DSL_SRC))
 
-TEST_BOGO_SRC = \
-	../src/bogo.c \
+BOGO_SRC = \
 	../src/list.c \
+	../src/dsl.c \
 	../src/utf8small.c \
 	$(UNITTEST_SRC)
-TEST_BOGO_OBJ = $(patsubst %.c,%.o,$(TEST_BOGO_SRC))
+BOGO_OBJ = $(patsubst %.c,%.o,$(BOGO_SRC))
 
 INCLUDE          = ../src/
 TEST_DATA_DIR    = ../test_data
@@ -32,9 +32,10 @@ TEST_UTF8_EXEC   = $(BUILD_TEST_DIR)/test_utf8
 
 CFLAGS = -g -std=c99 -I$(INCLUDE)
 
-test: test_dsl test_tone_and_mark
+test: test_dsl test_tone_and_mark test_bogo
 	./test_dsl
 	./test_tone_and_mark
+	./test_bogo
 
 test_utf: $(TEST_UTF8_SRC)
 	@mkdir -p $(BUILD_TEST_DIR)
@@ -46,9 +47,9 @@ test_utf: $(TEST_UTF8_SRC)
 
 test_dsl: $(TEST_DSL_OBJ)
 
-# test_bogo: $(TEST_BOGO_OBJ)
+test_bogo: $(BOGO_OBJ) test_bogo.o
 
-test_tone_and_mark: $(TEST_BOGO_OBJ) test_tone_and_mark.o
+test_tone_and_mark: $(BOGO_OBJ) test_tone_and_mark.o
 
 clean:
 	rm -rf \
