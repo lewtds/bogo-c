@@ -34,6 +34,21 @@ int testAddToneToChar(void) {
     addToneToChar(target, TONE_ACUTE);
     assertStr("á", target);
 
+    // Consonants should not be touched
+    bgstrAssign(target, "n");
+    addToneToChar(target, TONE_ACUTE);
+    assertStr("n", target);
+
+    // Should work with complex vowel
+    bgstrAssign(target, "ư");
+    addToneToChar(target, TONE_ACUTE);
+    assertStr("ứ", target);
+
+    // Should also change tone
+    bgstrAssign(target, "ứ");
+    addToneToChar(target, TONE_GRAVE);
+    assertStr("ừ", target);
+
     return finishTestCase ();
 }
 
