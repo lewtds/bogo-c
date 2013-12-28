@@ -2,6 +2,7 @@
 #define DSL_H
 
 #include "common.h"
+#include "bogo.h"
 
 void parseRuleFromString(struct RuleT *rule, const bgstr str);
 void parseTransType(enum TransEnum *transType, union TransTypeUnion *transMethod, const bgstr str);
