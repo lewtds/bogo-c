@@ -27,6 +27,7 @@
 #include "unittest.h"
 
 #include "bogo.c"
+#include "dsl.h"
 
 int testFindMarkTarget(void) {
     initTestCase ("Find mark target");
