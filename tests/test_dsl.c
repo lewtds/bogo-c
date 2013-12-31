@@ -32,7 +32,7 @@
 int testParseTransType(void) {
     initTestCase("Parse transformation type and method");
 
-    union TransTypeUnion method;
+    union ToneMarkUnion method;
     enum TransEnum type;
     parseTransType(&type, &method, "^");
 
@@ -56,7 +56,7 @@ int testSimpleHatRules(void) {
     assertInt(TRANS_MARK, rule.type);
     assertStr("a", rule.key);
     assertStr("a", rule.effectOn);
-    assertInt(MARK_HAT, rule.transMethod.mark);
+    assertInt(MARK_HAT, rule.toneMarkDetail.mark);
 
     return finishTestCase ();
 }

@@ -111,10 +111,10 @@ void parseRuleFromString(struct RuleT *rule,
     /* Last part: transformation type */
     bgstr lastChar;
     bgstrLastChar(lastChar, tmp);
-    parseTransType(&(rule->type), &(rule->transMethod), lastChar);
+    parseTransType(&(rule->type), &(rule->toneMarkDetail), lastChar);
 }
 
-void parseTransType(enum TransEnum *transType, union TransTypeUnion *transMethod, const bgstr str)
+void parseTransType(enum TransEnum *transType, union ToneMarkUnion *transMethod, const bgstr str)
 {
     if (bgstrEqual(str, "'")) {
         *transType = TRANS_TONE;

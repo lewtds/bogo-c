@@ -48,7 +48,7 @@ enum MarkEnum {
     MARK_DASH
 };
 
-union TransTypeUnion {
+union ToneMarkUnion {
     enum ToneEnum   tone;   /* Larger data structure goes first */
     enum MarkEnum   mark;
 };
@@ -57,7 +57,7 @@ struct RuleT {
     bgstr key;
     bgstr effectOn;
     enum TransEnum type;
-    union TransTypeUnion transMethod;
+    union ToneMarkUnion toneMarkDetail;
 };
 
 struct TransT {

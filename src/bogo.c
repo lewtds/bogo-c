@@ -107,7 +107,7 @@ const struct RuleT APPEND_RULE = {
     .key = "",
     .effectOn = "",
     .type = TRANS_APPEND,
-    .transMethod = 0
+    .toneMarkDetail = 0
 };
 
 
@@ -156,12 +156,12 @@ void flatten(bgstr output,
         case TRANS_TONE:
             toBeChanged = listIndex(outputArray, trans->target->dest_index)->item;
             addToneToChar(toBeChanged,
-                             trans->rule.transMethod.tone);
+                             trans->rule.toneMarkDetail.tone);
             break;
         case TRANS_MARK:
             toBeChanged = listIndex(outputArray, trans->target->dest_index)->item;
             addMarkToChar(toBeChanged,
-                             trans->rule.transMethod.mark);
+                             trans->rule.toneMarkDetail.mark);
             break;
         }
 
