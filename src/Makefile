@@ -1,6 +1,6 @@
 UTF8_SRC = utf8small.c utf8small.h
 UNITTEST_SRC = unittest.h unittest.c
-BOGO_SRC = bogo.c list.c dsl.c
+BOGO_SRC = bogo.c dsl.c
 
 BOGO_EXEC = $(BUILD_DIR)/bogo
 

@@ -92,7 +92,6 @@
 #include <wchar.h>
 #include <string.h>
 
-#include "list.h"
 #include "bogo.h"
 #include "utf8small.h"
 
@@ -128,55 +127,42 @@ input_list = [{
 output = "á"
 */
 void flatten(bgstr output,
-             struct List *transList)
+             struct TransformationQueue *transList)
 {
     int output_index = 0;
 
     // Holds output characters to be joined into "output"
-    struct List *outputArray = listNew();
+    bgchar outputArray[32];
 
-    struct ListItem *iterator = transList->first;
-    while (iterator != NULL) {
-
-        struct Transformation *trans = (struct Transformation *) iterator->item;
-
-        bgstrheap toBeAppended;
-        bgstrheap toBeChanged;
+    struct Transformation *trans;
+    TAILQ_FOREACH(trans, transList, queuePtrs) {
 
         switch (trans->rule.type) {
         case TRANS_APPEND:
-            toBeAppended = malloc(MAXSTRLEN);
-
-            bgstrAssign(toBeAppended, trans->rule.key);
-            listAppend(outputArray, toBeAppended);
+            bgstrAssign(outputArray[output_index], trans->rule.key);
 
             trans->dest_index = output_index;
             output_index++;  // Only TRANS_APPEND creates a new char
             break;
         case TRANS_TONE:
-            toBeChanged = listIndex(outputArray, trans->target->dest_index)->item;
-            addToneToChar(toBeChanged,
-                             trans->rule.toneMarkDetail.tone);
+            addToneToChar(outputArray[trans->target->dest_index],
+                          trans->rule.toneMarkDetail.tone);
             break;
         case TRANS_MARK:
-            toBeChanged = listIndex(outputArray, trans->target->dest_index)->item;
-            addMarkToChar(toBeChanged,
-                             trans->rule.toneMarkDetail.mark);
+            addMarkToChar(outputArray[trans->target->dest_index],
+                          trans->rule.toneMarkDetail.mark);
             break;
         }
-
-        iterator = iterator->next;
     }
 
 
     // Join outputArray into "output"
+    int outputLen = output_index;
     output_index = 0;
-    iterator = outputArray->first;
-    while(iterator != NULL) {
-        bgstrAssign(output + output_index, iterator->item);
-        output_index += strlen(iterator->item);
+    for (int i = 0; i < outputLen; ++i) {
 
-        iterator = iterator->next;
+        bgstrAssign(output + output_index, outputArray[i]);
+        output_index += strlen(outputArray[i]);
     }
 }
 
@@ -206,15 +192,19 @@ void addMarkToChar(bgstr chr, enum Mark mark)
     }
 }
 
-void findMarkTarget(struct List *transList, struct Transformation *trans, struct Rule *rule) {
-    struct ListItem *iter = transList->last;
-    while (iter != NULL) {
-        ITERITEM(iter, struct Transformation, currentTrans);
+void findMarkTarget(struct TransformationQueue *transList,
+                    struct Transformation *trans,
+                    struct Rule *rule) {
+    struct Transformation *currentTrans;
+
+    TAILQ_FOREACH_REVERSE(currentTrans,
+                          transList,
+                          TransformationQueue,
+                          queuePtrs) {
         if (bgstrEqual(currentTrans->rule.key, rule->effectOn)) {
             trans->target = currentTrans;
             break;
         }
-        iter = iter->prev;
     }
 
     if (trans->target != NULL) {
@@ -223,17 +213,18 @@ void findMarkTarget(struct List *transList, struct Transformation *trans, struct
 }
 
 
-void processChar(struct List *rules, struct List *transList, bgstr chr) {
-    struct List *applicable_rules = listNew();
+void processChar(struct RuleQueue *rules,
+                 struct TransformationQueue *transList,
+                 bgstr chr) {
+    struct RuleQueue *applicable_rules = new(struct RuleQueue);
+    TAILQ_INIT(applicable_rules);
 
     // Build a list of applicable rules whose key matches chr
-    struct ListItem *iter = rules->first;
-    while (iter != NULL) {
-        struct Rule *rule = (struct Rule *) iter->item;
+    struct Rule *rule;
+    TAILQ_FOREACH(rule, rules, queuePtrs) {
         if (bgstrEqual(rule->key, chr)) {
-            listAppend(applicable_rules, rule);
+            TAILQ_INSERT_TAIL(applicable_rules, rule, queuePtrs);
         }
-        iter = iter->next;
     }
 
     struct Transformation *newTrans = new(struct Transformation);
@@ -242,10 +233,9 @@ void processChar(struct List *rules, struct List *transList, bgstr chr) {
     newTrans->rule = APPEND_RULE;
     bgstrAssign(newTrans->rule.key, chr);
 
-    if (applicable_rules->length != 0) {
-        struct ListItem *ruleIter = rules->first;
-        while (ruleIter != NULL) {
-            struct Rule *rule = (struct Rule *) ruleIter->item;
+    if (!TAILQ_EMPTY(applicable_rules)) {
+        struct Rule *rule;
+        TAILQ_FOREACH(rule, rules, queuePtrs) {
 
             if (rule->type == TRANS_MARK) {
                 findMarkTarget(transList, newTrans, rule);
@@ -253,18 +243,18 @@ void processChar(struct List *rules, struct List *transList, bgstr chr) {
                 // Must be tonal then
 //                findToneTarget(transList, newTrans, rule);
             }
-
-            ruleIter = ruleIter->next;
         }
     }
 
-    listAppend(transList, newTrans);
-    listFree(applicable_rules);
+    TAILQ_INSERT_TAIL(transList, newTrans, queuePtrs);
+//    listFree(applicable_rules);
 }
 
 
-void processString(struct List *rules, bgstr output, const bgstr input) {
-    struct List *transList = listNew();
+void processString(struct RuleQueue *rules, bgstr output, const bgstr input) {
+
+    struct TransformationQueue *transList = new(struct TransformationQueue);
+    TAILQ_INIT(transList);
 
     for (int i = 0; i < bgstrLen(input); ++i) {
         bgstr chr;
@@ -274,6 +264,6 @@ void processString(struct List *rules, bgstr output, const bgstr input) {
 
     flatten(output, transList);
 
-    listFree(transList);
+//    listFree(transList);
 }
 

@@ -35,8 +35,6 @@ typedef int       bgbool;
 
 typedef char      bgstr[BG_MAX_BUFFER];
 typedef bgstr     bgchar;
-typedef char*     bgstrheap;
-
 
 /* Helper */
 /* Copy string using memcpy instead of strncpy and make sure it's

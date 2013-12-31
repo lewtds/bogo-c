@@ -32,13 +32,14 @@
 int testFindMarkTarget(void) {
     initTestCase ("Find mark target");
 
-    struct List *transList = listNew();
+    struct TransformationQueue *transList = new(struct TransformationQueue);
+    TAILQ_INIT(transList);
 
     struct Rule dDashRule = {
         "d",        // Key
         "d",        // Effect on
         TRANS_MARK, // Type
-        MARK_DASH   // Transformation form
+        MARK_DASH   // Mark detail
     };
 
     struct Transformation firstD;
@@ -51,7 +52,9 @@ int testFindMarkTarget(void) {
 
 
     findMarkTarget(transList, &firstD, &dDashRule);
-    listAppend(transList, &firstD);
+
+    TAILQ_INSERT_TAIL(transList, &firstD, queuePtrs);
+
     findMarkTarget(transList, &secondD, &dDashRule);
 
     assertInt(TRANS_APPEND, firstD.rule.type);
@@ -66,13 +69,16 @@ int testFindMarkTarget(void) {
 
     struct Transformation secondN = firstN;
 
-    listFree(transList);
-    transList = listNew();
+//    listFree(transList);
+    TAILQ_INIT(transList);
 
-    listAppend(transList, &firstN);
-    listAppend(transList, &secondN);
+    TAILQ_INSERT_TAIL(transList, &firstN, queuePtrs);
+    TAILQ_INSERT_TAIL(transList, &secondN, queuePtrs);
+
     findMarkTarget(transList, &firstD, &dDashRule);
-    listAppend(transList, &firstD);
+
+    TAILQ_INSERT_TAIL(transList, &firstD, queuePtrs);
+
     findMarkTarget(transList, &secondD, &dDashRule);
 
     assertTrue(&firstD == secondD.target);
@@ -81,8 +87,9 @@ int testFindMarkTarget(void) {
 }
 
 
-struct List *buildRules() {
-    struct List *rules = listNew();
+struct RuleQueue *buildRules() {
+    struct RuleQueue *rules = new(struct RuleQueue);
+    TAILQ_INIT(rules);
 
     bgstr ruleTemplates[] = {
         "a a a^",
@@ -93,7 +100,7 @@ struct List *buildRules() {
     for (int i = 0; i < 2; ++i) {
         struct Rule *rule = new(struct Rule);
         parseRuleFromString(rule, ruleTemplates[i]);
-        listAppend(rules, rule);
+        TAILQ_INSERT_TAIL(rules, rule, queuePtrs);
     }
 
     return rules;
@@ -102,7 +109,7 @@ struct List *buildRules() {
 int testTest(void) {
     initTestCase("Blah");
 
-    struct List *rules = buildRules();
+    struct RuleQueue *rules = buildRules();
 
     bgstr output;
 

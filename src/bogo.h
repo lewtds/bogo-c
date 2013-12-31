@@ -22,7 +22,8 @@
 
 */
 
-#include "list.h"
+#include <sys/queue.h>
+
 #include "common.h"
 
 enum TransformationType {
@@ -61,6 +62,8 @@ struct Rule {
     bgstr effectOn;
     enum TransformationType type;
     union ToneMarkUnion toneMarkDetail;
+
+    TAILQ_ENTRY(Rule) queuePtrs;
 };
 
 struct Transformation {
@@ -69,12 +72,22 @@ struct Transformation {
     int                   dest_index;  /* For TRANS_APPEND, a pointer to the */
                                        /* char in the flattened string made  */
                                        /* by this TransT                     */
+
+    TAILQ_ENTRY(Transformation) queuePtrs;
 };
+
+// Collection types
+
+TAILQ_HEAD(RuleQueue, Rule);
+TAILQ_HEAD(TransformationQueue, Transformation);
+
+
+// Functions
 
 void addToneToChar (bgstr chr, enum Tone tone);
 void addMarkToChar (bgstr chr, enum Mark mark);
 
-void flatten       (bgstr output, struct List *transList);
-void processString (struct List *rules, bgstr output, const bgstr input);
+void flatten       (bgstr output, struct TransformationQueue *transList);
+void processString (struct RuleQueue *rules, bgstr output, const bgstr input);
 
 #endif // BOGO_H
