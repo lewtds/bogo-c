@@ -76,4 +76,6 @@ void assertNotStrI             (const char *, const char *);
 void assertStrIDescription     (const char *, const char *, const char *);
 void assertNotStrIDescription  (const char *, const char *, const char *);
 
+#define assertTrue(condition)  assertNotInt(0, condition)
+
 #endif

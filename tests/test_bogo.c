@@ -55,7 +55,7 @@ int testFindMarkTarget(void) {
 
     assertInt(TRANS_APPEND, firstD.rule.type);
     assertInt(TRANS_MARK, secondD.rule.type);
-    assertInt(&firstD, secondD.target);
+    assertTrue(&firstD == secondD.target);
 
     // ----------------------------- //
 
@@ -74,7 +74,7 @@ int testFindMarkTarget(void) {
     listAppend(transList, &firstD);
     findMarkTarget(transList, &secondD, &dDashRule);
 
-    assertInt(&firstD, secondD.target);
+    assertTrue(&firstD == secondD.target);
 
     return finishTestCase ();
 }
