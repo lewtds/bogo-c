@@ -31,11 +31,11 @@
 
 typedef uint8_t   bgbyte;
 typedef int32_t   bglen_t;
-typedef char      bgbool;
+typedef int       bgbool;
 
-typedef uint8_t   bgstr[BG_MAX_BUFFER];
+typedef char      bgstr[BG_MAX_BUFFER];
 typedef bgstr     bgchar;
-typedef uint8_t*  bgstrheap;
+typedef char*     bgstrheap;
 
 
 /* Helper */
