@@ -88,7 +88,7 @@ E.g.
   strToTrans(_, "   ")         _ => { key: "",  effectOn: "",  transType: APPEND     }
 
 */
-void parseRuleFromString(struct RuleT *rule,
+void parseRuleFromString(struct Rule *rule,
                 const bgstr str)
 {
     bgstr tmp;
@@ -114,7 +114,7 @@ void parseRuleFromString(struct RuleT *rule,
     parseTransType(&(rule->type), &(rule->toneMarkDetail), lastChar);
 }
 
-void parseTransType(enum TransEnum *transType, union ToneMarkUnion *transMethod, const bgstr str)
+void parseTransType(enum TransformationType *transType, union ToneMarkUnion *transMethod, const bgstr str)
 {
     if (bgstrEqual(str, "'")) {
         *transType = TRANS_TONE;

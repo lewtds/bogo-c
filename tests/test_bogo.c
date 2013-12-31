@@ -34,18 +34,18 @@ int testFindMarkTarget(void) {
 
     struct List *transList = listNew();
 
-    struct RuleT dDashRule = {
+    struct Rule dDashRule = {
         "d",        // Key
         "d",        // Effect on
         TRANS_MARK, // Type
         MARK_DASH   // Transformation form
     };
 
-    struct TransT firstD;
+    struct Transformation firstD;
     bgstrAssign(firstD.rule.key, "d");
     firstD.rule.type = TRANS_APPEND;
 
-    struct TransT secondD;
+    struct Transformation secondD;
     bgstrAssign(secondD.rule.key, "d");
     secondD.rule.type = TRANS_APPEND;
 
@@ -60,11 +60,11 @@ int testFindMarkTarget(void) {
 
     // ----------------------------- //
 
-    struct TransT firstN;
+    struct Transformation firstN;
     bgstrAssign(firstD.rule.key, "d");
     firstD.rule.type = TRANS_APPEND;
 
-    struct TransT secondN = firstN;
+    struct Transformation secondN = firstN;
 
     listFree(transList);
     transList = listNew();
@@ -91,7 +91,7 @@ struct List *buildRules() {
     };
 
     for (int i = 0; i < 2; ++i) {
-        struct RuleT *rule = new(struct RuleT);
+        struct Rule *rule = new(struct Rule);
         parseRuleFromString(rule, ruleTemplates[i]);
         listAppend(rules, rule);
     }

@@ -103,7 +103,7 @@ const bgstr VOWELS = "àáảãạaằắẳẵặăầấẩẫậâèéẻẽ�
 // Note that some text editors/IDEs doesn't understand designated initialization yet
 // and will flag this as syntax error.
 
-const struct RuleT APPEND_RULE = {
+const struct Rule APPEND_RULE = {
     .key = "",
     .effectOn = "",
     .type = TRANS_APPEND,
@@ -138,7 +138,7 @@ void flatten(bgstr output,
     struct ListItem *iterator = transList->first;
     while (iterator != NULL) {
 
-        struct TransT *trans = (struct TransT *) iterator->item;
+        struct Transformation *trans = (struct Transformation *) iterator->item;
 
         bgstrheap toBeAppended;
         bgstrheap toBeChanged;
@@ -180,7 +180,7 @@ void flatten(bgstr output,
     }
 }
 
-void addToneToChar(bgstr chr, enum ToneEnum tone)
+void addToneToChar(bgstr chr, enum Tone tone)
 {
     int index = bgstrIndexOf(VOWELS, chr, 0);
 
@@ -192,7 +192,7 @@ void addToneToChar(bgstr chr, enum ToneEnum tone)
     }
 }
 
-void addMarkToChar(bgstr chr, enum MarkEnum mark)
+void addMarkToChar(bgstr chr, enum Mark mark)
 {
     // TODO Backup and restore the tone
     static bgstr mark_groups[] =
@@ -206,10 +206,10 @@ void addMarkToChar(bgstr chr, enum MarkEnum mark)
     }
 }
 
-void findMarkTarget(struct List *transList, struct TransT *trans, struct RuleT *rule) {
+void findMarkTarget(struct List *transList, struct Transformation *trans, struct Rule *rule) {
     struct ListItem *iter = transList->last;
     while (iter != NULL) {
-        ITERITEM(iter, struct TransT, currentTrans);
+        ITERITEM(iter, struct Transformation, currentTrans);
         if (bgstrEqual(currentTrans->rule.key, rule->effectOn)) {
             trans->target = currentTrans;
             break;
@@ -229,14 +229,14 @@ void processChar(struct List *rules, struct List *transList, bgstr chr) {
     // Build a list of applicable rules whose key matches chr
     struct ListItem *iter = rules->first;
     while (iter != NULL) {
-        struct RuleT *rule = (struct RuleT *) iter->item;
+        struct Rule *rule = (struct Rule *) iter->item;
         if (bgstrEqual(rule->key, chr)) {
             listAppend(applicable_rules, rule);
         }
         iter = iter->next;
     }
 
-    struct TransT *newTrans = new(struct TransT);
+    struct Transformation *newTrans = new(struct Transformation);
 
     // A transformation is by default an appending one
     newTrans->rule = APPEND_RULE;
@@ -245,7 +245,7 @@ void processChar(struct List *rules, struct List *transList, bgstr chr) {
     if (applicable_rules->length != 0) {
         struct ListItem *ruleIter = rules->first;
         while (ruleIter != NULL) {
-            struct RuleT *rule = (struct RuleT *) ruleIter->item;
+            struct Rule *rule = (struct Rule *) ruleIter->item;
 
             if (rule->type == TRANS_MARK) {
                 findMarkTarget(transList, newTrans, rule);
