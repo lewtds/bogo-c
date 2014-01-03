@@ -16,7 +16,6 @@ TEST_DSL_SRC = \
 TEST_DSL_OBJ = $(patsubst %.c,%.o,$(TEST_DSL_SRC))
 
 BOGO_SRC = \
-	../src/list.c \
 	../src/dsl.c \
 	../src/utf8small.c \
 	$(UNITTEST_SRC)

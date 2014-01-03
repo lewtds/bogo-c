@@ -27,61 +27,69 @@
 #include "unittest.h"
 
 #include "bogo.c"
+#include "dsl.h"
 
 int testFindMarkTarget(void) {
     initTestCase ("Find mark target");
 
-    struct List *transList = listNew();
+    struct TransformationQueue *transList = new(struct TransformationQueue);
+    TAILQ_INIT(transList);
 
-    struct RuleT dDashRule = {
+    struct Rule dDashRule = {
         "d",        // Key
         "d",        // Effect on
         TRANS_MARK, // Type
-        MARK_DASH   // Transformation form
+        MARK_DASH   // Mark detail
     };
 
-    struct TransT firstD;
+    struct Transformation firstD;
     bgstrAssign(firstD.rule.key, "d");
     firstD.rule.type = TRANS_APPEND;
 
-    struct TransT secondD;
+    struct Transformation secondD;
     bgstrAssign(secondD.rule.key, "d");
     secondD.rule.type = TRANS_APPEND;
 
 
     findMarkTarget(transList, &firstD, &dDashRule);
-    listAppend(transList, &firstD);
+
+    TAILQ_INSERT_TAIL(transList, &firstD, queuePtrs);
+
     findMarkTarget(transList, &secondD, &dDashRule);
 
     assertInt(TRANS_APPEND, firstD.rule.type);
     assertInt(TRANS_MARK, secondD.rule.type);
-    assertInt(&firstD, secondD.target);
+    assertTrue(&firstD == secondD.target);
 
     // ----------------------------- //
 
-    struct TransT firstN;
+    struct Transformation firstN;
     bgstrAssign(firstD.rule.key, "d");
     firstD.rule.type = TRANS_APPEND;
 
-    struct TransT secondN = firstN;
+    struct Transformation secondN = firstN;
 
-    listFree(transList);
-    transList = listNew();
+//    listFree(transList);
+    TAILQ_INIT(transList);
 
-    listAppend(transList, &firstN);
-    listAppend(transList, &secondN);
+    TAILQ_INSERT_TAIL(transList, &firstN, queuePtrs);
+    TAILQ_INSERT_TAIL(transList, &secondN, queuePtrs);
+
     findMarkTarget(transList, &firstD, &dDashRule);
-    listAppend(transList, &firstD);
+
+    TAILQ_INSERT_TAIL(transList, &firstD, queuePtrs);
+
     findMarkTarget(transList, &secondD, &dDashRule);
 
-    assertInt(&firstD, secondD.target);
+    assertTrue(&firstD == secondD.target);
 
     return finishTestCase ();
 }
 
 
-struct List *buildRules() {
-    struct List *rules = listNew();
+struct RuleQueue *buildRules() {
+    struct RuleQueue *rules = new(struct RuleQueue);
+    TAILQ_INIT(rules);
 
     bgstr ruleTemplates[] = {
         "a a a^",
@@ -90,9 +98,9 @@ struct List *buildRules() {
     };
 
     for (int i = 0; i < 2; ++i) {
-        struct RuleT *rule = new(struct RuleT);
+        struct Rule *rule = new(struct Rule);
         parseRuleFromString(rule, ruleTemplates[i]);
-        listAppend(rules, rule);
+        TAILQ_INSERT_TAIL(rules, rule, queuePtrs);
     }
 
     return rules;
@@ -101,7 +109,7 @@ struct List *buildRules() {
 int testTest(void) {
     initTestCase("Blah");
 
-    struct List *rules = buildRules();
+    struct RuleQueue *rules = buildRules();
 
     bgstr output;
 

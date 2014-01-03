@@ -32,8 +32,8 @@
 int testParseTransType(void) {
     initTestCase("Parse transformation type and method");
 
-    union TransTypeUnion method;
-    enum TransEnum type;
+    union ToneMarkUnion method;
+    enum TransformationType type;
     parseTransType(&type, &method, "^");
 
     assertInt(TRANS_MARK, type);
@@ -50,13 +50,13 @@ int testParseTransType(void) {
 int testSimpleHatRules(void) {
     initTestCase ("Parse simple hat rules");
 
-    struct RuleT rule;
+    struct Rule rule;
     parseRuleFromString(&rule, "a a a^");
 
     assertInt(TRANS_MARK, rule.type);
     assertStr("a", rule.key);
     assertStr("a", rule.effectOn);
-    assertInt(MARK_HAT, rule.transMethod.mark);
+    assertInt(MARK_HAT, rule.toneMarkDetail.mark);
 
     return finishTestCase ();
 }
