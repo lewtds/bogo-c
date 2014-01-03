@@ -97,7 +97,9 @@ struct RuleQueue *buildRules() {
         "o f o`"
     };
 
-    for (int i = 0; i < 2; ++i) {
+    int len = sizeof(ruleTemplates) / sizeof(bgstr);
+
+    for (int i = 0; i < len; ++i) {
         struct Rule *rule = new(struct Rule);
         parseRuleFromString(rule, ruleTemplates[i]);
         TAILQ_INSERT_TAIL(rules, rule, queuePtrs);
@@ -106,8 +108,8 @@ struct RuleQueue *buildRules() {
     return rules;
 }
 
-int testTest(void) {
-    initTestCase("Blah");
+int testProcessString(void) {
+    initTestCase("Test whole string processing");
 
     struct RuleQueue *rules = buildRules();
 
