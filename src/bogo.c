@@ -99,6 +99,14 @@
 const bgstr VOWELS = "àáảãạaằắẳẵặăầấẩẫậâèéẻẽẹeềếểễệêìíỉĩịi" \
                         "òóỏõọoồốổỗộôờớởỡợơùúủũụuừứửữựưỳýỷỹỵy";
 
+
+#define TAILQ_FREE(iter, list, field) do {  \
+    TAILQ_FOREACH(iter, list, field) {      \
+        free(iter);                         \
+    }                                       \
+    free(list);                             \
+} while(0)
+
 // Note that some text editors/IDEs doesn't understand designated initialization yet
 // and will flag this as syntax error.
 
@@ -132,6 +140,7 @@ void flatten(bgstr output,
     int output_index = 0;
 
     // Holds output characters to be joined into "output"
+    // FIXME: Possible stack buffer overflow bug
     bgchar outputArray[32];
 
     struct Transformation *trans;
@@ -223,7 +232,9 @@ void processChar(struct RuleQueue *rules,
     struct Rule *rule;
     TAILQ_FOREACH(rule, rules, queuePtrs) {
         if (bgstrEqual(rule->key, chr)) {
-            TAILQ_INSERT_TAIL(applicable_rules, rule, queuePtrs);
+            struct Rule *ruleClone = new(struct Rule);
+            *ruleClone = *rule;
+            TAILQ_INSERT_TAIL(applicable_rules, ruleClone, queuePtrs);
         }
     }
 
@@ -247,7 +258,10 @@ void processChar(struct RuleQueue *rules,
     }
 
     TAILQ_INSERT_TAIL(prevTransformations, newTrans, queuePtrs);
-//    listFree(applicable_rules);
+
+    // Free up applicable_rules
+    struct Rule *iter;
+    TAILQ_FREE(iter, applicable_rules, queuePtrs);
 }
 
 
@@ -264,6 +278,7 @@ void processString(struct RuleQueue *rules, bgstr output, const bgstr input) {
 
     flatten(output, transList);
 
-//    listFree(transList);
+    struct Transformation *iter;
+    TAILQ_FREE(iter, transList, queuePtrs);
 }
 
