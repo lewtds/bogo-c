@@ -307,6 +307,21 @@ bool findToneTarget(struct TransformationQueue *prevTransformations,
         return found;
     }
 
+    // Special cases
+
+    bool isUo(struct Transformation **vowels)
+    {
+        return bgstrEqual(vowels[0]->rule.key, "o") &&
+               bgstrEqual(vowels[1]->rule.key, "u");
+    }
+
+    bool isUye(struct Transformation **vowels)
+    {
+        return bgstrEqual(vowels[0]->rule.key, "e") &&
+               bgstrEqual(vowels[1]->rule.key, "y") &&
+               bgstrEqual(vowels[2]->rule.key, "u");
+    }
+
     struct Transformation **rightmostVowels = findRightmostVowels();
 
     switch (vcount) {
@@ -315,9 +330,9 @@ bool findToneTarget(struct TransformationQueue *prevTransformations,
         trans->target = rightmostVowels[0];
         break;
     case 2:
-        // FIXME: And thuở?
-        if (hasConsonantBehind(rightmostVowels[0])) {
-            // nước
+        if (hasConsonantBehind(rightmostVowels[0]) ||
+            isUo(rightmostVowels)) {
+            // nước, thuở
             trans->target = rightmostVowels[0];
         } else {
             // cáo
@@ -325,9 +340,13 @@ bool findToneTarget(struct TransformationQueue *prevTransformations,
         }
         break;
     case 3:
-        // khuỷu
-        // FIXME: What about chuyển?
-        trans->target = rightmostVowels[1];
+        if (isUye(rightmostVowels)) {
+            // chuyển
+            trans->target = rightmostVowels[0];
+        } else {
+            // khuỷu
+            trans->target = rightmostVowels[1];
+        }
         break;
     default:
         trans->target = NULL;
