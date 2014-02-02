@@ -214,7 +214,8 @@ bool findToneTarget(struct TransformationQueue *prevTransformations,
                bgstrEqual(chr, "e") ||
                bgstrEqual(chr, "i") ||
                bgstrEqual(chr, "o") ||
-               bgstrEqual(chr, "u");
+               bgstrEqual(chr, "u") ||
+               bgstrEqual(chr, "y");
     }
 
     /*
