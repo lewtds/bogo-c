@@ -242,7 +242,7 @@ bool findToneTarget(struct TransformationQueue *prevTransformations,
 {
     int vcount = 0;
 
-    bool isVowel(bgchar chr)
+    inline bool isVowel(bgchar chr)
     {
         // Note that transformations' key can only be ASCII chars.
         return bgstrEqual(chr, "a") ||
@@ -259,7 +259,7 @@ bool findToneTarget(struct TransformationQueue *prevTransformations,
      *
      * e.g. findRightmostVowels("athuong") -> "ou"
      */
-    struct Transformation **findRightmostVowels()
+    inline struct Transformation **findRightmostVowels()
     {
         struct Transformation** vowels = malloc(sizeof(void*) * 3);
 
@@ -292,7 +292,7 @@ bool findToneTarget(struct TransformationQueue *prevTransformations,
      * Linked list: {key:a, type:APPEND} -> NULL
      * hasConsonantBehind({key:a, type:APPEND}) => FALSE
      */
-    bool hasConsonantBehind(struct Transformation *vowel)
+    inline bool hasConsonantBehind(struct Transformation *vowel)
     {
         bool found = FALSE;
         struct Transformation *next = vowel;
@@ -309,13 +309,13 @@ bool findToneTarget(struct TransformationQueue *prevTransformations,
 
     // Special cases
 
-    bool isUo(struct Transformation **vowels)
+    inline bool isUo(struct Transformation **vowels)
     {
         return bgstrEqual(vowels[0]->rule.key, "o") &&
                bgstrEqual(vowels[1]->rule.key, "u");
     }
 
-    bool isUye(struct Transformation **vowels)
+    inline bool isUye(struct Transformation **vowels)
     {
         return bgstrEqual(vowels[0]->rule.key, "e") &&
                bgstrEqual(vowels[1]->rule.key, "y") &&
