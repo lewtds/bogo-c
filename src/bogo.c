@@ -230,9 +230,10 @@ void addMarkToChar(bgstr chr, enum Mark mark)
     }
 }
 
-int findMarkTarget(struct TransformationQueue *prevTransformations,
-                    struct Transformation *trans,
-                    struct Rule *rule) {
+bool findMarkTarget(struct TransformationQueue *prevTransformations,
+                   struct Transformation *trans,
+                   struct Rule *rule)
+{
     struct Transformation *currentTrans;
 
     TAILQ_FOREACH_REVERSE(currentTrans,
@@ -247,15 +248,17 @@ int findMarkTarget(struct TransformationQueue *prevTransformations,
 
     if (trans->target != NULL) {
         trans->rule = *rule;
-        return 1;
+        return TRUE;
+    } else {
+        return FALSE;
     }
-    return 0;
 }
 
 
 void processChar(struct RuleQueue *rules,
                  struct TransformationQueue *prevTransformations,
-                 bgstr chr) {
+                 bgstr chr)
+{
     struct RuleQueue *applicable_rules = newRuleQueue();
 
     // Build a list of applicable rules whose key matches chr
@@ -300,7 +303,8 @@ void processChar(struct RuleQueue *rules,
 }
 
 
-void processString(struct RuleQueue *rules, bgstr output, const bgstr input) {
+void processString(struct RuleQueue *rules, bgstr output, const bgstr input)
+{
 
     struct TransformationQueue *transList = newTransformationQueue();
 
