@@ -91,17 +91,21 @@ struct RuleQueue *buildRules() {
     struct RuleQueue *rules = newRuleQueue();
     TAILQ_INIT(rules);
 
-    bgstr ruleTemplates[] = {
+    bgstr telexRules[] = {
         "a a a^",
+        "a w a(",
         "e e e^",
-        "o f o`"
+        "o o o^",
+        "o w o+",
+        "u w u+",
+        "_ f `"
     };
 
-    int len = sizeof(ruleTemplates) / sizeof(bgstr);
+    int len = sizeof(telexRules) / sizeof(bgstr);
 
     for (int i = 0; i < len; ++i) {
         struct Rule *rule = newRule();
-        parseRuleFromString(rule, ruleTemplates[i]);
+        parseRuleFromString(rule, telexRules[i]);
         TAILQ_INSERT_TAIL(rules, rule, queuePtrs);
     }
 
@@ -129,6 +133,9 @@ int testProcessString(void) {
 
     processString(rules, output, "naanee");
     assertStr("nânê", output);
+
+    processString(rules, output, "aw");
+    assertStr("ă", output);
 
     return finishTestCase();
 }

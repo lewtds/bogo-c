@@ -230,7 +230,7 @@ void addMarkToChar(bgstr chr, enum Mark mark)
     }
 }
 
-void findMarkTarget(struct TransformationQueue *prevTransformations,
+int findMarkTarget(struct TransformationQueue *prevTransformations,
                     struct Transformation *trans,
                     struct Rule *rule) {
     struct Transformation *currentTrans;
@@ -247,7 +247,9 @@ void findMarkTarget(struct TransformationQueue *prevTransformations,
 
     if (trans->target != NULL) {
         trans->rule = *rule;
+        return 1;
     }
+    return 0;
 }
 
 
@@ -274,13 +276,18 @@ void processChar(struct RuleQueue *rules,
 
     if (!TAILQ_EMPTY(applicable_rules)) {
         struct Rule *rule;
+        int found = 0;
         TAILQ_FOREACH(rule, applicable_rules, queuePtrs) {
 
             if (rule->type == TRANS_MARK) {
-                findMarkTarget(prevTransformations, newTrans, rule);
+                found = findMarkTarget(prevTransformations, newTrans, rule);
             } else {
                 // Must be tonal then
-//                findToneTarget(transList, newTrans, rule);
+//                found = findToneTarget(transList, newTrans, rule);
+            }
+
+            if (found) {
+                break;
             }
         }
     }
