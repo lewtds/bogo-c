@@ -130,7 +130,7 @@ int testProcessString(void) {
 int main (int argc, char *argv[]) {
 
     addTest (testFindMarkTarget);
-    addTest (testTest);
+    addTest (testProcessString);
 
     runAllTests ();
 
