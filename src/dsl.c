@@ -114,6 +114,24 @@ void parseRuleFromString(struct Rule *rule,
     parseTransType(&(rule->type), &(rule->toneMarkDetail), lastChar);
 }
 
+/*
+ * Constants:
+ *
+ * STRING_TO_TRANS = {
+ *     "'": TONE_ACUTE,
+ *     "`": TONE_GRAVE,
+ *     "?": TONE_HOOK,
+ *     "~": TONE_TILDE,
+ *     ".": TONE_DOT,
+ *     "_": TONE_NONE,
+ *     "+": MARK_HORN = 0,
+ *     "(": MARK_BREVE,
+ *     "^": MARK_HAT,
+ *     "-": MARK_DASH
+ * }
+ *
+ */
+
 void parseTransType(enum TransformationType *transType, union ToneMarkUnion *transMethod, const bgstr str)
 {
     if (bgstrEqual(str, "'")) {

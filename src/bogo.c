@@ -53,37 +53,6 @@
  *   is *extremely* obvious from the context.
  */
 
-/*
- * Helpers:
- *
- * void  strSubStr(output, theString, position, numberOfCharacters);
- * int   strIndexOf(theString, theSubString, startFrom);
- * void  strAssign(destString, inputString);
- * bool  strStartsWith(theString, theSubString);
- *
- * void  hashGetValuerUnion(outputAsUnion, hashTable, key);
- * void  hashGetValueStr(outputAsString, hashTable, key);
- *
- */
-
-/*
- * Constants:
- *
- * STRING_TO_TRANS = {
- *     "'": TONE_ACUTE,
- *     "`": TONE_GRAVE,
- *     "?": TONE_HOOK,
- *     "~": TONE_TILDE,
- *     ".": TONE_DOT,
- *     "_": TONE_NONE,
- *     "+": MARK_HORN = 0,
- *     "(": MARK_BREVE,
- *     "^": MARK_HAT,
- *     "-": MARK_DASH
- * }
- *
- */
-
 
 
 #include <stdio.h>
