@@ -8,8 +8,17 @@ struct RuleQueue *buildRules() {
 
     bgstr ruleTemplates[] = {
         "a a a^",
+        "a w a(",
         "e e e^",
-        "o f o`"
+        "o o o^",
+        "o w o+",
+        "u w u+",
+        "d d d-",
+        "_ f `",
+        "_ r ?",
+        "_ x ~",
+        "_ j .",
+        "_ s '",
     };
 
     int len = sizeof(ruleTemplates) / sizeof(bgstr);
