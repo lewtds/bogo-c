@@ -199,6 +199,115 @@ void addMarkToChar(bgstr chr, enum Mark mark)
     }
 }
 
+
+
+bool findToneTarget(struct TransformationQueue *prevTransformations,
+                    struct Transformation *trans,
+                    struct Rule *rule)
+{
+    int vcount = 0;
+
+    bool isVowel(bgchar chr)
+    {
+        // Note that transformations' key can only be ASCII chars.
+        return bgstrEqual(chr, "a") ||
+               bgstrEqual(chr, "e") ||
+               bgstrEqual(chr, "i") ||
+               bgstrEqual(chr, "o") ||
+               bgstrEqual(chr, "u");
+    }
+
+    /*
+     * Find the right-most chunk of at most 3 continuous vowels in
+     * prevTransformations. The results are in reverse.
+     *
+     * e.g. findRightmostVowels("athuong") -> "ou"
+     */
+    struct Transformation **findRightmostVowels()
+    {
+        struct Transformation** vowels = malloc(sizeof(void*) * 3);
+
+        struct Transformation* pointer;
+        TAILQ_FOREACH_REVERSE(pointer,
+                              prevTransformations,
+                              TransformationQueue,
+                              queuePtrs) {
+            printf("isVowel(%s) = %d\n", pointer->rule.key, isVowel(pointer->rule.key));
+            if (pointer->rule.type == TRANS_APPEND &&
+                isVowel(pointer->rule.key)) {
+                vowels[vcount] = pointer;
+                vcount++;
+            }
+
+            if (vcount == 3) {
+                break;
+            }
+        }
+
+        return vowels;
+    }
+
+    /*
+     * Check if a vowel is followed by a TRANS_APPEND that contains
+     * a consonant.
+     */
+    bool hasConsonantBehind(struct Transformation *vowel)
+    {
+        bool found = FALSE;
+        struct Transformation *next = vowel;
+
+        while (next = TAILQ_NEXT(next, queuePtrs)) {
+            printf("next->rule.type == TRANS_APPEND = %d\n", next->rule.type == TRANS_APPEND );
+            printf("next->rule.key %s\n", next->rule.key);
+            if (next->rule.type == TRANS_APPEND && !isVowel(next->rule.key)) {
+                found = TRUE;
+                break;
+            }
+            printf("here\n");
+        }
+
+        return found;
+    }
+
+    struct Transformation **rightmostVowels = findRightmostVowels();
+
+    printf("vcount = %d\n", vcount);
+    switch (vcount) {
+    case 1:
+        // cá
+        trans->target = rightmostVowels[0];
+        break;
+    case 2:
+        printf("hasConsonantBehind(rightmostVowels[0]) = %d\n", hasConsonantBehind(rightmostVowels[0]));
+        printf("%s\n", rightmostVowels[0]->rule.key);
+        // FIXME: And thuở?
+        if (hasConsonantBehind(rightmostVowels[0])) {
+            // nước
+            trans->target = rightmostVowels[0];
+        } else {
+            // cáo
+            trans->target = rightmostVowels[1];
+        }
+        break;
+    case 3:
+        // khuỷu
+        // FIXME: What about chuyển?
+        trans->target = rightmostVowels[2];
+        break;
+    default:
+        trans->target = NULL;
+        break;
+    }
+
+    if (trans->target != NULL) {
+        trans->rule = *rule;
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+
+
 bool findMarkTarget(struct TransformationQueue *prevTransformations,
                    struct Transformation *trans,
                    struct Rule *rule)
@@ -253,9 +362,8 @@ void processChar(struct RuleQueue *rules,
 
             if (rule->type == TRANS_MARK) {
                 found = findMarkTarget(prevTransformations, newTrans, rule);
-            } else {
-                // Must be tonal then
-//                found = findToneTarget(transList, newTrans, rule);
+            } else if (rule->type == TRANS_TONE) {
+                found = findToneTarget(prevTransformations, newTrans, rule);
             }
 
             if (found) {

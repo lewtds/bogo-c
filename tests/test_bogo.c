@@ -87,6 +87,94 @@ int testFindMarkTarget(void) {
 }
 
 
+int testFindToneTarget1(void) {
+    initTestCase ("Find tone target with two open-ended vowels");
+
+    struct TransformationQueue *transList = newTransformationQueue();
+
+    struct Transformation a;
+    bgstrAssign(a.rule.key, "a");
+    a.rule.type = TRANS_APPEND;
+
+    struct Transformation o;
+    bgstrAssign(o.rule.key, "o");
+    o.rule.type = TRANS_APPEND;
+
+    TAILQ_INSERT_TAIL(transList, &a, queuePtrs);
+    TAILQ_INSERT_TAIL(transList, &o, queuePtrs);
+
+    struct Rule acute;
+    acute.type = TRANS_TONE;
+    acute.toneMarkDetail.tone = TONE_ACUTE;
+
+    struct Transformation newTrans;
+
+    findToneTarget(transList, &newTrans, &acute);
+
+    assertPtr(&a, newTrans.target);
+
+    return finishTestCase();
+}
+
+int testFindToneTarget2(void) {
+    initTestCase ("Find tone target with one open-ended vowel");
+
+    struct TransformationQueue *transList = newTransformationQueue();
+
+    struct Transformation a;
+    bgstrAssign(a.rule.key, "a");
+    a.rule.type = TRANS_APPEND;
+
+    TAILQ_INSERT_TAIL(transList, &a, queuePtrs);
+
+    struct Rule acute;
+    acute.type = TRANS_TONE;
+    acute.toneMarkDetail.tone = TONE_ACUTE;
+
+    struct Transformation newTrans;
+
+    findToneTarget(transList, &newTrans, &acute);
+
+    assertPtr(&a, newTrans.target);
+
+    return finishTestCase();
+}
+
+int testFindToneTarget3(void) {
+    initTestCase ("Find tone target with two close-ended vowels");
+
+    struct TransformationQueue *transList = newTransformationQueue();
+
+    struct Transformation u;
+    bgstrAssign(u.rule.key, "u");
+    u.rule.type = TRANS_APPEND;
+
+    struct Transformation o;
+    bgstrAssign(o.rule.key, "o");
+    o.rule.type = TRANS_APPEND;
+
+    struct Transformation c;
+    bgstrAssign(c.rule.key, "c");
+    c.rule.type = TRANS_APPEND;
+
+    TAILQ_INSERT_TAIL(transList, &u, queuePtrs);
+    TAILQ_INSERT_TAIL(transList, &o, queuePtrs);
+    TAILQ_INSERT_TAIL(transList, &c, queuePtrs);
+
+    struct Rule acute;
+    acute.type = TRANS_TONE;
+    acute.toneMarkDetail.tone = TONE_ACUTE;
+
+    struct Transformation newTrans;
+
+    findToneTarget(transList, &newTrans, &acute);
+
+    assertPtr(&o, newTrans.target);
+
+    return finishTestCase();
+}
+
+
 struct RuleQueue *buildRules() {
     struct RuleQueue *rules = newRuleQueue();
     TAILQ_INIT(rules);
@@ -142,8 +230,11 @@ int testProcessString(void) {
 
 int main (int argc, char *argv[]) {
 
-    addTest (testFindMarkTarget);
-    addTest (testProcessString);
+    addTest(testFindMarkTarget);
+    addTest(testFindToneTarget1);
+    addTest(testFindToneTarget2);
+    addTest(testFindToneTarget3);
+    addTest(testProcessString);
 
     runAllTests ();
 
