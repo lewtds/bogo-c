@@ -246,7 +246,7 @@ void processChar(struct RuleQueue *rules,
 
     if (!TAILQ_EMPTY(applicable_rules)) {
         struct Rule *rule;
-        TAILQ_FOREACH(rule, rules, queuePtrs) {
+        TAILQ_FOREACH(rule, applicable_rules, queuePtrs) {
 
             if (rule->type == TRANS_MARK) {
                 findMarkTarget(prevTransformations, newTrans, rule);

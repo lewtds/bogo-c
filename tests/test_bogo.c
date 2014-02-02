@@ -115,6 +115,9 @@ int testProcessString(void) {
 
     bgstr output;
 
+    processString(rules, output, "ae");
+    assertStr("ae", output);
+
     processString(rules, output, "aa");
     assertStr("â", output);
 
