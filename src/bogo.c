@@ -232,7 +232,6 @@ bool findToneTarget(struct TransformationQueue *prevTransformations,
                               prevTransformations,
                               TransformationQueue,
                               queuePtrs) {
-            printf("isVowel(%s) = %d\n", pointer->rule.key, isVowel(pointer->rule.key));
             if (pointer->rule.type == TRANS_APPEND &&
                 isVowel(pointer->rule.key)) {
                 vowels[vcount] = pointer;
@@ -257,13 +256,10 @@ bool findToneTarget(struct TransformationQueue *prevTransformations,
         struct Transformation *next = vowel;
 
         while (next = TAILQ_NEXT(next, queuePtrs)) {
-            printf("next->rule.type == TRANS_APPEND = %d\n", next->rule.type == TRANS_APPEND );
-            printf("next->rule.key %s\n", next->rule.key);
             if (next->rule.type == TRANS_APPEND && !isVowel(next->rule.key)) {
                 found = TRUE;
                 break;
             }
-            printf("here\n");
         }
 
         return found;
@@ -271,15 +267,12 @@ bool findToneTarget(struct TransformationQueue *prevTransformations,
 
     struct Transformation **rightmostVowels = findRightmostVowels();
 
-    printf("vcount = %d\n", vcount);
     switch (vcount) {
     case 1:
         // cá
         trans->target = rightmostVowels[0];
         break;
     case 2:
-        printf("hasConsonantBehind(rightmostVowels[0]) = %d\n", hasConsonantBehind(rightmostVowels[0]));
-        printf("%s\n", rightmostVowels[0]->rule.key);
         // FIXME: And thuở?
         if (hasConsonantBehind(rightmostVowels[0])) {
             // nước
