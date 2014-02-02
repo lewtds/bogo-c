@@ -36,13 +36,27 @@ int main() {
 
     struct RuleQueue *rules = buildRules();
     bgstr input;
+    bgstr chunk;
     bgstr output;
 
     while (1) {
         printf("> ");
-        scanf("%s", input);
-        processString(rules, output, input);
-        printf("%s\n", output);
+        fgets(input, sizeof(bgstr), stdin);
+
+        int k = 0;
+        for (int i = 0; i < sizeof(bgstr) && input[i]; ++i) {
+            if (input[i] != ' ' && input[i] != '\n') {
+                chunk[k++] = input[i];
+            } else {
+                chunk[k] = '\0';
+                processString(rules, output, chunk);
+
+                char sep = input[i] == '\n' ? '\n' : ' ';
+                printf("%s%c", output, sep);
+
+                k = 0;
+            }
+        }
     }
 
     return 0;
