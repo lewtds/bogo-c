@@ -184,14 +184,34 @@ void addToneToChar(bgstr chr, enum Tone tone)
     }
 }
 
+
+/*
+ * getToneFromChar("a") => TONE_NONE
+ * getToneFromChar("b") => TONE_NONE
+ * getToneFromChar("á") => TONE_ACUTE
+ */
+enum Tone getToneFromChar(bgchar chr)
+{
+    int index = bgstrIndexOf(VOWELS, chr, 0);
+    if (index != -1) {
+        int current_tone = index % 6;
+        return current_tone;
+    } else {
+        return TONE_NONE;
+    }
+}
+
 /*
  * addMarkToChar("a", MARK_HAT) => "â"
  */
 void addMarkToChar(bgstr chr, enum Mark mark)
 {
-    // TODO Backup and restore the tone
     static bgstr mark_groups[] =
     {"aâăaa", "eêeee", "oôoơo", "uuuưu", "ddddđ"};
+
+    // Backup and clear the tone
+    enum Tone tone = getToneFromChar(chr);
+    addToneToChar(chr, TONE_NONE);
 
     for (int i = 0; i < 5; i++) {
         if (bgstrIndexOf(mark_groups[i], chr, 0) != -1) {
@@ -199,6 +219,9 @@ void addMarkToChar(bgstr chr, enum Mark mark)
             break;
         }
     }
+
+    // Restore the tone
+    addToneToChar(chr, tone);
 }
 
 
