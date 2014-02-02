@@ -118,6 +118,35 @@ const struct Rule APPEND_RULE = {
 };
 
 
+struct Rule* newRule(void)
+{
+    struct Rule* tmp = malloc(sizeof(struct Rule));
+    return tmp;
+}
+
+struct Transformation* newTransformation(void)
+{
+    struct Transformation* tmp = malloc(sizeof(struct Transformation));
+    tmp->target = NULL;
+    return tmp;
+}
+
+struct TransformationQueue* newTransformationQueue(void)
+{
+    struct TransformationQueue* tmp = \
+            malloc(sizeof(struct TransformationQueue));
+    TAILQ_INIT(tmp);
+    return tmp;
+}
+
+struct RuleQueue* newRuleQueue(void)
+{
+    struct RuleQueue* tmp = malloc(sizeof(struct RuleQueue));
+    TAILQ_INIT(tmp);
+    return tmp;
+}
+
+
 /*
 Apply all transformations in a list of transformations into a result string.
 
@@ -225,20 +254,19 @@ void findMarkTarget(struct TransformationQueue *prevTransformations,
 void processChar(struct RuleQueue *rules,
                  struct TransformationQueue *prevTransformations,
                  bgstr chr) {
-    struct RuleQueue *applicable_rules = new(struct RuleQueue);
-    TAILQ_INIT(applicable_rules);
+    struct RuleQueue *applicable_rules = newRuleQueue();
 
     // Build a list of applicable rules whose key matches chr
     struct Rule *rule;
     TAILQ_FOREACH(rule, rules, queuePtrs) {
         if (bgstrEqual(rule->key, chr)) {
-            struct Rule *ruleClone = new(struct Rule);
+            struct Rule *ruleClone = newRule();
             *ruleClone = *rule;
             TAILQ_INSERT_TAIL(applicable_rules, ruleClone, queuePtrs);
         }
     }
 
-    struct Transformation *newTrans = new(struct Transformation);
+    struct Transformation *newTrans = newTransformation();
 
     // A transformation is by default an appending one
     newTrans->rule = APPEND_RULE;
@@ -267,8 +295,7 @@ void processChar(struct RuleQueue *rules,
 
 void processString(struct RuleQueue *rules, bgstr output, const bgstr input) {
 
-    struct TransformationQueue *transList = new(struct TransformationQueue);
-    TAILQ_INIT(transList);
+    struct TransformationQueue *transList = newTransformationQueue();
 
     for (int i = 0; i < bgstrLen(input); ++i) {
         bgstr chr;

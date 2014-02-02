@@ -81,6 +81,12 @@ struct Transformation {
 TAILQ_HEAD(RuleQueue, Rule);
 TAILQ_HEAD(TransformationQueue, Transformation);
 
+// Constructors
+struct Rule*      newRule(void);
+struct RuleQueue* newRuleQueue(void);
+
+struct Transformation*      newTransformation(void);
+struct TransformationQueue* newTransformationQueue(void);
 
 // Functions
 

@@ -44,7 +44,5 @@
 //typedef wchar_t bgChar;
 //typedef wchar_t bgstr[MAXSTRLEN];
 
-#define new(type) malloc(sizeof(type))
-#define ITERITEM(iter, type, name) type* name = (type*) iter->item
 
 #endif // COMMON_H

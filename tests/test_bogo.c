@@ -32,7 +32,7 @@
 int testFindMarkTarget(void) {
     initTestCase ("Find mark target");
 
-    struct TransformationQueue *transList = new(struct TransformationQueue);
+    struct TransformationQueue *transList = newTransformationQueue();
     TAILQ_INIT(transList);
 
     struct Rule dDashRule = {
@@ -88,7 +88,7 @@ int testFindMarkTarget(void) {
 
 
 struct RuleQueue *buildRules() {
-    struct RuleQueue *rules = new(struct RuleQueue);
+    struct RuleQueue *rules = newRuleQueue();
     TAILQ_INIT(rules);
 
     bgstr ruleTemplates[] = {
@@ -100,7 +100,7 @@ struct RuleQueue *buildRules() {
     int len = sizeof(ruleTemplates) / sizeof(bgstr);
 
     for (int i = 0; i < len; ++i) {
-        struct Rule *rule = new(struct Rule);
+        struct Rule *rule = newRule();
         parseRuleFromString(rule, ruleTemplates[i]);
         TAILQ_INSERT_TAIL(rules, rule, queuePtrs);
     }
