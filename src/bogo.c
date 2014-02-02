@@ -387,7 +387,7 @@ bool findMarkTarget(struct TransformationQueue *prevTransformations,
  *
  * => prevTrans = [
  *      {key:a, type:APPEND},
- *      {key:a, type:MARK, mark:HAT, target:`the-first-transformation`}
+ *      {key:a, type:MARK, mark:HAT, target:&prevTrans[0]}
  *    ]
  */
 void processChar(struct RuleQueue *rules,
