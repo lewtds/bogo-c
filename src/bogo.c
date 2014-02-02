@@ -327,7 +327,7 @@ bool findToneTarget(struct TransformationQueue *prevTransformations,
     case 3:
         // khuỷu
         // FIXME: What about chuyển?
-        trans->target = rightmostVowels[2];
+        trans->target = rightmostVowels[1];
         break;
     default:
         trans->target = NULL;
