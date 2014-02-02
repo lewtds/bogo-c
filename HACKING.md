@@ -19,6 +19,15 @@ existing ones. We call these simply 'marks'.
 * horn, used in ư, ơ
 * dash, used in đ
 
+## Coding Style & Decisions
+
+- Use **camelCase** for functions and variables/arguments, **PascalCase** for
+  structs, **ALL_CAPS** for enums.
+- Kernighan & Ritchie style formatting/indenting. Expand tab to 4 spaces.
+- Keep `typedef`s to the minimum.
+- Each struct should have a constructor, prefixed with *new*, e.g. `newMyStruct`.
+- Use BSD's `queue.h` for list operations.
+
 ## Operation
 
 Bogo engine works in two phases. First, it tries to build a list of
