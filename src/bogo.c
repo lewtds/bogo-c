@@ -117,21 +117,16 @@ struct RuleQueue* newRuleQueue(void)
 
 
 /*
-Apply all transformations in a list of transformations into a result string.
-
-input_list = [{
-    type: TRANS_APPEND,
-    key: "a"
-},
-{
-    type: TRANS_TONE,
-    key: "s",
-    effect: TONE_ACUTE,
-    targets: [input_list[0]]
-}]
-
-output = "á"
-*/
+ * Apply all transformations in a list of transformations into a result string.
+ *
+ * bgstr buffer;
+ *
+ * flatten(output    = buffer,
+ *         transList = [{ key:a, type:APPEND },
+ *                      { key:s, type:TONE, tone:HAT, target:&transList[0] }])
+ *
+ * => buffer = "á"
+ */
 void flatten(bgstr output,
              struct TransformationQueue *transList)
 {
@@ -173,6 +168,10 @@ void flatten(bgstr output,
     }
 }
 
+
+/*
+ * addToneToChar("a", TONE_ACUTE) => "á"
+ */
 void addToneToChar(bgstr chr, enum Tone tone)
 {
     int index = bgstrIndexOf(VOWELS, chr, 0);
@@ -185,6 +184,9 @@ void addToneToChar(bgstr chr, enum Tone tone)
     }
 }
 
+/*
+ * addMarkToChar("a", MARK_HAT) => "â"
+ */
 void addMarkToChar(bgstr chr, enum Mark mark)
 {
     // TODO Backup and restore the tone
@@ -200,7 +202,17 @@ void addMarkToChar(bgstr chr, enum Mark mark)
 }
 
 
-
+/*
+ * // aos -> áo
+ * findToneTarget(prevTrans = [{key:a, type:APPEND}, {key:o, type:APPEND}],
+ *                trans     = {target:NULL, rule:NULL},
+ *                rule      = {key:s, type:TONE, tone:TONE_ACUTE})
+ *
+ * => trans = {
+ *      target: {key:a, type:APPEND},
+ *      rule  : {key:s, type:TONE, tone:TONE_ACUTE}
+ *    }
+ */
 bool findToneTarget(struct TransformationQueue *prevTransformations,
                     struct Transformation *trans,
                     struct Rule *rule)
@@ -250,6 +262,12 @@ bool findToneTarget(struct TransformationQueue *prevTransformations,
     /*
      * Check if a vowel is followed by a TRANS_APPEND that contains
      * a consonant.
+     *
+     * Linked list: {key:a, type:APPEND} -> {key:n, type:APPEND}
+     * hasConsonantBehind({key:a, type:APPEND}) => TRUE
+     *
+     * Linked list: {key:a, type:APPEND} -> NULL
+     * hasConsonantBehind({key:a, type:APPEND}) => FALSE
      */
     bool hasConsonantBehind(struct Transformation *vowel)
     {
@@ -302,6 +320,17 @@ bool findToneTarget(struct TransformationQueue *prevTransformations,
 }
 
 
+/*
+ * // ana -> ân
+ * findMarkTarget(prevTrans = [{key:a, type:APPEND}, {key:n, type:APPEND}],
+ *                trans     = {target:NULL, rule:NULL},
+ *                rule      = {key:a, type:MARK, mark:HAT})
+ *
+ * => trans = {
+ *      target: {key:a, type:APPEND},
+ *      rule  : {key:a, type:MARK, mark:HAT}
+ *    }
+ */
 bool findMarkTarget(struct TransformationQueue *prevTransformations,
                    struct Transformation *trans,
                    struct Rule *rule)
@@ -327,6 +356,17 @@ bool findMarkTarget(struct TransformationQueue *prevTransformations,
 }
 
 
+/*
+ * // aa -> â
+ * processChar(rules     = [{key:a, effectOn:a, type:MARK, mark:HAT}],
+ *             prevTrans = [{key:a, type:APPEND}],
+ *             chr       = "a");
+ *
+ * => prevTrans = [
+ *      {key:a, type:APPEND},
+ *      {key:a, type:MARK, mark:HAT, target:`the-first-transformation`}
+ *    ]
+ */
 void processChar(struct RuleQueue *rules,
                  struct TransformationQueue *prevTransformations,
                  bgstr chr)
@@ -374,6 +414,14 @@ void processChar(struct RuleQueue *rules,
 }
 
 
+/*
+ * bgstr buffer;
+ * processString(rules  = [{key:f, type:TONE, tone:GRAVE}],
+ *               output = buffer,
+ *               input  = "meof")
+ *
+ * => buffer = mèo
+ */
 void processString(struct RuleQueue *rules, bgstr output, const bgstr input)
 {
 
