@@ -1,22 +1,10 @@
 #include <stdio.h>
-#include <locale.h>
-#include <stdlib.h>
-#include <wchar.h>
-
-#include "string.h"
 #include "bogo.h"
-#include "list.h"
 #include "dsl.h"
 
-int main() {
-    if (!setlocale(LC_CTYPE, "")) {
-      fprintf(stderr, "Can't set the specified locale! "
-              "Check LANG, LC_CTYPE, LC_ALL.\n");
-      return 1;
-    }
-
-    struct List *rules = new(struct RuleT);
-    struct RuleT aHatRule;
+struct RuleQueue *buildRules() {
+    struct RuleQueue *rules = newRuleQueue();
+    TAILQ_INIT(rules);
 
     bgstr ruleTemplates[] = {
         "a a a^",
@@ -24,18 +12,29 @@ int main() {
         "o f o`"
     };
 
-    for (int i = 0; i < 2; ++i) {
-        struct RuleT *rule = new(struct RuleT);
+    int len = sizeof(ruleTemplates) / sizeof(bgstr);
+
+    for (int i = 0; i < len; ++i) {
+        struct Rule *rule = newRule();
         parseRuleFromString(rule, ruleTemplates[i]);
-        listAppend(rules, rule);
+        TAILQ_INSERT_TAIL(rules, rule, queuePtrs);
     }
 
-    bgstr input = "aa";
+    return rules;
+}
+
+int main() {
+
+    struct RuleQueue *rules = buildRules();
+    bgstr input;
     bgstr output;
 
-    processString(rules, output, input);
-
-    printf("%s\n", output);
+    while (1) {
+        printf("> ");
+        scanf("%s", input);
+        processString(rules, output, input);
+        printf("%s\n", output);
+    }
 
     return 0;
 }

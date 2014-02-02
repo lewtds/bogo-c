@@ -129,6 +129,7 @@ int testProcessString(void) {
 
     processString(rules, output, "naanee");
     assertStr("nânê", output);
+
     return finishTestCase();
 }
 

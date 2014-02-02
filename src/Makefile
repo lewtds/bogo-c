@@ -2,6 +2,7 @@ UTF8_SRC = utf8small.c utf8small.h
 UNITTEST_SRC = unittest.h unittest.c
 BOGO_SRC = bogo.c dsl.c
 
+BOGO_LIB = $(BUILD_DIR)/libbogo.so
 BOGO_EXEC = $(BUILD_DIR)/bogo
 
 TRYOUT_MAIN_SRC           = tryout/tryout.c
@@ -15,7 +16,7 @@ TRYOUT_UNITTEST_PASS_EXEC  = $(BUILD_DIR)/tryout_unittest_pass
 TRYOUT_UNITTEST_FAIL_EXEC  = $(BUILD_DIR)/tryout_unittest_fail
 TRYOUT_MAIN_EXEC           = $(BUILD_DIR)/tryout_main
 
-INCLUDE = ./
+INCLUDE = .
 
 .PHONY: clean tryout
 
@@ -49,7 +50,7 @@ tryout_unittest:
 	$(TRYOUT_UNITTEST_PASS_EXEC)
 	$(TRYOUT_UNITTEST_FAIL_EXEC)
 
-bogo: $(BOGO_SRC)
+libbogo: $(BOGO_SRC)
 	@mkdir -p $(BUILD_DIR)
 
 	@$(CC) -o $(BOGO_EXEC) \
@@ -60,3 +61,14 @@ bogo: $(BOGO_SRC)
 		-fPIC \
 		$(BOGO_SRC) \
 		$(UTF8_SRC)
+
+bogo: $(BOGO_SRC) main.c
+	@mkdir -p $(BUILD_DIR)
+
+	$(CC) -o $(BOGO_EXEC) \
+	        -I$(INCLUDE) \
+	        -std=c99 \
+	        -g \
+	        $(BOGO_SRC) \
+	        $(UTF8_SRC) \
+	        main.c
