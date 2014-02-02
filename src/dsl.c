@@ -105,8 +105,8 @@ void parseRuleFromString(struct Rule *rule,
         return;
     }
 
-    *rule->key = tmp[0];
-    *rule->effectOn = tmp[2];
+    *rule->effectOn = tmp[0];
+    *rule->key = tmp[2];
 
     /* Last part: transformation type */
     bgstr lastChar;

@@ -58,6 +58,13 @@ int testSimpleHatRules(void) {
     assertStr("a", rule.effectOn);
     assertInt(MARK_HAT, rule.toneMarkDetail.mark);
 
+    parseRuleFromString(&rule, "a w a(");
+
+    assertInt(TRANS_MARK, rule.type);
+    assertStr("w", rule.key);
+    assertStr("a", rule.effectOn);
+    assertInt(MARK_BREVE, rule.toneMarkDetail.mark);
+
     return finishTestCase ();
 }
 
