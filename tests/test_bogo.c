@@ -181,12 +181,12 @@ struct RuleQueue *buildRules() {
     TAILQ_INIT(rules);
 
     bgstr telexRules[] = {
+        "o w o+",
+        "u w u+",
         "a a a^",
         "a w a(",
         "e e e^",
         "o o o^",
-        "o w o+",
-        "u w u+",
         "d d d-",
         "_ f `",
         "_ r ?",

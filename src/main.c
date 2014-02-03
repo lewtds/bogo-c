@@ -6,13 +6,18 @@ struct RuleQueue *buildRules() {
     struct RuleQueue *rules = newRuleQueue();
     TAILQ_INIT(rules);
 
+    // NOTE: The rules order matters. "u w u+" should come before "a w a(" so
+    //       that "uaw" resolves to ưa and not uă.
+    //
+    // FIXME: Should this behavior be tolerated? Should we fix uă explicitly
+    //        in postProcessString()?
     bgstr ruleTemplates[] = {
+        "o w o+",
+        "u w u+",
         "a a a^",
         "a w a(",
         "e e e^",
         "o o o^",
-        "o w o+",
-        "u w u+",
         "d d d-",
         "_ f `",
         "_ r ?",
