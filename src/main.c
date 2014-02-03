@@ -50,30 +50,36 @@ int main() {
     bgstr output;
 
     while (1) {
-        input = readline("> ");
+        input = readline("bogo > ");
 
-        clock_t startTime = clock();
+        if (input[0] != '\0') {
 
-        int k = 0;
-        for (int i = 0;; ++i) {
-            if (input[i] != ' ' && input[i] != '\0') {
-                chunk[k++] = input[i];
-            } else {
-                chunk[k] = '\0';
-                processString(rules, output, chunk);
+            clock_t startTime = clock();
 
-                char sep = input[i] == '\0' ? '\n' : ' ';
-                printf("%s%c", output, sep);
+            int k = 0;
+            for (int i = 0;; ++i) {
+                if (input[i] != ' ' && input[i] != '\0') {
+                    chunk[k++] = input[i];
+                } else {
+                    chunk[k] = '\0';
+                    processString(rules, output, chunk);
 
-                if (input[i] == '\0') {
-                    break;
+                    char sep = input[i] == '\0' ? '\n' : ' ';
+                    printf("%s%c", output, sep);
+
+                    if (input[i] == '\0') {
+                        break;
+                    }
+                    k = 0;
                 }
-                k = 0;
             }
+
+            add_history(input);
+
+            clock_t endTime = clock();
+            printf("%.3f ms\n", (endTime - startTime) * 1000.0 / CLOCKS_PER_SEC);
         }
 
-        clock_t endTime = clock();
-        printf("%.3f ms\n", (endTime - startTime) * 1000.0 / CLOCKS_PER_SEC);
         free(input);
     }
 
