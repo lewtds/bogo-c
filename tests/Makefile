@@ -1,7 +1,7 @@
 TARGET           = test_dsl test_bogo test_tone_and_mark
 OBJS             = test_bogo.o test_dsl.o test_tone_and_mark.o
 SRCS             = $(OBJS:.o=.c)
-INCLUDEDIRS     += -I../include
+INCLUDEDIRS     += -I../include -I../src/engine -I../utf8small
 LIBDIRS         += -L../src/lib
 LDFLAGS         += $(LIBDIRS) -lbogoengine -lutf8small -lunittest -lm
 CFLAGS          += -W -Wall

@@ -26,7 +26,7 @@
 #include <malloc.h>
 #include "unittest.h"
 
-#include "bogo.h"
+#include "bogo.c"
 #include "dsl.h"
 #include "utf8small.h"
 
