@@ -109,4 +109,9 @@ bgbool strIsEmpty(const bgstr str);
 int bgstrIndexOf(const bgstr str, const bgstr pattern, int startFrom);
 
 bgbool bgstrEqual(const bgstr left, const bgstr right);
+
+void bgcharLower(bgchar target, bgchar source);
+void bgcharUpper(bgchar target, bgchar source);
+//void bgstrLower(bgstr target, bgstr source);
+//void bgstrUpper(bgstr target, bgstr source);
 #endif

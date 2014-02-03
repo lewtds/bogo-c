@@ -66,7 +66,9 @@
 
 
 const bgstr VOWELS = "àáảãạaằắẳẵặăầấẩẫậâèéẻẽẹeềếểễệêìíỉĩịi" \
-                        "òóỏõọoồốổỗộôờớởỡợơùúủũụuừứửữựưỳýỷỹỵy";
+                     "òóỏõọoồốổỗộôờớởỡợơùúủũụuừứửữựưỳýỷỹỵy" \
+                     "ÀÁẢÃẠAẰẮẲẴẶĂẦẤẨẪẬÂÈÉẺẼẸEỀẾỂỄỆÊÌÍỈĨỊI" \
+                     "ÒÓỎÕỌOỒỐỔỖỘÔỜỚỞỠỢƠÙÚỦŨỤUỪỨỬỮỰƯỲÝỶỸỴY";
 
 
 #define TAILQ_FREE(iter, list, field) do {  \
@@ -206,14 +208,16 @@ enum Tone getToneFromChar(bgchar chr)
  */
 void addMarkToChar(bgstr chr, enum Mark mark)
 {
-    static bgstr mark_groups[] =
-    {"aâăaa", "eêeee", "oôoơo", "uuuưu", "ddddđ"};
+    static bgstr mark_groups[] = {
+         "aâăaa", "eêeee", "oôoơo", "uuuưu", "ddddđ",
+         "AÂĂAA", "EÊEEE", "OÔOƠO", "UUUƯU", "DDDDĐ"
+    };
 
     // Backup and clear the tone
     enum Tone tone = getToneFromChar(chr);
     addToneToChar(chr, TONE_NONE);
 
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < sizeof(mark_groups); i++) {
         if (bgstrIndexOf(mark_groups[i], chr, 0) != -1) {
             bgstrSubStr(chr, mark_groups[i], mark, 1);
             break;
@@ -245,12 +249,12 @@ bool findToneTarget(struct TransformationQueue *prevTransformations,
     inline bool isVowel(bgchar chr)
     {
         // Note that transformations' key can only be ASCII chars.
-        return bgstrEqual(chr, "a") ||
-               bgstrEqual(chr, "e") ||
-               bgstrEqual(chr, "i") ||
-               bgstrEqual(chr, "o") ||
-               bgstrEqual(chr, "u") ||
-               bgstrEqual(chr, "y");
+        return bgstrEqual(chr, "a") || bgstrEqual(chr, "A") ||
+               bgstrEqual(chr, "e") || bgstrEqual(chr, "E") ||
+               bgstrEqual(chr, "i") || bgstrEqual(chr, "I") ||
+               bgstrEqual(chr, "o") || bgstrEqual(chr, "O") ||
+               bgstrEqual(chr, "u") || bgstrEqual(chr, "U") ||
+               bgstrEqual(chr, "y") || bgstrEqual(chr, "Y");
     }
 
     /*
@@ -311,15 +315,22 @@ bool findToneTarget(struct TransformationQueue *prevTransformations,
 
     inline bool isUo(struct Transformation **vowels)
     {
-        return bgstrEqual(vowels[0]->rule.key, "o") &&
-               bgstrEqual(vowels[1]->rule.key, "u");
+        bgchar o, u;
+        bgcharLower(o, vowels[0]->rule.key);
+        bgcharLower(u, vowels[1]->rule.key);
+        return bgstrEqual(o, "o") &&
+               bgstrEqual(u, "u");
     }
 
     inline bool isUye(struct Transformation **vowels)
     {
-        return bgstrEqual(vowels[0]->rule.key, "e") &&
-               bgstrEqual(vowels[1]->rule.key, "y") &&
-               bgstrEqual(vowels[2]->rule.key, "u");
+        bgchar u, y, e;
+        bgcharLower(u, vowels[2]->rule.key);
+        bgcharLower(y, vowels[1]->rule.key);
+        bgcharLower(e, vowels[0]->rule.key);
+        return bgstrEqual(e, "e") &&
+               bgstrEqual(y, "y") &&
+               bgstrEqual(u, "u");
     }
 
     struct Transformation **rightmostVowels = findRightmostVowels();
@@ -383,7 +394,10 @@ bool findMarkTarget(struct TransformationQueue *prevTransformations,
                           prevTransformations,
                           TransformationQueue,
                           queuePtrs) {
-        if (bgstrEqual(currentTrans->rule.key, rule->effectOn)) {
+        bgstr lowerKey;
+        bgcharLower(lowerKey, currentTrans->rule.key);
+
+        if (bgstrEqual(lowerKey, rule->effectOn)) {
             trans->target = currentTrans;
             break;
         }
@@ -416,9 +430,13 @@ void processChar(struct RuleQueue *rules,
     struct RuleQueue *applicable_rules = newRuleQueue();
 
     // Build a list of applicable rules whose key matches chr
+
+    bgchar lowerChr;
+    bgcharLower(lowerChr, chr);
+
     struct Rule *rule;
     TAILQ_FOREACH(rule, rules, queuePtrs) {
-        if (bgstrEqual(rule->key, chr)) {
+        if (bgstrEqual(rule->key, lowerChr)) {
             struct Rule *ruleClone = newRule();
             *ruleClone = *rule;
             TAILQ_INSERT_TAIL(applicable_rules, ruleClone, queuePtrs);

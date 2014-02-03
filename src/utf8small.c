@@ -21,6 +21,7 @@
 */
 
 #include <stdio.h>
+#include <ctype.h>
 #include "common.h"
 #include "utf8small.h"
 
@@ -345,4 +346,24 @@ int bgstrIndexOf(const bgstr str, const bgstr pattern, int startFrom)
 bgbool bgstrEqual(const bgstr left, const bgstr right)
 {
     return strcmp(left, right) == 0;
+}
+
+
+void bgcharLower(bgchar target, bgchar source)
+{
+    // FIXME: Only works with ASCII for now
+    if (strlen(source) == 1) {
+        target[0] = tolower(source[0]);
+        target[1] = '\0';
+    }
+}
+
+
+void bgcharUpper(bgchar target, bgchar source)
+{
+    // FIXME: Only works with ASCII for now
+    if (strlen(source) == 1) {
+        target[0] = toupper(source[0]);
+        target[1] = '\0';
+    }
 }

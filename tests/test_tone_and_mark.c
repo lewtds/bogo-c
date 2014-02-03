@@ -69,6 +69,11 @@ int testAddMarkToChar(void) {
     addMarkToChar(target, MARK_NONE);
     assertStr("a", target);
 
+    // Should work with upper case chars
+    bgstrAssign(target, "D");
+    addMarkToChar(target, MARK_DASH);
+    assertStr("Đ", target);
+
     return finishTestCase();
 }
 
