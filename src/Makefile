@@ -69,6 +69,7 @@ bogo: $(BOGO_SRC) main.c
 	        -I$(INCLUDE) \
 	        -std=c99 \
 	        -g \
+	        -lreadline \
 	        $(BOGO_SRC) \
 	        $(UTF8_SRC) \
 	        main.c

@@ -1,4 +1,8 @@
 #include <stdio.h>
+#include <malloc.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+
 #include "bogo.h"
 #include "dsl.h"
 
@@ -40,28 +44,33 @@ struct RuleQueue *buildRules() {
 int main() {
 
     struct RuleQueue *rules = buildRules();
-    bgstr input;
+    char* input;
     bgstr chunk;
     bgstr output;
 
     while (1) {
-        printf("> ");
-        fgets(input, sizeof(bgstr), stdin);
+        input = readline("> ");
+
 
         int k = 0;
-        for (int i = 0; i < sizeof(bgstr) && input[i]; ++i) {
-            if (input[i] != ' ' && input[i] != '\n') {
+        for (int i = 0;; ++i) {
+            if (input[i] != ' ' && input[i] != '\0') {
                 chunk[k++] = input[i];
             } else {
                 chunk[k] = '\0';
                 processString(rules, output, chunk);
 
-                char sep = input[i] == '\n' ? '\n' : ' ';
+                char sep = input[i] == '\0' ? '\n' : ' ';
                 printf("%s%c", output, sep);
 
+                if (input[i] == '\0') {
+                    break;
+                }
                 k = 0;
             }
         }
+
+        free(input);
     }
 
     return 0;
