@@ -52,8 +52,13 @@ int main() {
     while (1) {
         input = readline("bogo > ");
 
-        if (input[0] != '\0') {
+        // Control-D, should quit.
+        if (input == NULL) {
+            printf("\n");
+            break;
+        }
 
+        if (input[0] != '\0') {
             clock_t startTime = clock();
 
             int k = 0;
