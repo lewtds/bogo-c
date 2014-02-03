@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <time.h>
 #include <malloc.h>
 #include <readline/readline.h>
 #include <readline/history.h>
@@ -51,6 +52,7 @@ int main() {
     while (1) {
         input = readline("> ");
 
+        clock_t startTime = clock();
 
         int k = 0;
         for (int i = 0;; ++i) {
@@ -70,6 +72,8 @@ int main() {
             }
         }
 
+        clock_t endTime = clock();
+        printf("%.3f ms\n", (endTime - startTime) * 1000.0 / CLOCKS_PER_SEC);
         free(input);
     }
 
