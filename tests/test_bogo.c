@@ -28,6 +28,7 @@
 
 #include "bogo.c"
 #include "dsl.h"
+#include "utf8small.h"
 
 int testFindMarkTarget(void) {
     initTestCase ("Find mark target");
@@ -186,7 +187,12 @@ struct RuleQueue *buildRules() {
         "o o o^",
         "o w o+",
         "u w u+",
-        "_ f `"
+        "d d d-",
+        "_ f `",
+        "_ r ?",
+        "_ x ~",
+        "_ j .",
+        "_ s '",
     };
 
     int len = sizeof(telexRules) / sizeof(bgstr);
@@ -207,23 +213,47 @@ int testProcessString(void) {
 
     bgstr output;
 
-    processString(rules, output, "ae");
-    assertStr("ae", output);
+    bgstr pairs[] = {"v",  "v",
+                    "aw", "ă",
+//                    "w",  "ư",
+                    "ow", "ơ",
+                    "oo", "ô",
+                    "Oo", "Ô",
+                    "dd", "đ",
+                    "muaf", "mùa",
+                    "Doongd", "Đông",
+                    "gif",  "gì",
+                    "loAnj", "loẠn",
+//                    "muongw", "mương",
+//                    "qur", "qur",
+//                    "Tosan", "Toán",
+                    "tusnw", "tứn",
+                    "dee", "dê",
+                    "mowis", "mới",
+                    "uwa", "ưa",
+                    "uwo", "ưo",
+                    "ddx", "đx",
+                    "hoacw", "hoăc",
+                    "cuooi", "cuôi",
 
-    processString(rules, output, "aa");
-    assertStr("â", output);
+                    "tooi", "tôi",
+                    "chuyeenr", "chuyển",
+                    "ddoonjg", "động",
+                    "nheechs", "nhếch",
 
-    processString(rules, output, "naa");
-    assertStr("nâ", output);
+                    // uơ related
+                    "quowr", "quở",
+                    "huow", "huơ",
+                    "thuowr", "thuở",
+                    "QUOWR", "QUỞ",
+                    "HUOW", "HUƠ",
+                    "THUOWR", "THUỞ"
+                    };
 
-    processString(rules, output, "naane");
-    assertStr("nâne", output);
-
-    processString(rules, output, "naanee");
-    assertStr("nânê", output);
-
-    processString(rules, output, "aw");
-    assertStr("ă", output);
+    for (int i = 0; i < sizeof(pairs) / sizeof(bgstr) - 2; i += 2) {
+        processString(rules, output, pairs[i]);
+        assertStr(pairs[i+1], output);
+    }
 
     return finishTestCase();
 }
