@@ -25,7 +25,7 @@
 #include <string.h>
 #include "unittest.h"
 
-#include "bogo.c"
+#include "bogo.h"
 
 int testAddToneToChar(void) {
     initTestCase ("Add tone to char");

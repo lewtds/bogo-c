@@ -96,4 +96,12 @@ void addMarkToChar (bgstr chr, enum Mark mark);
 void flatten       (bgstr output, struct TransformationQueue *transList);
 void processString (struct RuleQueue *rules, bgstr output, const bgstr input);
 
+bool findToneTarget(struct TransformationQueue *prevTransformations,
+                    struct Transformation *trans,
+                    struct Rule *rule);
+
+bool findMarkTarget(struct TransformationQueue *prevTransformations,
+                    struct Transformation *trans,
+                    struct Rule *rule);
+
 #endif // BOGO_H
