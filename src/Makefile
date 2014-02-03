@@ -53,7 +53,7 @@ tryout_unittest:
 libbogo: $(BOGO_SRC)
 	@mkdir -p $(BUILD_DIR)
 
-	@$(CC) -o $(BOGO_EXEC) \
+	@$(CC) -o $(BOGO_LIB) \
 		-I$(INCLUDE) \
 		-std=c99 \
 		-g \

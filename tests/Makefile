@@ -36,6 +36,8 @@ test: test_dsl test_tone_and_mark test_bogo
 	./test_tone_and_mark
 	./test_bogo
 
+build-tests: test_dsl test_tone_and_mark test_bogo
+
 test_utf: $(TEST_UTF8_SRC)
 	@mkdir -p $(BUILD_TEST_DIR)
 	@$(CC) -o $(TEST_UTF8_EXEC) \
@@ -44,13 +46,14 @@ test_utf: $(TEST_UTF8_SRC)
 		$(SRC_FILES)
 	@$(TEST_UTF8_EXEC) < $(TEST_UTF8_INPUT)
 
-test_dsl: $(TEST_DSL_OBJ)
+test_dsl: $(TEST_DSL_SRC)
 
-test_bogo: $(BOGO_OBJ) test_bogo.o
+test_bogo: $(BOGO_SRC) test_bogo.c
 
-test_tone_and_mark: $(BOGO_OBJ) test_tone_and_mark.o
+test_tone_and_mark: $(BOGO_SRC) test_tone_and_mark.c
 
 clean:
 	rm -rf \
 		$(BUILD_TEST_DIR) \
-		*.o *.i *.gch *.a
+		*.o *.i *.gch *.a \
+		test_dsl test_tone_and_mark test_bogo

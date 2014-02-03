@@ -24,6 +24,8 @@ clean-test:
 test:
 	@cd tests; make test
 
+build-tests:
+	@cd tests; make build-tests
 
 #
 # Trying out
