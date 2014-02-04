@@ -1,10 +1,18 @@
+#####################################################################
+# GNU Makefile Template for multiple project                        #
+# Author: Duc Minh Tran                                             #
+# Email: 901sttAtgmailDotcom                                        #
+#####################################################################
+
+
 TARGET           = test_dsl test_bogo test_tone_and_mark
-OBJS             = test_bogo.o test_dsl.o test_tone_and_mark.o
-SRCS             = $(OBJS:.o=.c)
-INCLUDEDIRS     += -I../include -I../src/engine -I../utf8small
+OBJS             = $(TARGET:=.o)
+SRCS             = $(patsubst %.c,%.o,$(wildcard *.c))
+INCLUDEDIRS     += -I../include -I../src/engine -I../src/utf8small
 LIBDIRS         += -L../src/lib
 LDFLAGS         += $(LIBDIRS) -lbogoengine -lutf8small -lunittest -lm
-CFLAGS          += -W -Wall
+LDFLAGS         += $(LIBDIRS)
+CFLAGS          += -W
 DEBUG_FLAGS      = -g3 -DDEBUG_ALL
 RELEASE_FLAGS    = -O2
 ARCH            ?=
@@ -31,9 +39,11 @@ TEST_UTF8_INPUT  = $(TEST_DATA_DIR)/utf8_input.txt
 TEST_UTF8_SRC    = test_utf8.c
 TEST_UTF8_EXEC   = $(BUILD_TEST_DIR)/test_utf8
 
-CFLAGS = -g -std=c99 $(INCLUDEDIRS)
+LD_LIB_TMP      := $(LD_LIBRARY_PATH)
+LD_LIBRARY_PATH := ../src/lib:$(LD_LIB_TMP)
+export LD_LIBRARY_PATH
 
-test: test_dsl test_tone_and_mark test_bogo
+test: $(TARGET)
 	./test_dsl
 	./test_tone_and_mark
 	./test_bogo
@@ -46,27 +56,21 @@ test_utf: $(TEST_UTF8_SRC)
 		$(SRC_FILES)
 	@$(TEST_UTF8_EXEC) < $(TEST_UTF8_INPUT)
 
-test_dsl: test_dsl.o
-	$(CC) -c  $< $(INCLUDEDIRS) $(CFLAGS) $(ARCHFLAGS) $(LDFLAGS) $(ADDFLAGS)
-	$(CC) $^ -o $@ $(INCLUDEDIRS) $(CFLAGS) $(LDFLAGS) $(ADDFLAGS)
-
-test_bogo: test_bogo.o
-	$(CC) -c  $< $(INCLUDEDIRS) $(CFLAGS) $(ARCHFLAGS) $(LDFLAGS) $(ADDFLAGS)
-	$(CC) $^ -o $@ $(INCLUDEDIRS) $(CFLAGS) $(LDFLAGS) $(ADDFLAGS)
-
-test_tone_and_mark: test_tone_and_mark.o
-	$(CC) -c  $< $(INCLUDEDIRS) $(CFLAGS) $(ARCHFLAGS) $(LDFLAGS) $(ADDFLAGS)
-	$(CC) $^ -o $@ $(INCLUDEDIRS) $(CFLAGS) $(LDFLAGS) $(ADDFLAGS)
 
 
-.c.o:
-#	To use shared library, add -fPIC
-#	$(CC) -fPIC -c $< $(INCLUDEDIRS) $(CFLAGS) $(ARCHFLAGS) $(LDFLAGS) $(ADDFLAGS)
+$(TARGET): $(OBJS)
+	$(CC) $@.o -o $@ $(INCLUDEDIRS) $(CFLAGS) $(LDFLAGS) $(ADDFLAGS)
+
+%.o : %.c
+ifeq ($(SHARED_LIB), 1)
+	$(CC) -fPIC -c $< $(INCLUDEDIRS) $(CFLAGS) $(ARCHFLAGS) $(LDFLAGS) $(ADDFLAGS)
+else
 	$(CC) -c  $< $(INCLUDEDIRS) $(CFLAGS) $(ARCHFLAGS) $(LDFLAGS) $(ADDFLAGS)
+endif
 
 
 clean:
-	rm -rf \
+	@$(RM) -rvf \
 		$(BUILD_TEST_DIR) \
 		$(OBJS) $(TARGET)
 

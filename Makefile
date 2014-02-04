@@ -1,3 +1,9 @@
+#####################################################################
+# GNU Makefile Template for multiple project                        #
+# Author: Duc Minh Tran                                             #
+# Email: 901sttAtgmailDotcom                                        #
+#####################################################################
+
 
 # Those are flag which use to support the build,
 # and default when building
@@ -12,11 +18,14 @@
 
 # DEBUG_FLAGS and REALEASE_FLAGS cannot be overwrite
 
+
 # export INCLUDEDIRS     += -I../../include
 # export LIBDIRS         += -L../lib
 # export LDFLAGS         += $(LIBDIRS) -lm
 # export CFLAGS          += -W -Wall -std=c99
 export CFLAGS          += -std=c99
+# export DEBUG            = 0
+# export SHARED_LIB       = 0
 # export ARCH            ?=
 # export CROSS_COMPILE   ?=
 # export COMPILER_CC     ?= gcc
@@ -27,26 +36,18 @@ export CFLAGS          += -std=c99
 # export MKDIR           ?= mkdir
 # export CP              ?= cp
 # export RM              ?= rm
+# export CC              := $(CROSS_COMPILE)$(COMPILER_CC)
+# export CXX             := $(CROSS_COMPILE)$(COMPILER_CXX)
+# export AR              := $(CROSS_COMPILE)$(COMPILER_AR)
+# export LD              := $(CROSS_COMPILE)$(COMPILER_LD)
+# export RANLIB          := $(CROSS_COMPILE)$(COMPILER_RANLIB)
 # DEBUG_FLAGS      = -g3 -DDEBUG_ALL
 # RELEASE_FLAGS    = -O2
-# CC               = $(CROSS_COMPILE)$(COMPILER_CC)
-# CXX              = $(CROSS_COMPILE)$(COMPILER_CXX)
-# AR               = $(CROSS_COMPILE)$(COMPILER_AR)
-# LD               = $(CROSS_COMPILE)$(COMPILER_LD)
-# RANLIB           = $(CROSS_COMPILE)$(COMPILER_RANLIB)
+
 
 
 .PHONY: all
-all: release
-
-.PHONY: debug
-debug:  MAKEFILE_FLAGS := debug
-debug:  build_app
-
-
-.PHONY:	release
-release:  MAKEFILE_FLAGS := release
-release:  build_app
+all: build_app
 
 .PHONY:	test
 test: MAKEFILE_FLAGS := test

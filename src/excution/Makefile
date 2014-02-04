@@ -1,12 +1,21 @@
+#####################################################################
+# GNU Makefile Template for multiple project                        #
+# Author: Duc Minh Tran                                             #
+# Email: 901sttAtgmailDotcom                                        #
+#####################################################################
+
+
 TARGET           = bogo
 OBJS             = main.o
-SRCS             = $(OBJS:.o=.c)
+SRCS             = $(patsubst %.c,%.o,$(wildcard *.c))
 INCLUDEDIRS     += -I../../include
 LIBDIRS         += -L../lib
 LDFLAGS         += $(LIBDIRS) -lbogoengine -lutf8small -lm -lreadline
 CFLAGS          += -W -Wall
 DEBUG_FLAGS      = -g3 -DDEBUG_ALL
 RELEASE_FLAGS    = -O2
+DEBUG           ?= 0
+SHARED_LIB      ?= 0
 ARCH            ?=
 CROSS_COMPILE   ?=
 COMPILER_CC     ?= gcc
@@ -14,11 +23,11 @@ COMPILER_CXX    ?= g++
 COMPILER_AR     ?= ar
 COMPILER_LD     ?= ld
 COMPILER_RANLIB ?= ranlib
-CC               = $(CROSS_COMPILE)$(COMPILER_CC)
-CXX              = $(CROSS_COMPILE)$(COMPILER_CXX)
-AR               = $(CROSS_COMPILE)$(COMPILER_AR)
-LD               = $(CROSS_COMPILE)$(COMPILER_LD)
-RANLIB           = $(CROSS_COMPILE)$(COMPILER_RANLIB)
+CC              ?= $(CROSS_COMPILE)$(COMPILER_CC)
+CXX             ?= $(CROSS_COMPILE)$(COMPILER_CXX)
+AR              ?= $(CROSS_COMPILE)$(COMPILER_AR)
+LD              ?= $(CROSS_COMPILE)$(COMPILER_LD)
+RANLIB          ?= $(CROSS_COMPILE)$(COMPILER_RANLIB)
 MKDIR           ?= mkdir
 CP              ?= cp
 RM              ?= rm
@@ -26,17 +35,27 @@ TARGET_LIBDIR    = ../lib
 BUILD_DIR        = ../build
 
 
+
+ifeq ($(DEBUG), 1)
+	CFLAGS += $(DEBUG_FLAGS)
+else
+	CFLAGS += $(RELEASE_FLAGS)
+endif
+
+
 .PHONY: all
-all:	release
+all:	build_target
 
 
 $(TARGET): $(OBJS)
 	$(CC) $^ -o $@ $(INCLUDEDIRS) $(CFLAGS) $(LDFLAGS) $(ADDFLAGS)
 
-.c.o:
-#	To use shared library, add -fPIC
-#	$(CC) -fPIC -c $< $(INCLUDEDIRS) $(CFLAGS) $(ARCHFLAGS) $(LDFLAGS) $(ADDFLAGS)
+%.o : %.c
+ifeq ($(SHARED_LIB), 1)
+	$(CC) -fPIC -c $< $(INCLUDEDIRS) $(CFLAGS) $(ARCHFLAGS) $(LDFLAGS) $(ADDFLAGS)
+else
 	$(CC) -c  $< $(INCLUDEDIRS) $(CFLAGS) $(ARCHFLAGS) $(LDFLAGS) $(ADDFLAGS)
+endif
 
 
 .PHONY: copy_target
@@ -45,15 +64,9 @@ copy_target:
 	@$(CP) -fv $(TARGET) $(BUILD_DIR)
 
 
-.PHONY: debug
-debug:  CFLAGS += $(DEBUG_FLAGS)
-debug:  $(TARGET)
-debug:  copy_target
-
-.PHONY: release
-release:  CFLAGS += $(RELEASE_FLAGS)
-release:  $(TARGET)
-release:  copy_target
+.PHONY: build_target
+build_target:  $(TARGET)
+build_target:  copy_target
 
 .PHONY: clean
 clean:
