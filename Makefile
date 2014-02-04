@@ -36,13 +36,13 @@ export CFLAGS          += -std=c99
 # export MKDIR           ?= mkdir
 # export CP              ?= cp
 # export RM              ?= rm
-# export CC              := $(CROSS_COMPILE)$(COMPILER_CC)
-# export CXX             := $(CROSS_COMPILE)$(COMPILER_CXX)
-# export AR              := $(CROSS_COMPILE)$(COMPILER_AR)
-# export LD              := $(CROSS_COMPILE)$(COMPILER_LD)
-# export RANLIB          := $(CROSS_COMPILE)$(COMPILER_RANLIB)
-# DEBUG_FLAGS      = -g3 -DDEBUG_ALL
-# RELEASE_FLAGS    = -O2
+# export CC              ?= $(CROSS_COMPILE)$(COMPILER_CC)
+# export CXX             ?= $(CROSS_COMPILE)$(COMPILER_CXX)
+# export AR              ?= $(CROSS_COMPILE)$(COMPILER_AR)
+# export LD              ?= $(CROSS_COMPILE)$(COMPILER_LD)
+# export RANLIB          ?= $(CROSS_COMPILE)$(COMPILER_RANLIB)
+# DEBUG_FLAGS             = -g3 -DDEBUG_ALL
+# RELEASE_FLAGS           = -O2
 
 
 
