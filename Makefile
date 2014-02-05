@@ -135,7 +135,8 @@ clean:
 	rm -rf $(INTERPRETER_TARGET) \
 	       $(INTERPRETER_OBJ) \
 	       $(ENGINE_TARGET) \
-	       $(ENGINE_OBJ)
+	       $(ENGINE_OBJ) \
+	       libbogo.so
 
 .PHONY: _all
 _all: $(ENGINE_TARGET) $(INTERPRETER_TARGET)
