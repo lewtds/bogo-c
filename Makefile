@@ -94,6 +94,8 @@ INTERPRETER_LIBS   = -lreadline -lbogo
 $(INTERPRETER_TARGET): $(ENGINE_TARGET)
 $(INTERPRETER_TARGET): LDFLAGS += $(INTERPRETER_LIBS)
 $(INTERPRETER_TARGET): $(INTERPRETER_OBJ)
+	# @lewtds: I don't like it that $(ENGINE_TARGET) got included in $^.
+	#          We already have that covered with -lbogo.
 	gcc $^ -o $@ $(CFLAGS)
 
 #
