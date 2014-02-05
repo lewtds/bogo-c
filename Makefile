@@ -14,7 +14,7 @@ all: _all
 # E.g. If the C cross-compiler's name is arm-unknown-linux-gcc
 # then CROSS_COMPILE should be "arm-unknown-linux-".
 #
-# CC, CXX, ARR, LD, RANLIB flags should not be edited as
+# The CC, CXX, ARR, LD, RANLIB flags should not be edited as
 # they are handled automatically.
 #
 # DEBUG_FLAGS and REALEASE_FLAGS should be kept intact.
