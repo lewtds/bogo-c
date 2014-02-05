@@ -91,11 +91,11 @@ INTERPRETER_SRC    = src/interpreter.c
 INTERPRETER_OBJ    = $(INTERPRETER_SRC:.c=.o)
 INTERPRETER_LIBS   = -lreadline -lbogo
 
-$(INTERPRETER_TARGET): $(ENGINE_TARGET)
 $(INTERPRETER_TARGET): LDFLAGS += $(INTERPRETER_LIBS)
-$(INTERPRETER_TARGET): $(INTERPRETER_OBJ)
-	# @lewtds: I don't like it that $(ENGINE_TARGET) got included in $^.
-	#          We already have that covered with -lbogo.
+
+# @lewtds: I don't like it that $(ENGINE_TARGET) got included in $^.
+#          We already have that covered with -lbogo.
+$(INTERPRETER_TARGET): $(INTERPRETER_OBJ) $(ENGINE_TARGET)
 	gcc $^ -o $@ $(CFLAGS)
 
 #
@@ -112,9 +112,8 @@ TEST_TARGETS     = tests/test_dsl \
 TEST_OBJS        = $(TEST_TARGETS:=.o)
 TEST_LIBS        = -lbogo
 
-$(TEST_TARGETS): $(ENGINE_TARGET)
 $(TEST_TARGETS): LDFLAGS += $(TEST_LIBS)
-$(TEST_TARGETS): $(TEST_OBJS)
+$(TEST_TARGETS): $(TEST_OBJS) $(ENGINE_TARGET)
 	gcc $@.o tests/unittest/unittest.o -o $@ $(CFLAGS)
 
 .PHONY: build_tests
