@@ -55,96 +55,16 @@ endif
 # %.o : %.c
 # 	$(CC) -o $@ -c $< $(CFLAGS)
 
-#
-# Build libbogo
-#
-
-UTF8_SRC      = src/utf8small/utf8small.c
-ENGINE_SRC    = $(UTF8_SRC) \
-                src/engine/bogo.c \
-                src/engine/dsl.c
-ENGINE_HDRS   = include/bogo.h \
-                include/common.h \
-                include/dsl.h \
-                include/utf8small.h
-ENGINE_OBJ    = $(ENGINE_SRC:.c=.o)
-
-ifeq ($(SHARED_LIB), 1)
-
-ENGINE_TARGET = libbogo.so
-
-$(ENGINE_TARGET): CFLAGS += -fPIC --shared
-$(ENGINE_TARGET): $(ENGINE_OBJ) $(ENGINE_HDRS)
-	gcc -o $@ $(CFLAGS) $^
-
-else
-
-ENGINE_TARGET = libbogo.a
-
-$(ENGINE_TARGET): $(ENGINE_OBJ) $(ENGINE_HDRS)
-	$(AR) rs $@ $^
-
-endif
-
-#
-# Build the interactive interpreter
-#
-
-INTERPRETER_TARGET = bogo
-INTERPRETER_SRC    = src/interpreter.c
-INTERPRETER_OBJ    = $(INTERPRETER_SRC:.c=.o)
-INTERPRETER_LIBS   = -lreadline -lbogo
-
-$(INTERPRETER_TARGET): LDFLAGS += $(INTERPRETER_LIBS)
-
-# @lewtds: I don't like it that $(ENGINE_TARGET) got included in $^.
-#          We already have that covered with -lbogo.
-$(INTERPRETER_TARGET): $(INTERPRETER_OBJ) $(ENGINE_TARGET) $(ENGINE_HDRS)
-	gcc $^ -o $@ $(CFLAGS)
-
-#
-# Tests
-#
-
-TEST_DATA_DIR    = ./tests/test_data
-TEST_UTF8_INPUT  = $(TEST_DATA_DIR)/utf8_input.txt
-
-TEST_TARGETS     = tests/test_dsl \
-                   tests/test_bogo \
-                   tests/test_tone_and_mark \
-                   tests/test_utf8
-TEST_OBJS        = $(TEST_TARGETS:=.o)
-TEST_LIBS        = -lbogo
-
-$(TEST_TARGETS): LDFLAGS += $(TEST_LIBS)
-$(TEST_TARGETS): $(TEST_OBJS) $(ENGINE_TARGET) $(ENGINE_HDRS)
-	gcc $@.o tests/unittest/unittest.o -o $@ $(CFLAGS)
-
-.PHONY: build_tests
-build_tests: $(TEST_TARGETS)
-
-.PHONY: test
-test:
-test: build_tests
-	LD_LIBRARY_PATH=. ./tests/test_bogo
-	LD_LIBRARY_PATH=. ./tests/test_dsl
-	LD_LIBRARY_PATH=. ./tests/test_tone_and_mark
-	LD_LIBRARY_PATH=. ./tests/test_utf8 < $(TEST_UTF8_INPUT)
+include libbogo.mk
+include interpreter.mk
+include tests.mk
 
 #
 # Misc rules
 #
 
 .PHONY: clean
-clean:
-	rm -rf $(INTERPRETER_TARGET) \
-	       $(INTERPRETER_OBJ) \
-	       $(ENGINE_TARGET) \
-	       $(ENGINE_OBJ) \
-	       $(TEST_TARGETS) \
-	       $(TEST_OBJS) \
-	       libbogo.so \
-	       tests/unittest/unittest.o
+clean: clean_libbogo clean_interpreter clean_tests
 
 .PHONY: _all
 _all: $(ENGINE_TARGET) $(INTERPRETER_TARGET)
