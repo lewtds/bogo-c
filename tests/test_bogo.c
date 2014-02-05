@@ -24,9 +24,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <malloc.h>
-#include "unittest.h"
+#include "unittest/unittest.h"
 
-#include "bogo.c"
+#include "../src/engine/bogo.c"
 #include "dsl.h"
 #include "utf8small.h"
 

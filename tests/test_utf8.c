@@ -25,7 +25,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "utf8small.h"
-#include "unittest.h"
+#include "unittest/unittest.h"
 
 bgstr   mainString, buff;
 bglen_t i;

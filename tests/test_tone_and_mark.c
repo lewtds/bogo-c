@@ -23,9 +23,9 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "unittest.h"
+#include "bogo.h"
 
-#include "bogo.c"
+// #include "../src/engine/bogo.c"
 
 int testAddToneToChar(void) {
     initTestCase ("Add tone to char");

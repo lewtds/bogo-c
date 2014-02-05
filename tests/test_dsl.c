@@ -24,7 +24,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include "unittest.h"
+#include "unittest/unittest.h"
 
 #include "dsl.h"
 #include "bogo.h"
