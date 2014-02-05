@@ -15,9 +15,9 @@ TEST_DATA_DIR    = ./tests/test_data
 TEST_UTF8_INPUT  = $(TEST_DATA_DIR)/utf8_input.txt
 
 TEST_TARGETS     = tests/test_dsl \
-				   tests/test_bogo \
-				   tests/test_tone_and_mark \
-				   tests/test_utf8
+                   tests/test_bogo \
+                   tests/test_tone_and_mark \
+                   tests/test_utf8
 TEST_OBJS        = $(TEST_TARGETS:=.o)
 TEST_LIBS        = -lbogo
 

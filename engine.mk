@@ -12,12 +12,12 @@
 
 UTF8_SRC      = src/utf8small/utf8small.c
 ENGINE_SRC    = $(UTF8_SRC) \
-				src/engine/bogo.c \
-				src/engine/dsl.c
+                src/engine/bogo.c \
+                src/engine/dsl.c
 ENGINE_HDRS   = include/bogo.h \
-				include/common.h \
-				include/dsl.h \
-				include/utf8small.h
+                include/common.h \
+                include/dsl.h \
+                include/utf8small.h
 ENGINE_OBJ    = $(ENGINE_SRC:.c=.o)
 
 ifeq ($(SHARED_LIB), 1)
