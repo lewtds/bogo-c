@@ -40,7 +40,7 @@ RANLIB          ?= $(CROSS_COMPILE)$(COMPILER_RANLIB)
 DEBUG_FLAGS      = -g3 -DDEBUG_ALL
 RELEASE_FLAGS    = -O2
 INCLUDEDIRS     += -Iinclude
-LIBDIRS         += -L../lib
+LIBDIRS         += -L.
 LDFLAGS         += $(LIBDIRS) -lm
 CFLAGS          += -W -Wall -std=c99  $(ARCHFLAGS) $(LDFLAGS) $(INCLUDEDIRS)
 
@@ -86,14 +86,15 @@ endif
 # Build the interactive interpreter
 #
 
+INTERPRETER_TARGET = bogo
 INTERPRETER_SRC    = src/interpreter.c
 INTERPRETER_OBJ    = $(INTERPRETER_SRC:.c=.o)
-INTERPRETER_LIBS   = -lreadline
-INTERPRETER_TARGET = bogo
+INTERPRETER_LIBS   = -lreadline -lbogo
 
 $(INTERPRETER_TARGET): $(ENGINE_TARGET)
+$(INTERPRETER_TARGET): LDFLAGS += $(INTERPRETER_LIBS)
 $(INTERPRETER_TARGET): $(INTERPRETER_OBJ)
-	gcc $^ -o $@ $(INTERPRETER_LIBS) -L. -lbogo
+	gcc $^ -o $@ $(CFLAGS)
 
 #
 # Tests
@@ -107,9 +108,12 @@ TEST_TARGETS     = tests/test_dsl \
                    tests/test_tone_and_mark \
                    tests/test_utf8
 TEST_OBJS        = $(TEST_TARGETS:=.o)
+TEST_LIBS        = -lbogo
+
 $(TEST_TARGETS): $(ENGINE_TARGET)
+$(TEST_TARGETS): LDFLAGS += $(TEST_LIBS)
 $(TEST_TARGETS): $(TEST_OBJS)
-	gcc $@.o tests/unittest/unittest.o -o $@ -L. -lbogo
+	gcc $@.o tests/unittest/unittest.o -o $@ $(CFLAGS)
 
 .PHONY: build_tests
 build_tests: $(TEST_TARGETS)
