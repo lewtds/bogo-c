@@ -26,7 +26,9 @@ existing ones. We call these simply 'marks'.
 - Kernighan & Ritchie style formatting/indenting. Expand tab to 4 spaces.
 - Keep `typedef`s to the minimum.
 - Each struct should have a constructor, prefixed with *new*, e.g. `newMyStruct`.
-- Use BSD's `queue.h` for list operations.
+- Use BSD's `queue.h` for list operations. See [this tutorial][1] (Vietnamese).
+
+[1]: http://ngochin.com/2014/01/01/linked-list-preprocessor-c/
 
 ## Operation
 
@@ -46,13 +48,11 @@ then the list should look similar to this:
         { 'type' : 'tone',
           'key': 'f',
           'tone': 'GRAVE',
-          'target': [1] }
+          'target': 1 }
     ]
 
 Using matching rules, it will sort each key into three categories: tone, mark,
-append; and find one or more suitable targets for it. The target has to be a
-list because we need to accomodate typing shortcuts like "uow", in which the
-letter "w" targets both "o" and "u", resulting in "ươ".
+append; and find one or more suitable targets for it.
 
 The second phase is simpler, Bogo flattens the list into a final string using
 the instructions built from the first phase into the list itself.
@@ -67,6 +67,10 @@ delete characters, not undo tone or mark operations. So we remove the last
 appending transformation and all other operations that target it. If the
 targeting transformation has more than one targets then remove the orphaned
 target from it.
+
+**WARNING:** The following text is deprecated as `target` is now a pointer
+to a single transformation in the list. Shortcuts like *uow* are now handled
+by regular expressions and/or manual patching.
 
 Consider this example:
 
