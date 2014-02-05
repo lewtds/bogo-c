@@ -58,7 +58,7 @@ endif
 # %.o : %.c
 # 	$(CC) -o $@ -c $< $(CFLAGS)
 
-include libbogo.mk
+include engine.mk
 include interpreter.mk
 include tests.mk
 
