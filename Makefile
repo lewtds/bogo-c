@@ -47,7 +47,7 @@ LIBDIRS         += -L.
 LDFLAGS         += $(LIBDIRS) -lm
 CFLAGS          += -W -Wall -std=c99  $(ARCHFLAGS) $(LDFLAGS) $(INCLUDEDIRS)
 
-ifeq ($(DEBUG), 1)
+ifdef DEBUG
 CFLAGS += $(DEBUG_FLAGS)
 else
 CFLAGS += $(RELEASE_FLAGS)

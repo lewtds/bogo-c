@@ -20,7 +20,7 @@ ENGINE_HDRS   = include/bogo.h \
                 include/utf8small.h
 ENGINE_OBJ    = $(ENGINE_SRC:.c=.o)
 
-ifeq ($(SHARED_LIB), 1)
+ifdef SHARED_LIB
 
 ENGINE_TARGET = libbogo.so
 
