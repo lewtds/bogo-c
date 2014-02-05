@@ -4,66 +4,134 @@
 # Email: 901sttAtgmailDotcom                                        #
 #####################################################################
 
-
-# Those are flag which use to support the build,
-# and default when building
-# Un-comment and edit to overwrite them
-
-# The CROSS_COMPILE flag must be full prefix off gcc
-# E.g C Cross compiler is arm-unknown-linux-gcc
-# then the CROSS_COMPILE flag is "arm-unknown-linux-"
-
-# Should not edit CC, CXX, ARR, LD, RANLIB flag
-# they will be handled automatically
-
-# DEBUG_FLAGS and REALEASE_FLAGS cannot be overwrite
+all: _all
 
 
-# export INCLUDEDIRS     += -I../../include
-# export LIBDIRS         += -L../lib
-# export LDFLAGS         += $(LIBDIRS) -lm
-# export CFLAGS          += -W -Wall -std=c99
-export CFLAGS          += -std=c99
-# export DEBUG            = 0
-# export SHARED_LIB       = 0
-# export ARCH            ?=
-# export CROSS_COMPILE   ?=
-# export COMPILER_CC     ?= gcc
-# export COMPILER_CXX    ?= g++
-# export COMPILER_AR     ?= ar
-# export COMPILER_LD     ?= ld
-# export COMPILER_RANLIB ?= ranlib
-# export MKDIR           ?= mkdir
-# export CP              ?= cp
-# export RM              ?= rm
-# export CC              ?= $(CROSS_COMPILE)$(COMPILER_CC)
-# export CXX             ?= $(CROSS_COMPILE)$(COMPILER_CXX)
-# export AR              ?= $(CROSS_COMPILE)$(COMPILER_AR)
-# export LD              ?= $(CROSS_COMPILE)$(COMPILER_LD)
-# export RANLIB          ?= $(CROSS_COMPILE)$(COMPILER_RANLIB)
-# DEBUG_FLAGS             = -g3 -DDEBUG_ALL
-# RELEASE_FLAGS           = -O2
+# NOTES
+#
+# The CROSS_COMPILE flag must be a prefix for gcc.
+#
+# E.g. If the C cross-compiler's name is arm-unknown-linux-gcc
+# then CROSS_COMPILE should be "arm-unknown-linux-".
+#
+# CC, CXX, ARR, LD, RANLIB flags should not be edited as
+# they are handled automatically.
+#
+# DEBUG_FLAGS and REALEASE_FLAGS should be kept intact.
 
 
+ARCH            ?=
+ARCHFLAGS        =
+CROSS_COMPILE   ?=
+COMPILER_CC     ?= gcc
+COMPILER_CXX    ?= g++
+COMPILER_AR     ?= ar
+COMPILER_LD     ?= ld
+COMPILER_RANLIB ?= ranlib
+MKDIR           ?= mkdir
+CP              ?= cp
+RM              ?= rm
+CC              ?= $(CROSS_COMPILE)$(COMPILER_CC)
+CXX             ?= $(CROSS_COMPILE)$(COMPILER_CXX)
+AR              ?= $(CROSS_COMPILE)$(COMPILER_AR)
+LD              ?= $(CROSS_COMPILE)$(COMPILER_LD)
+RANLIB          ?= $(CROSS_COMPILE)$(COMPILER_RANLIB)
 
-.PHONY: all
-all: build_app
+DEBUG_FLAGS      = -g3 -DDEBUG_ALL
+RELEASE_FLAGS    = -O2
+INCLUDEDIRS     += -Iinclude
+LIBDIRS         += -L../lib
+LDFLAGS         += $(LIBDIRS) -lm
+CFLAGS          += -W -Wall -std=c99  $(ARCHFLAGS) $(LDFLAGS) $(INCLUDEDIRS)
 
-.PHONY:	test
-test: MAKEFILE_FLAGS := test
-test: build_app
-	$(MAKE) -C tests
+ifeq ($(DEBUG), 1)
+CFLAGS += $(DEBUG_FLAGS)
+else
+CFLAGS += $(RELEASE_FLAGS)
+endif
 
-.PHONY: install
-install: MAKEFILE_FLAGS := release
-install: build_app
+# @lewtds: Not sure if this is needed as it looks almost the same as the
+#          default implicit rule for C.
+# %.o : %.c
+# 	$(CC) -o $@ -c $< $(CFLAGS)
+
+#
+# Build libbogo
+#
+
+UTF8_SRC      = src/utf8small/utf8small.c
+ENGINE_SRC    = $(UTF8_SRC) \
+			    src/engine/bogo.c \
+			    src/engine/dsl.c
+ENGINE_OBJ    = $(ENGINE_SRC:.c=.o)
+
+ifeq ($(SHARED_LIB), 1)
+
+ENGINE_TARGET = libbogo.so
+
+$(ENGINE_TARGET): CFLAGS += -fPIC --shared
+$(ENGINE_TARGET): $(ENGINE_OBJ)
+	gcc -o $@ $(CFLAGS) $^
+
+else
+
+ENGINE_TARGET = libbogo.a
+
+$(ENGINE_TARGET): $(ENGINE_OBJ)
+	$(AR) rs $@ $^
+
+endif
+
+#
+# Build the interactive interpreter
+#
+
+INTERPRETER_SRC    = src/interpreter.c
+INTERPRETER_OBJ    = $(INTERPRETER_SRC:.c=.o)
+INTERPRETER_LIBS   = -lreadline
+INTERPRETER_TARGET = bogo
+
+$(INTERPRETER_TARGET): $(ENGINE_TARGET)
+$(INTERPRETER_TARGET): $(INTERPRETER_OBJ)
+	gcc $^ -o $@ $(INTERPRETER_LIBS) -L. -lbogo
+
+#
+# Tests
+#
+
+TEST_TARGETS     = tests/test_dsl \
+			       tests/test_bogo \
+			       tests/test_tone_and_mark \
+			       tests/test_utf8
+TEST_OBJS        = $(TEST_TARGETS:=.o)
+TEST_DATA_DIR    = ./test_data
+TEST_UTF8_INPUT  = $(TEST_DATA_DIR)/utf8_input.txt
+
+$(TEST_TARGETS): $(ENGINE_TARGET)
+$(TEST_TARGETS): $(TEST_OBJS)
+	gcc $@.o tests/unittest/unittest.o -o $@ -L. -lbogo
+
+.PHONY: build_tests
+build_tests: $(TEST_TARGETS)
+
+.PHONY: test
+test:
+test: build_tests
+	LD_LIBRARY_PATH=. ./tests/test_bogo
+	LD_LIBRARY_PATH=. ./tests/test_dsl
+	LD_LIBRARY_PATH=. ./tests/test_tone_and_mark
+	LD_LIBRARY_PATH=. ./tests/test_utf8 < $(TEST_UTF8_INPUT)
+
+#
+# Misc rules
+#
 
 .PHONY: clean
-clean: MAKEFILE_FLAGS := clean
-clean:  build_app
-	$(MAKE) -C tests $(MAKEFILE_FLAGS)
+clean:
+	rm -rf $(INTERPRETER_TARGET) \
+		   $(INTERPRETER_OBJ) \
+		   $(ENGINE_TARGET) \
+		   $(ENGINE_OBJ)
 
-.PHONY: build_app
-build_app:
-	$(MAKE) -C src $(MAKEFILE_FLAGS)
-
+.PHONY: _all
+_all: $(ENGINE_TARGET) $(INTERPRETER_TARGET)
