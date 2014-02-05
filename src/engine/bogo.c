@@ -85,7 +85,7 @@ const struct Rule APPEND_RULE = {
     .key = "",
     .effectOn = "",
     .type = TRANS_APPEND,
-    .toneMarkDetail = 0
+    .toneMarkDetail = {0}
 };
 
 
