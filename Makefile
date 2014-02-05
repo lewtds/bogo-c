@@ -61,8 +61,8 @@ endif
 
 UTF8_SRC      = src/utf8small/utf8small.c
 ENGINE_SRC    = $(UTF8_SRC) \
-			    src/engine/bogo.c \
-			    src/engine/dsl.c
+                src/engine/bogo.c \
+                src/engine/dsl.c
 ENGINE_OBJ    = $(ENGINE_SRC:.c=.o)
 
 ifeq ($(SHARED_LIB), 1)
@@ -99,14 +99,14 @@ $(INTERPRETER_TARGET): $(INTERPRETER_OBJ)
 # Tests
 #
 
-TEST_TARGETS     = tests/test_dsl \
-			       tests/test_bogo \
-			       tests/test_tone_and_mark \
-			       tests/test_utf8
-TEST_OBJS        = $(TEST_TARGETS:=.o)
 TEST_DATA_DIR    = ./test_data
 TEST_UTF8_INPUT  = $(TEST_DATA_DIR)/utf8_input.txt
 
+TEST_TARGETS     = tests/test_dsl \
+                   tests/test_bogo \
+                   tests/test_tone_and_mark \
+                   tests/test_utf8
+TEST_OBJS        = $(TEST_TARGETS:=.o)
 $(TEST_TARGETS): $(ENGINE_TARGET)
 $(TEST_TARGETS): $(TEST_OBJS)
 	gcc $@.o tests/unittest/unittest.o -o $@ -L. -lbogo
@@ -129,9 +129,9 @@ test: build_tests
 .PHONY: clean
 clean:
 	rm -rf $(INTERPRETER_TARGET) \
-		   $(INTERPRETER_OBJ) \
-		   $(ENGINE_TARGET) \
-		   $(ENGINE_OBJ)
+	       $(INTERPRETER_OBJ) \
+	       $(ENGINE_TARGET) \
+	       $(ENGINE_OBJ)
 
 .PHONY: _all
 _all: $(ENGINE_TARGET) $(INTERPRETER_TARGET)
