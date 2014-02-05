@@ -141,7 +141,10 @@ clean:
 	       $(INTERPRETER_OBJ) \
 	       $(ENGINE_TARGET) \
 	       $(ENGINE_OBJ) \
-	       libbogo.so
+	       $(TEST_TARGETS) \
+	       $(TEST_OBJS) \
+	       libbogo.so \
+	       tests/unittest/unittest.o
 
 .PHONY: _all
 _all: $(ENGINE_TARGET) $(INTERPRETER_TARGET)
