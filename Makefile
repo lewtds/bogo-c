@@ -106,7 +106,7 @@ $(INTERPRETER_TARGET): $(INTERPRETER_OBJ) $(ENGINE_TARGET) $(ENGINE_HDRS)
 # Tests
 #
 
-TEST_DATA_DIR    = ./test_data
+TEST_DATA_DIR    = ./tests/test_data
 TEST_UTF8_INPUT  = $(TEST_DATA_DIR)/utf8_input.txt
 
 TEST_TARGETS     = tests/test_dsl \
