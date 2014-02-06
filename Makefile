@@ -7,6 +7,7 @@
 # project's top level for more details.
 #
 
+.PHONY: all
 all: _all
 
 # If you need to do cross-compiling, set the CC, LD, AR environment variables
