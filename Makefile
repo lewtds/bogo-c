@@ -15,6 +15,8 @@ all: _all
 #
 # $ make CC=my-gcc LD=my-ld AR=my-ar CFLAGS=--my-platform-flag all
 
+CC              ?= gcc
+
 INCLUDEDIRS     += -Iinclude
 LIBDIRS         += -L.
 LDFLAGS         += $(LIBDIRS) -lm
