@@ -10,9 +10,10 @@
 all: _all
 
 # If you need to do cross-compiling, set the CC, LD, AR environment variables
-# to the ones specific to your toolchain.
+# to the ones specific to your toolchain. Make a shellscript if you need to
+# save keystrokes.
 #
-# $ make CC=my-gcc LD=my-ld AR=my-ar all
+# $ make CC=my-gcc LD=my-ld AR=my-ar CFLAGS=--my-platform-flag all
 
 INCLUDEDIRS     += -Iinclude
 LIBDIRS         += -L.
