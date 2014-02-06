@@ -36,6 +36,5 @@ test: build_tests
 	LD_LIBRARY_PATH=. ./tests/test_tone_and_mark
 	LD_LIBRARY_PATH=. ./tests/test_utf8 < $(TEST_UTF8_INPUT)
 
-.PHONY: clean_tests
-clean_tests:
-	rm -rf $(TEST_OBJS) $(TEST_TARGETS) tests/unittest/unittest.o
+
+CLOBBER += $(TEST_OBJS) $(TEST_TARGETS)

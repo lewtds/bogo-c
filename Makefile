@@ -45,7 +45,8 @@ include tests.mk
 #
 
 .PHONY: clean
-clean: clean_libbogo clean_interpreter clean_tests
+clean:
+	rm -rf $(CLOBBER)
 
 .PHONY: _all
 _all: $(ENGINE_TARGET) $(INTERPRETER_TARGET)

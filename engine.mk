@@ -40,6 +40,5 @@ $(ENGINE_TARGET): $(ENGINE_OBJ) $(ENGINE_HDRS)
 
 endif
 
-.PHONY: clean_libbogo
-clean_libbogo:
-	rm -rf $(ENGINE_TARGET) $(ENGINE_OBJ) libbogo.so
+
+CLOBBER += $(ENGINE_TARGET) $(ENGINE_OBJ) libbogo.so
