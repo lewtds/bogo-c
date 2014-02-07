@@ -216,6 +216,91 @@ void addMarkToChar(bgstr chr, enum Mark mark)
     addToneToChar(chr, tone);
 }
 
+inline bool isVowel(bgchar chr)
+{
+    // Note that transformations' key can only be ASCII chars.
+    return bgstrEqual(chr, "a") || bgstrEqual(chr, "A") ||
+           bgstrEqual(chr, "e") || bgstrEqual(chr, "E") ||
+           bgstrEqual(chr, "i") || bgstrEqual(chr, "I") ||
+           bgstrEqual(chr, "o") || bgstrEqual(chr, "O") ||
+           bgstrEqual(chr, "u") || bgstrEqual(chr, "U") ||
+           bgstrEqual(chr, "y") || bgstrEqual(chr, "Y");
+}
+
+/*
+ * Find the right-most chunk of at most 3 continuous vowels in
+ * prevTransformations. The results are in reverse.
+ *
+ * e.g. findRightmostVowels("athuong") -> "ou"
+ */
+inline int findRightmostVowels(struct TransformationQueue *prevTransformations,
+                               struct Transformation     **vowels)
+{
+    int vcount = 0;
+
+    struct Transformation* pointer;
+    TAILQ_FOREACH_REVERSE(pointer,
+                          prevTransformations,
+                          TransformationQueue,
+                          queuePtrs) {
+        if (pointer->rule.type == TRANS_APPEND &&
+            isVowel(pointer->rule.key)) {
+            vowels[vcount] = pointer;
+            vcount++;
+        }
+
+        if (vcount == 3) {
+            break;
+        }
+    }
+
+    return vcount;
+}
+
+/*
+ * Check if a vowel is followed by a TRANS_APPEND that contains
+ * a consonant.
+ *
+ * Linked list: {key:a, type:APPEND} -> {key:n, type:APPEND}
+ * hasConsonantBehind({key:a, type:APPEND}) => TRUE
+ *
+ * Linked list: {key:a, type:APPEND} -> NULL
+ * hasConsonantBehind({key:a, type:APPEND}) => FALSE
+ */
+inline bool hasConsonantBehind(struct Transformation *vowel)
+{
+    bool found = FALSE;
+    struct Transformation *next = vowel;
+
+    while (next = TAILQ_NEXT(next, queuePtrs)) {
+        if (next->rule.type == TRANS_APPEND && !isVowel(next->rule.key)) {
+            found = TRUE;
+            break;
+        }
+    }
+
+    return found;
+}
+
+inline bool isUo(struct Transformation **vowels)
+{
+    bgchar o, u;
+    bgcharLower(o, vowels[0]->rule.key);
+    bgcharLower(u, vowels[1]->rule.key);
+    return bgstrEqual(o, "o") &&
+           bgstrEqual(u, "u");
+}
+
+inline bool isUye(struct Transformation **vowels)
+{
+    bgchar u, y, e;
+    bgcharLower(u, vowels[2]->rule.key);
+    bgcharLower(y, vowels[1]->rule.key);
+    bgcharLower(e, vowels[0]->rule.key);
+    return bgstrEqual(e, "e") &&
+           bgstrEqual(y, "y") &&
+           bgstrEqual(u, "u");
+}
 
 /*
  * // aos -> áo
@@ -232,96 +317,8 @@ bool findToneTarget(struct TransformationQueue *prevTransformations,
                     struct Transformation *trans,
                     struct Rule *rule)
 {
-    int vcount = 0;
-
-    inline bool isVowel(bgchar chr)
-    {
-        // Note that transformations' key can only be ASCII chars.
-        return bgstrEqual(chr, "a") || bgstrEqual(chr, "A") ||
-               bgstrEqual(chr, "e") || bgstrEqual(chr, "E") ||
-               bgstrEqual(chr, "i") || bgstrEqual(chr, "I") ||
-               bgstrEqual(chr, "o") || bgstrEqual(chr, "O") ||
-               bgstrEqual(chr, "u") || bgstrEqual(chr, "U") ||
-               bgstrEqual(chr, "y") || bgstrEqual(chr, "Y");
-    }
-
-    /*
-     * Find the right-most chunk of at most 3 continuous vowels in
-     * prevTransformations. The results are in reverse.
-     *
-     * e.g. findRightmostVowels("athuong") -> "ou"
-     */
-    inline struct Transformation **findRightmostVowels()
-    {
-        struct Transformation** vowels = malloc(sizeof(void*) * 3);
-
-        struct Transformation* pointer;
-        TAILQ_FOREACH_REVERSE(pointer,
-                              prevTransformations,
-                              TransformationQueue,
-                              queuePtrs) {
-            if (pointer->rule.type == TRANS_APPEND &&
-                isVowel(pointer->rule.key)) {
-                vowels[vcount] = pointer;
-                vcount++;
-            }
-
-            if (vcount == 3) {
-                break;
-            }
-        }
-
-        return vowels;
-    }
-
-    /*
-     * Check if a vowel is followed by a TRANS_APPEND that contains
-     * a consonant.
-     *
-     * Linked list: {key:a, type:APPEND} -> {key:n, type:APPEND}
-     * hasConsonantBehind({key:a, type:APPEND}) => TRUE
-     *
-     * Linked list: {key:a, type:APPEND} -> NULL
-     * hasConsonantBehind({key:a, type:APPEND}) => FALSE
-     */
-    inline bool hasConsonantBehind(struct Transformation *vowel)
-    {
-        bool found = FALSE;
-        struct Transformation *next = vowel;
-
-        while (next = TAILQ_NEXT(next, queuePtrs)) {
-            if (next->rule.type == TRANS_APPEND && !isVowel(next->rule.key)) {
-                found = TRUE;
-                break;
-            }
-        }
-
-        return found;
-    }
-
-    // Special cases
-
-    inline bool isUo(struct Transformation **vowels)
-    {
-        bgchar o, u;
-        bgcharLower(o, vowels[0]->rule.key);
-        bgcharLower(u, vowels[1]->rule.key);
-        return bgstrEqual(o, "o") &&
-               bgstrEqual(u, "u");
-    }
-
-    inline bool isUye(struct Transformation **vowels)
-    {
-        bgchar u, y, e;
-        bgcharLower(u, vowels[2]->rule.key);
-        bgcharLower(y, vowels[1]->rule.key);
-        bgcharLower(e, vowels[0]->rule.key);
-        return bgstrEqual(e, "e") &&
-               bgstrEqual(y, "y") &&
-               bgstrEqual(u, "u");
-    }
-
-    struct Transformation **rightmostVowels = findRightmostVowels();
+    struct Transformation **rightmostVowels = malloc(sizeof(void*) * 3);
+    int vcount = findRightmostVowels(prevTransformations, rightmostVowels);
 
     switch (vcount) {
     case 1:
