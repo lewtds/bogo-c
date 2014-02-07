@@ -32,10 +32,6 @@ else
 CFLAGS += $(RELEASE_FLAGS)
 endif
 
-# @lewtds: Not sure if this is needed as it looks almost the same as the
-#          default implicit rule for C.
-# %.o : %.c
-# 	$(CC) -o $@ -c $< $(CFLAGS)
 
 include engine.mk
 include interpreter.mk
