@@ -7,8 +7,6 @@
 # project's top level for more details.
 #
 
-.PHONY: all
-all: _all
 
 # If you need to do cross-compiling, set the CC, LD, AR environment variables
 # to the ones specific to your toolchain. Make a shellscript if you need to
@@ -32,18 +30,23 @@ else
 CFLAGS += $(RELEASE_FLAGS)
 endif
 
+all: lib interpreter
+
 
 include engine.mk
 include interpreter.mk
 include tests.mk
 
+
+lib: $(ENGINE_TARGET)
+libjs: $(ENGINE_JS_TARGET)
+interpreter: $(INTERPRETER_TARGET)
+
 #
 # Misc rules
 #
 
-.PHONY: clean
 clean:
 	rm -rf $(CLOBBER)
 
-.PHONY: _all
-_all: $(ENGINE_TARGET) $(INTERPRETER_TARGET)
+.PHONY: all lib libjs interpreter

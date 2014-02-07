@@ -26,10 +26,8 @@ $(TEST_TARGETS): LDFLAGS += $(TEST_LIBS)
 $(TEST_TARGETS): $(TEST_OBJS) tests/unittest/unittest.o
 	$(CC) $@.o tests/unittest/unittest.o -o $@ $(CFLAGS)
 
-.PHONY: build_tests
 build_tests: $(ENGINE_TARGET) $(ENGINE_HDRS) $(TEST_TARGETS)
 
-.PHONY: test
 test: build_tests
 	LD_LIBRARY_PATH=. ./tests/test_bogo
 	LD_LIBRARY_PATH=. ./tests/test_dsl
@@ -38,3 +36,5 @@ test: build_tests
 
 
 CLOBBER += $(TEST_OBJS) $(TEST_TARGETS)
+
+.PHONY: test build_tests
