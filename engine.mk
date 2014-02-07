@@ -12,7 +12,7 @@
 
 ENGINE_SHARED_TARGET = libbogo.so
 ENGINE_STATIC_TARGET = libbogo.a
-ENGINE_JS_TARGET     = libbogo.js
+ENGINE_JS_TARGET     = libbogo.html
 
 UTF8_SRC      = src/utf8small/utf8small.c
 
@@ -42,10 +42,10 @@ ENGINE_TARGET = libbogo.a
 $(ENGINE_TARGET): $(ENGINE_OBJ) $(ENGINE_HDRS)
 	$(AR) rs $@ $^
 
-js: $(ENGINE_TARGET)
-	$(CC) -O2 $(ENGINE_TARGET) -o libbogo.js \
-		-s EXPORTED_FUNCTIONS="['_sass_compile_emscripten']" \
-		-s DISABLE_EXCEPTION_CATCHING=0
+$(ENGINE_JS_TARGET): $(ENGINE_TARGET)
+	$(CC) $^ -o $@ -O2 \
+	      -s EXPORTED_FUNCTIONS="['_simpleProcessStringTelex']" \
+	      -s DISABLE_EXCEPTION_CATCHING=0
 
 endif
 

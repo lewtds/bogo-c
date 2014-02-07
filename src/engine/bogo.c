@@ -51,6 +51,7 @@
 
 #include "bogo.h"
 #include "utf8small.h"
+#include "dsl.h"
 
 
 const bgstr VOWELS = "àáảãạaằắẳẵặăầấẩẫậâèéẻẽẹeềếểễệêìíỉĩịi" \
@@ -484,3 +485,45 @@ void processString(struct RuleQueue *rules, bgstr output, const bgstr input)
     TAILQ_FREE(iter, transList, queuePtrs);
 }
 
+
+struct RuleQueue *telexRules = NULL;
+
+void buildTelexRules()
+{
+    telexRules = newRuleQueue();
+    TAILQ_INIT(telexRules);
+
+    bgstr ruleTemplates[] = {
+        "o w o+",
+        "u w u+",
+        "a a a^",
+        "a w a(",
+        "e e e^",
+        "o o o^",
+        "d d d-",
+        "_ f `",
+        "_ r ?",
+        "_ x ~",
+        "_ j .",
+        "_ s '",
+    };
+
+    int len = sizeof(ruleTemplates) / sizeof(bgstr);
+
+    for (int i = 0; i < len; ++i) {
+        struct Rule *rule = newRule();
+        parseRuleFromString(rule, ruleTemplates[i]);
+        TAILQ_INSERT_TAIL(telexRules, rule, queuePtrs);
+    }
+}
+
+char *simpleProcessStringTelex(char *input)
+{
+    char *output = malloc(512);
+    if (telexRules == NULL) {
+        buildTelexRules();
+    }
+
+    processString(telexRules, output, input);
+    return output;
+}
