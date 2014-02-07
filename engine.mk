@@ -12,7 +12,7 @@
 
 ENGINE_SHARED_TARGET = libbogo.so
 ENGINE_STATIC_TARGET = libbogo.a
-ENGINE_JS_TARGET     = libbogo.html
+ENGINE_JS_TARGET     = libbogo.js
 
 UTF8_SRC      = src/utf8small/utf8small.c
 
