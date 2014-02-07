@@ -24,7 +24,7 @@ TEST_LIBS        = -lbogo
 
 $(TEST_TARGETS): LDFLAGS += $(TEST_LIBS)
 $(TEST_TARGETS): $(TEST_OBJS) tests/unittest/unittest.o
-	gcc $@.o -o $@ $(CFLAGS)
+	$(CC) $@.o tests/unittest/unittest.o -o $@ $(CFLAGS)
 
 .PHONY: build_tests
 build_tests: $(ENGINE_TARGET) $(ENGINE_HDRS) $(TEST_TARGETS)

@@ -29,7 +29,7 @@ ENGINE_TARGET = libbogo.so
 
 $(ENGINE_TARGET): CFLAGS += -fPIC --shared
 $(ENGINE_TARGET): $(ENGINE_OBJ) $(ENGINE_HDRS)
-	gcc -o $@ $(CFLAGS) $^
+	$(CC) -o $@ $(CFLAGS) $^
 
 else
 
