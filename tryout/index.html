@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+
+  <style type="text/css">
+      #shell-panel {
+        height: 400px;
+        /*width: 100%;*/
+        /*background-color: #002f05;*/
+        color: #333;
+        padding: 20px 20px 20px 20px;
+        font-family: 'Source Code Pro';
+        overflow: scroll;
+        overflow-x: hidden;
+        overflow-y: scroll;
+        border: 1px dashed #E6EBE0;
+      }
+
+      #shell-cli .prompt {
+        font-weight: bold;
+      }
+
+      .perf {
+        color: lightgray;
+      }
+  </style>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.2/underscore-min.js"></script>
+
+  <script src="js/history.js"></script>
+  <script src="js/killring.js"></script>
+  <script src="js/readline.js"></script>
+  <script src="js/input.js"></script>
+  <script src="js/shell.js"></script>
+  <script src="js/pathhandler.js"></script>
+</head>
+<body>
+
+<div id="shell-panel">
+  <div id="shell-view"></div>
+</div>
+
+<script type="text/javascript" src="libbogo.js"></script>
+
+<script type="text/javascript">
+
+  window.onload = function (e) {
+    var process = Module.cwrap('simpleProcessStringTelex', 'string', ['string'])
+
+    var history = new Josh.History({ key: 'bogo.history'});
+    var shell = Josh.Shell({history: history});
+
+    var promptCounter = 0;
+    shell.onNewPrompt(function(callback) {
+        promptCounter++;
+        callback("[bogo] $ ");
+    });
+
+    shell.setCommandHandler("_default", {
+        exec: function(cmd, args, callback) {
+          var startTime = performance.now();
+
+          args.unshift(cmd);
+
+          var sentence = [];
+          for(i = 0; i < args.length; i++) {
+            var word = process(args[i]);
+            sentence.push(word);
+            Module._free(word);
+          }
+
+          var result = '<div>' + sentence.join(' ') + '</div>' +
+                       '<div class="perf">' +(performance.now() - startTime).toFixed(2) + ' ms</div>';
+
+          callback(result);
+        },
+        completion: function(cmd, arg, line, callback) {
+          callback(shell.bestMatch(arg, ['world', 'josh']))
+        }
+    });
+
+    shell.activate();
+  }
+
+
+</script>
+</body>
+</html>
