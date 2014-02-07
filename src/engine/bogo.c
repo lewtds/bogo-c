@@ -233,7 +233,7 @@ bool isVowel(bgchar chr)
  *
  * e.g. findRightmostVowels("athuong") -> "ou"
  */
-inline int findRightmostVowels(struct TransformationQueue *prevTransformations,
+int findRightmostVowels(struct TransformationQueue *prevTransformations,
                                struct Transformation     **vowels)
 {
     int vcount = 0;
@@ -267,7 +267,7 @@ inline int findRightmostVowels(struct TransformationQueue *prevTransformations,
  * Linked list: {key:a, type:APPEND} -> NULL
  * hasConsonantBehind({key:a, type:APPEND}) => FALSE
  */
-inline bool hasConsonantBehind(struct Transformation *vowel)
+bool hasConsonantBehind(struct Transformation *vowel)
 {
     bool found = FALSE;
     struct Transformation *next = vowel;
@@ -282,7 +282,7 @@ inline bool hasConsonantBehind(struct Transformation *vowel)
     return found;
 }
 
-inline bool isUo(struct Transformation **vowels)
+bool isUo(struct Transformation **vowels)
 {
     bgchar o, u;
     bgcharLower(o, vowels[0]->rule.key);
@@ -291,7 +291,7 @@ inline bool isUo(struct Transformation **vowels)
            bgstrEqual(u, "u");
 }
 
-inline bool isUye(struct Transformation **vowels)
+bool isUye(struct Transformation **vowels)
 {
     bgchar u, y, e;
     bgcharLower(u, vowels[2]->rule.key);
