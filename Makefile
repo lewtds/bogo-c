@@ -20,7 +20,7 @@ CC              ?= gcc
 
 INCLUDEDIRS     += -Iinclude
 LIBDIRS         += -L.
-LDFLAGS         += $(LIBDIRS) -lm
+LDFLAGS         += $(LIBDIRS)
 CFLAGS          += -W -Wall -std=c99 $(LDFLAGS) $(INCLUDEDIRS)
 
 DEBUG_FLAGS     := -g3 -DDEBUG_ALL
