@@ -20,7 +20,7 @@ $(INTERPRETER_TARGET): LDFLAGS += $(INTERPRETER_LIBS)
 
 # @lewtds: I don't like it that $(ENGINE_TARGET) got included in $^.
 #          We already have that covered with -lbogo.
-$(INTERPRETER_TARGET): $(INTERPRETER_OBJ) $(ENGINE_TARGET) $(ENGINE_HDRS)
+$(INTERPRETER_TARGET): $(INTERPRETER_OBJ) $(ENGINE_TARGET)
 	$(CC) $^ -o $@ $(CFLAGS)
 
 
