@@ -38,6 +38,11 @@ ENGINE_TARGET = libbogo.a
 $(ENGINE_TARGET): $(ENGINE_OBJ) $(ENGINE_HDRS)
 	$(AR) rs $@ $^
 
+js: $(ENGINE_TARGET)
+	$(CC) -O2 $(ENGINE_TARGET) -o libbogo.js \
+		-s EXPORTED_FUNCTIONS="['_sass_compile_emscripten']" \
+		-s DISABLE_EXCEPTION_CATCHING=0
+
 endif
 
 
