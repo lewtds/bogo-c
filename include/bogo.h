@@ -12,8 +12,7 @@
 #ifndef BOGO_H
 #define BOGO_H
 
-#include <sys/queue.h>
-
+#include "queue.h"
 #include "common.h"
 
 enum TransformationType {
