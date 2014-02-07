@@ -216,7 +216,7 @@ void addMarkToChar(bgstr chr, enum Mark mark)
     addToneToChar(chr, tone);
 }
 
-inline bool isVowel(bgchar chr)
+bool isVowel(bgchar chr)
 {
     // Note that transformations' key can only be ASCII chars.
     return bgstrEqual(chr, "a") || bgstrEqual(chr, "A") ||
