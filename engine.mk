@@ -10,6 +10,10 @@
 # Build libbogo
 #
 
+ENGINE_SHARED_TARGET = libbogo.so
+ENGINE_STATIC_TARGET = libbogo.a
+ENGINE_JS_TARGET     = libbogo.js
+
 UTF8_SRC      = src/utf8small/utf8small.c
 
 ENGINE_SRC    = $(UTF8_SRC) \
@@ -46,4 +50,7 @@ js: $(ENGINE_TARGET)
 endif
 
 
-CLOBBER += $(ENGINE_TARGET) $(ENGINE_OBJ) libbogo.so
+CLOBBER += $(ENGINE_SHARED_TARGET) \
+           $(ENGINE_STATIC_TARGET) \
+           $(ENGINE_JS_TARGET) \
+           $(ENGINE_OBJ)
